@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+html(lang="zh-Hant")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title Radio-Defense
+
+    //- link(rel="stylesheet" href="./css/style.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Yantramanav:300,400,500")
+    //- link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500")
+    link(rel="stylesheet" href="./css/style.css")
+
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/plugins/CSSPlugin.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/easing/EasePack.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenLite.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.3/dat.gui.min.js")
+
+  body
+    .container#container
+      canvas#game(width="856" height="624")
+      .panel#panel
+        section.panel__cover#cover
+          //- .logo R
+          .panel__cover-img-wrapper
+            img.battery(src="./img/battery.svg", alt="")
+            img.logo(src="./img/R.svg", alt="")
+          h1 Radio Defense
+          button#start-btn(type="button") Start Game
+          .panel__cover-circle.panel__cover-circle--outer
+          .panel__cover-circle.panel__cover-circle--inner
+          .intro
+            p 你身負著運送能量電池的任務
+            p 卻遭到幾何星人的埋伏
+            p 請從他們手中奪回能量電池！
+        section.panel__game#game-panel
+          .panel__game-part-center
+            .panel__game-time 00:43”
+            .panel__game-alert
+              //- svg(width="24" height="24" viewBox="0 0 24 24")
+                //- polygon(points="12,0 0,24 24,24" stroke="#f5af5f")
+                //- path(d="M8.454 1.492l-8.242 14.508h16.581l-8.339-14.508zM8.459 3.508l6.605 11.492h-13.134l6.529-11.492zM9 10.938h-1v-3.938h1v3.938zM9.5 13.031c0 0.552-0.447 1-1 1s-1-0.448-1-1 0.447-1 1-1 1 0.448 1 1z" fill="#f5af5f")
+              p BOSS COMING
+            .panel__game-level Wave 31
+          .panel__game-part-top-right
+            .panel__game-hp#hp
+            .panel__game-heart-wrapper#heart-wrapper
+              //- .panel__game-heart
+              //- .panel__game-heart
+              //- .panel__game-heart.mr-0
+            .panel__game-prop#prop
+              img#prop__img(src="./img/heart.svg", alt="")
+              p 0:<span id="prop__last-time">00</span>
+          .panel__game-part-top-left
+            img(src="./img/R.svg", alt="")
+            //- p.panel__game-name RADIO Defense
+          .panel__game-part-bottom-right#battery-info
+            img.battery(src="./img/battery.svg", alt="")
+            div
+              p 已回收
+              p <span id="battery-num">0</span>個能量電池
+          .panel__game-keyboard#keyboard
+            .key-wrapper(style="margin-right: 20px;")
+              .key-code S
+              .key-name 射擊
+            .key-wrapper
+              .key-code P
+              .key-name 暫停
+          .panel__game-end#result
+            img(src="./img/battery.svg", alt="")
+            div
+              p 你回收了
+              p <span id="result-num">0</span>個能量電池
+              button#restart-btn(type="button") Restart
+      //- .mouse-style#mouse-style
+      //-   .mouse-circle
+    //- link(rel="stylesheet" href="./css/style.css")
+    script(src="./js/index.js")
