@@ -1,7 +1,5 @@
 /* Environment Variable */
 const updateFPS = 30;
-// const showMouse = true;
-// const bgColor = 'black';
 let time = 0;
 
 const globalColor = {
@@ -16,21 +14,13 @@ const globalColor = {
 
 /* GUI Controls */
 const controls = {
-  // splited: false,
-  // length: 120,
   // amp: 8,
   // freq: 0.3,
-  // divide: 1,
 }
 
 const gui = new dat.GUI();
-// gui.add(controls, 'length', 0, 200).step(1).onChange((value) => {});
 // gui.add(controls, 'amp', 0, 30).step(1).onChange((value) => {});
 // gui.add(controls, 'freq', 0, 1).step(0.1).onChange((value) => {});
-// gui.add(controls, 'divide', 1, 100).step(1).onChange((value) => {});
-
-// gui.add(controls, 'splited');
-// gui.add(controls, 'value', -2, 2).step(0.01).onChange((value) => {});
 
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
@@ -47,9 +37,6 @@ const resultNum = document.getElementById('result-num');
 const panel = document.getElementById('panel');
 const container = document.getElementById('container');
 const keyboard = document.getElementById('keyboard');
-// const mouseStyle = document.getElementById('mouse-style');
-
-
 
 
 
@@ -109,14 +96,6 @@ let wh;
 let gameW;
 let gameH;
 
-// ctx.circle = function (v, r) {
-//   this.arc(v.x, v.y, r, 0, Math.PI * 2);
-// }
-// ctx.line = function (v1, v2) {
-//   this.moveTo(v1.x, v1.y);
-//   this.lineTo(v2.x, v2.y);
-// }
-
 ctx.$triLineTo = function(r, angle, angleAdd = 0) {
   return ctx.lineTo(r * Math.cos(angle * degToPi + angleAdd), r * Math.sin(angle * degToPi + angleAdd));
 }
@@ -127,7 +106,6 @@ function initCanvas() {
   ww = document.documentElement.clientWidth;
   wh = document.documentElement.clientHeight;
 }
-// initCanvas();
 
 
 
@@ -170,7 +148,6 @@ class Prop {
     if ((this.axisRotateR + this.r) <= (shooter.r + (shooter.cirSolidLineW / 2))) {
       game.props.splice(idx, 1);
       const propName = this.src.replace('../img/', '').split('.')[0];
-      // const propName = this.src.slice(7).split('.')[0];
       shooter.getProp(propName);
     }
   }
@@ -200,7 +177,6 @@ class Game {
       subTriangles: [],
       isStart: true,
       isPause: false,
-      // isEnd: false,
       blockV: {
         x: -2,
         y: 2,
@@ -238,10 +214,7 @@ class Game {
     window.addEventListener('keyup', handleKeyup);
     startBtn.addEventListener('click', () => {
       this.startGame();
-    }, {
-      once: true
-    });
-    // restartBtn.addEventListener('click', this.restartGame);
+    }, { once: true });
     restartBtn.addEventListener('click', () => {
       this.restartGame();
     });
@@ -465,7 +438,7 @@ class Game {
   // 遊戲結束
   endGame() {
     this.isStart = false;
-    // 隱藏獲得電池資訊
+    // 隱藏電池分數資訊
     batteryInfo.style.opacity = 0;
     // 隱藏鍵盤指示
     keyboard.style.opacity = 0;
@@ -488,7 +461,7 @@ class Game {
   generateProp() {
 
   }
-  // 緩慢恢復 shooter 生命條
+  // 自動恢復 shooter 生命條
   recoverShooterHPBar() {
     this.recoverHPTimer = setTimeout(() => {
       if (this.isPause || !this.isStart) {
@@ -648,14 +621,14 @@ const enemyMethods = {
     shooterHPBar.style.width = `${shooterHPBarW < 0 ? 0 : shooterHPBarW}px`;
     if (shooterHPBarW <= 0) {
       const shooterHeart = document.querySelectorAll('.panel__game-heart');
-      // 如果 shooter 還有愛心命
+      // 如果 shooter 還有愛心
       if (shooterHeart.length) {
         // 減掉一個愛心
         shooterHeart[0].parentNode.removeChild(shooterHeart[0]);
         // 命條減 1/3
         shooterHPBar.style.width = `${shooterHPBarOriginW}px`;
       } else {
-        // 如果沒有，結束遊戲
+        // 如果沒有愛心，結束遊戲
         game.endGame();
       }
     }
@@ -665,15 +638,12 @@ const enemyMethods = {
 
 
 
-
-/* Circle Class */
+/**
+ * Circle Class
+ */
 class Circle {
   constructor(args) {
     const def = {
-      // axisRotatePos: {
-      //   x: gameW / 2,
-      //   y: gameH / 2,
-      // },
       axisRotateR: 0,
       axisRotateAngle: 0,
       r: 22,
@@ -784,7 +754,7 @@ class Circle {
     // 射 1-2 發
     for (let i = 0; i < 2 * Math.random(); i += 1) {
       const timer = setTimeout(() => {
-        this.bullets.push(new CircleBullet({
+        this.bullets.push(new CirBullet({
           p: {
             x: originalPos(this.axisRotateR, this.axisRotateAngle).x,
             y: originalPos(this.axisRotateR, this.axisRotateAngle).y,
@@ -844,20 +814,12 @@ class Circle {
 
 
 
-
-
-/* Triangle Class */
+/**
+ * Triangle Class
+ */
 class Triangle {
   constructor(args) {
     const def = {
-      // axisRotatePos: {
-      //   x: gameW / 2,
-      //   y: gameH / 2,
-      // },
-      // axisRotateR: {
-      //   x: 0,
-      //   y: 0,
-      // },
       axisRotateR: 0,
       axisRotateAngle: 0,
       r: 26,
@@ -882,9 +844,9 @@ class Triangle {
   draw() {
     this.beginAppear && this.appear(this.isBossGenerate);
     this.beginAppear = false;
-    const triangleOuterBigR = this.r + 4;
-    const triangleInnerBigR = this.r - 16;
-    const triangleInnerSmallR = this.r - 22;
+    const triOuterBigR = this.r + 4;
+    const triInnerBigR = this.r - 16;
+    const triInnerSmallR = this.r - 22;
     ctx.save();
       // 淡三角
       ctx.translate(originalPos(this.axisRotateR, this.axisRotateAngle).x, originalPos(this.axisRotateR, this.axisRotateAngle).y);
@@ -893,9 +855,9 @@ class Triangle {
       ctx.save();
         ctx.translate(4, 0);
         ctx.beginPath();
-        ctx.moveTo(triangleOuterBigR * Math.cos(60 * degToPi), triangleOuterBigR * Math.sin(60 * degToPi));
-        ctx.$triLineTo(triangleOuterBigR, 180);
-        ctx.$triLineTo(triangleOuterBigR, 300);
+        ctx.moveTo(triOuterBigR * Math.cos(60 * degToPi), triOuterBigR * Math.sin(60 * degToPi));
+        ctx.$triLineTo(triOuterBigR, 180);
+        ctx.$triLineTo(triOuterBigR, 300);
         ctx.closePath();
         ctx.fillStyle = 'rgba(54, 118, 187, 0.34)';
         ctx.fill();
@@ -913,16 +875,16 @@ class Triangle {
       ctx.fillStyle = globalColor.white;
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.$triLineTo(triangleInnerBigR, 90);
-      ctx.$triLineTo(triangleInnerBigR, 150);
+      ctx.$triLineTo(triInnerBigR, 90);
+      ctx.$triLineTo(triInnerBigR, 150);
       ctx.closePath();
       ctx.fill();
       // 小白三角
       ctx.translate(8 * Math.cos(-40 * degToPi), 8 * Math.sin(-40 * degToPi))
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.$triLineTo(triangleInnerSmallR, 90);
-      ctx.$triLineTo(triangleInnerSmallR, 150);
+      ctx.$triLineTo(triInnerSmallR, 90);
+      ctx.$triLineTo(triInnerSmallR, 150);
       ctx.closePath();
       ctx.fill();
     ctx.restore();
@@ -956,7 +918,7 @@ class Triangle {
         onComplete: () => {
           // 移動完後發射子彈
           this.shoot();
-          // 發射一顆子彈後，每 2.4 - 10.4 秒發射第二發子彈
+          // 發射一顆子彈後，每 2.4-10.4 秒發射第二發子彈
           this.shootTimer = setTimeout(() => {
             this.shoot();
           }, (Math.random() * 8000 + 2400));
@@ -964,21 +926,10 @@ class Triangle {
       });
       this.beforeRotateAxisAngleTime = rotateAxisAngleTime;
     }
-    // 每 2.4-3.6 秒，發射 1 發子彈
-    // const shootTime = new Date();
-    // if (shootTime - this.beforeShootTime > (Math.random() * 1200 + 2400)) {
-    //   if (!this.bullets.length) {
-    //     this.shoot();
-    //   }
-    // }
     // 當生命值剩 2，派副三角形攻擊
     if (this.HP === 2 && !this.isReproduce) {
       for (let i = 1; i <= 2; i += 1) {
-        game.subTriangles.push(new TriangleSub({
-          // axisRotateR: {
-          //   x: this.axisRotateR.x,
-          //   y: this.axisRotateR.y,
-          // },
+        game.subTriangles.push(new TriSub({
           axisRotateR: this.axisRotateR,
           axisRotateAngle: this.axisRotateAngle,
           rotate: this.rotate,
@@ -991,14 +942,13 @@ class Triangle {
     enemyMethods.hitShooter(game.triangles, idx, 'triangle', this.axisRotateR, this.axisRotateAngle);
   }
   shoot() {
-    this.bullets.push(new TriangleBullet({
+    this.bullets.push(new TriBullet({
       p: {
         x: originalPos(this.axisRotateR, this.axisRotateAngle).x,
         y: originalPos(this.axisRotateR, this.axisRotateAngle).y,
       },
       axisRotateR: this.axisRotateR,
       rotateAngle: this.rotate,
-      // rotate: this.rotate,
     }));
   }
   appear(isBossGenerate) {
@@ -1014,9 +964,6 @@ class Triangle {
         axisRotateAngle: `+=${rotateNum}`,
         axisRotateR: `+=${rNum}`,
         ease: Power2.easeOut,
-        // onComplete: () => {
-        //   this.isAppearing = false;
-        // },
       });
     }
     TweenLite.to(this, 1.6, {
@@ -1028,14 +975,12 @@ class Triangle {
 
 
 
-/* Polygon 類別 */
+/**
+ * Polygon Class
+ */
 class Polygon {
   constructor(args) {
     const def = {
-      // axisRotatePos: {
-      //   x: gameW / 2,
-      //   y: gameH / 2,
-      // },
       axisRotateR: {
         whole: 0,
         big: 0,
@@ -1061,11 +1006,6 @@ class Polygon {
         big: 2.4,
         small: 2.4,
       },
-      // axisRotateRA: {
-      //   whole: 0.01,
-      //   big: 0.01,
-      //   small: 0.01,
-      // },
       axisRotateAngleV: {
         whole: 0.4,
         big: 0.4,
@@ -1217,12 +1157,13 @@ class Polygon {
     if (!this.HP.whole) {
       this.isSplited = true;
     }
+    // 如果還未分裂
     if (!this.isSplited) {
       this.axisRotateR.whole = this.axisRotateR.big = this.axisRotateR.small -= this.axisRotateRV.whole;
       this.rotate.whole = this.rotate.big = this.rotate.small += this.rotateV.whole;
       // 當多邊形撞上 shooter
       enemyMethods.hitShooter(game.polygons, idx, 'whole', this.axisRotateR.whole, this.axisRotateAngle.whole);
-    } else {
+    } else { // 如果已經分裂
       if (!this.isSplitedMove) {
         // const rotateOriginPos = 90 - 70;
         // const rotateDirection = (((this.rotate.whole % 360) >= rotateOriginPos) && ((this.rotate.whole % 360) < (180 + rotateOriginPos))) ? -1 : 1;
@@ -1250,7 +1191,6 @@ class Polygon {
       // 當大分裂撞上 shooter
       if (this.HP.big && this.isSpliting) {
         this.axisRotateR.big -= this.axisRotateRV.big;
-        // this.axisRotateRV.big += this.axisRotateRA.big;
         enemyMethods.hitShooter(game.polygons, idx, 'big', this.axisRotateR.big, this.axisRotateAngle.big);
       }
       // 當小分裂撞上 shooter
@@ -1259,12 +1199,6 @@ class Polygon {
         enemyMethods.hitShooter(game.polygons, idx, 'small', this.axisRotateR.small, this.axisRotateAngle.small);
       }
     }
-    // if (!this.isInBoundary) {
-    //   this.p.x = -48;
-    //   this.p.y = -32;
-    //   this.v.x = 0.5 * Math.random() + 0.5;
-    //   this.v.y = 0.5 * Math.random() + 0.5;
-    // }
   }
   appear(isBossGenerate) {
     TweenLite.to(this, 0.8, {
@@ -1288,17 +1222,13 @@ class Polygon {
       });
     }
   }
-  // get isInBoundary() {
-  //   const xInRange = -48 <= this.p.x && this.p.x <= gameW + 48;
-  //   const yInRange = -48 <= this.p.y && this.p.y <= gameH + 48;
-  //   return xInRange && yInRange;
-  // }
 }
 
 
 
-
-
+/**
+ * Boss Class
+ */
 class Boss {
   constructor(args) {
     const def = {
@@ -1475,15 +1405,12 @@ class Boss {
 }
 
 
-/* Shooter 類別 */
-// let shooterBullets = [];
+/**
+ * Shooter Class
+ */
 class Shooter {
   constructor(args) {
     const def = {
-      // p: {
-      //   x: gameW / 2,
-      //   y: gameH / 2,
-      // },
       color: globalColor.white,
       // r: 34 * 0.85,
       r: 28.9,
@@ -1499,7 +1426,6 @@ class Shooter {
       states: [],
       isAttacked: false,
       isProtect: false,
-      // isGameEnd: false,
       beforeShootTime: new Date(),
     };
     Object.assign(def, args);
@@ -1509,7 +1435,6 @@ class Shooter {
     ctx.save();
       // 輪圍
       ctx.translate(gameW / 2, gameH / 2);
-      // ctx.rotate(this.rotateAngle);
       ctx.save();
         ctx.beginPath();
         ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
@@ -1522,7 +1447,6 @@ class Shooter {
           ctx.strokeStyle = globalColor.red;
           this.isAttacked = false;
         }
-        // ctx.strokeStyle = this.color;
         ctx.stroke();
         // 輪軸
         ctx.beginPath();
@@ -1557,7 +1481,7 @@ class Shooter {
       ctx.beginPath();
       ctx.lineWidth = this.shieldLineW;
       // 如果 shooter 狀態為 shield，護盾變為 180°
-      if (!this.judgeStatus('shield')) {
+      if (!this.judgeState('shield')) {
         ctx.arc(0, 0, this.shieldR, 135 * degToPi + this.rotateAngle, 225 * degToPi + this.rotateAngle);
       } else {
         ctx.arc(0, 0, this.shieldR, 90 * degToPi + this.rotateAngle, 270 * degToPi + this.rotateAngle);
@@ -1575,17 +1499,16 @@ class Shooter {
         ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
         ctx.shadowBlur = 16;
         ctx.rotate(this.rotateAngle);
-        // ctx.translate(this.r + 8, 0);
         ctx.translate(this.r + 8, 0);
         ctx.moveTo(0, 0);
         // 下方長方形長 16、寬（高） 12
         // 上方梯形高 14、上邊寬 8
-        // ctx.lineTo(0, 8 * 0.85);
-        // ctx.lineTo(12 * 0.85, 8 * 0.85);
-        // ctx.lineTo(26 * 0.85, 4 * 0.85);
-        // ctx.lineTo(26 * 0.85, -4 * 0.85);
-        // ctx.lineTo(12 * 0.85, -8 * 0.85);
-        // ctx.lineTo(0, -8 * 0.85);
+        // ctx.lineTo(0, 8);
+        // ctx.lineTo(12, 8);
+        // ctx.lineTo(26, 4);
+        // ctx.lineTo(26, -4);
+        // ctx.lineTo(12, -8);
+        // ctx.lineTo(0, -8);
         // 下方長方形長 13.6、寬（高） 10.2
         // 上方梯形高 11.8、上邊寬 6.8
         ctx.lineTo(0, 6.8);
@@ -1615,17 +1538,15 @@ class Shooter {
     if (shootTime - beforeShootTime > 400) {
       let bulletNum;
       // 如果 shooter 狀態為 double，每次射兩發，兩發之間隔 0.16 秒
-      if (!this.judgeStatus('double')) {
+      if (!this.judgeState('double')) {
         bulletNum = 1;
       } else {
         bulletNum = 2;
       }
       for (let i = 0; i < bulletNum; i++) {
-        if (!this.judgeStatus('wave')) {
+        if (!this.judgeState('wave')) {
           setTimeout(() => {
             this.bullets.push(new ShooterBullet({
-              // 34 + 12 + 16
-              // p: new Vec2(62, 0),
               // axisRotateR: 62 * 0.85,
               axisRotateR: 52.7,
               rotateAngle: mouseMoveAngle,
@@ -1678,18 +1599,18 @@ class Shooter {
       }
     }, lastTime);
     // 如果 shooter 狀態為 heart，就恢復一個愛心
-    if (this.judgeStatus('heart')) {
+    if (this.judgeState('heart')) {
       this.recoverHeart();
     }
     // 如果 shooter 狀態為 crackdown，就發出清場效果
-    if (this.judgeStatus('crackdown')) {
+    if (this.judgeState('crackdown')) {
       this.drawCrackdownEffect();
     }
     // 顯示道具效果持續時間
     this.displayPropInfo(propName, lastTime);
   }
-  judgeStatus(shooterStatus) {
-    return this.states.find((state) => state === shooterStatus);
+  judgeState(currentState) {
+    return this.states.find((state) => state === currentState);
   }
   // 繪製清場效果
   drawCrackdownEffect() {
@@ -1800,19 +1721,16 @@ class Shooter {
   }
 }
 
-// 以 x 為底的 y 的對數：logxy
-function baseLog(x, y) {
-  return Math.log(y) / Math.log(x);
-}
 
 
-/* Shooter 子彈 */
+/**
+ * Shooter 子彈
+ */
 class ShooterBullet {
   constructor(args) {
     const def = {
-      // p: new Vec2(0, 0),
-      // bodyLength: 15 * 0.85,
-      bodyLength: 12.75,
+      // bodyLen: 15 * 0.85,
+      bodyLen: 12.75,
       axisRotateR: 0,
       color: globalColor.white,
       v: 8,
@@ -1829,8 +1747,7 @@ class ShooterBullet {
     ctx.save();
       ctx.translate(gameW / 2, gameH / 2);
       ctx.rotate(this.rotateAngle);
-      // ctx.translate(this.p.x, this.p.y);
-      if (!game.shooter.judgeStatus('wave')) {
+      if (!game.shooter.judgeState('wave')) {
         // 殘影
         ctx.beginPath();
         ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
@@ -1857,7 +1774,7 @@ class ShooterBullet {
         ctx.beginPath();
         // ctx.moveTo(3 * 0.85 + this.axisRotateR, 3 * 0.85);
         ctx.moveTo(2.55 + this.axisRotateR, 2.55);
-        ctx.lineTo(this.bodyLength + this.axisRotateR, 0);
+        ctx.lineTo(this.bodyLen + this.axisRotateR, 0);
         // ctx.lineTo(3 * 0.85 + this.axisRotateR, -3 * 0.85);
         ctx.lineTo(2.55 + this.axisRotateR, -2.55);
         ctx.closePath();
@@ -1871,20 +1788,19 @@ class ShooterBullet {
   update(bulletIdx) {
     // 移動子彈
     this.axisRotateR += this.v;
-    // 判斷子彈為哪一類型
     let anglePanFn;
     let shotRRangeFn;
+    // 判斷子彈為哪一類型
     // 一般類型
-    if (!game.shooter.judgeStatus('wave')) {
-      const bulletMoveLength = this.axisRotateR + this.bodyLength;
+    if (!game.shooter.judgeState('wave')) {
+      const bulletMoveLen = this.axisRotateR + this.bodyLen;
       // 判斷子彈有無射中圓形
       game.circles.forEach((circle, cirIdx) => {
         anglePanFn = () => {
           return Math.asin(circle.r / circle.axisRotateR);
         }
         shotRRangeFn = () => {
-          // const bulletMoveLength = this.axisRotateR + this.bodyLength;
-          return (bulletMoveLength >= (circle.axisRotateR - (circle.r / 2))) && (bulletMoveLength <= (circle.axisRotateR + (circle.r / 2)));
+          return (bulletMoveLen >= (circle.axisRotateR - (circle.r / 2))) && (bulletMoveLen <= (circle.axisRotateR + (circle.r / 2)));
         }
         this.attackEnemy(circle, cirIdx, game.circles, bulletIdx, anglePanFn, shotRRangeFn, '245, 175, 95');
       });
@@ -1899,8 +1815,7 @@ class ShooterBullet {
           return Math.atan2(lengthY, lengthX);
         }
         shotRRangeFn = () => {
-          // const bulletMoveLength = this.axisRotateR + this.bodyLength;
-          return (bulletMoveLength >= triangle.axisRotateR) && (bulletMoveLength <= (triangle.axisRotateR + (triangle.r / 2)));
+          return (bulletMoveLen >= triangle.axisRotateR) && (bulletMoveLen <= (triangle.axisRotateR + (triangle.r / 2)));
         }
         this.attackEnemy(triangle, triIdx, game.triangles, bulletIdx, anglePanFn, shotRRangeFn, '54, 118, 187');
       });
@@ -1909,9 +1824,8 @@ class ShooterBullet {
         // 當多邊形未分裂
         if (polygon.HP.whole) {
           shotRRangeFn = () => {
-            // const bulletMoveLength = this.axisRotateR + this.bodyLength;
             const sideA = polygon.axisRotateR.whole;
-            return (bulletMoveLength >= sideA) && (bulletMoveLength <= (sideA + 9));
+            return (bulletMoveLen >= sideA) && (bulletMoveLen <= (sideA + 9));
           }
           this.attackPolygon(polygon, polyIdx, 'whole', 34, 21, (360 - (202 + 75)), (8 + 75), 75, bulletIdx, shotRRangeFn, '231, 70, 93');
         } else {
@@ -1919,18 +1833,16 @@ class ShooterBullet {
           // 大分裂
           if (polygon.HP.big) {
             shotRRangeFn = () => {
-              // const bulletMoveLength = this.axisRotateR + this.bodyLength;
               const sideA = polygon.axisRotateR.big;
-              return (bulletMoveLength >= sideA + 8) && (bulletMoveLength <= (sideA + 16));
+              return (bulletMoveLen >= sideA + 8) && (bulletMoveLen <= (sideA + 16));
             }
             this.attackPolygon(polygon, polyIdx, 'big', 34, 23, ((202 + 44) - 180), (180 - (70 + 44)), 44, bulletIdx, shotRRangeFn, '231, 70, 93');
           }
           // 小分裂
           if (polygon.HP.small) {
             shotRRangeFn = () => {
-              // const bulletMoveLength = this.axisRotateR + this.bodyLength;
               const sideA = polygon.axisRotateR.small;
-              return (bulletMoveLength >= sideA + 8) && (bulletMoveLength <= (sideA + 16));
+              return (bulletMoveLen >= sideA + 8) && (bulletMoveLen <= (sideA + 16));
             }
             this.attackPolygon(polygon, polyIdx, 'small', 22, 23, ((255 + 17.5) - 180), (180 - (70 + 17.5)), 17.5, bulletIdx, shotRRangeFn, '231, 70, 93');
           }
@@ -1963,7 +1875,7 @@ class ShooterBullet {
       });
       // 有無射中多邊形
       game.polygons.forEach((polygon, polyIdx) => {
-        // 當多邊形未分裂
+        // 當多邊形尚未分裂
         if (polygon.HP.whole) {
           shotRRangeFn = () => {
             const sideA = polygon.axisRotateR.whole;
@@ -1971,7 +1883,7 @@ class ShooterBullet {
           }
           this.attackPolygon(polygon, polyIdx, 'whole', 34, 21, (360 - (202 + 75)), (8 + 75), 75, bulletIdx, shotRRangeFn, '231, 70, 93', 'wave');
         } else {
-          // 當多邊形分裂
+          // 當多邊形已經分裂
           // 大分裂
           if (polygon.HP.big) {
             shotRRangeFn = () => {
@@ -1988,11 +1900,7 @@ class ShooterBullet {
             }
             this.attackPolygon(polygon, polyIdx, 'small', 22, 23, ((255 + 17.5) - 180), (180 - (70 + 17.5)), 17.5, bulletIdx, shotRRangeFn, '231, 70, 93', 'wave');
           }
-          // 移除大小分裂效果
-          // if (!polygon.HP.big) {
-          //   enemyMethods.dieEffect(enemy, enemy.r, colorRGB);
-          // }
-          // 如果大小分裂都被擊斃了，那就移除此多邊形
+          // 如果大小分裂都已被擊斃，移除此多邊形
           if (!polygon.HP.big && !polygon.HP.small) {
             game.polygons.splice(polyIdx, 1);
             // 電池加一
@@ -2160,14 +2068,12 @@ class ShooterBullet {
 
 
 
-/* Sub Triangle 類別 */
-class TriangleSub {;
+/**
+ * Sub-Triangle Class
+ */
+class TriSub {;
   constructor(args) {
     const def = {
-      // axisRotatePos: {
-      //   x: gameW / 2,
-      //   y: gameH / 2,
-      // },
       axisRotateR: 0,
       axisRotateAngle: 0,
       // r: 26 * 0.4,
@@ -2183,10 +2089,9 @@ class TriangleSub {;
     Object.assign(this, def);
   }
   draw() {
-    // const scale = 0.4;
-    const triangleOuterBigR = this.r + 1.6;
-    const triangleInnerBigR = this.r - 6.4;
-    const triangleInnerSmallR = this.r - 8.8;
+    const triOuterBigR = this.r + 1.6;
+    const triInnerBigR = this.r - 6.4;
+    const triInnerSmallR = this.r - 8.8;
     ctx.save();
       // 淡三角
       ctx.translate(originalPos(this.axisRotateR, this.axisRotateAngle).x, originalPos(this.axisRotateR, this.axisRotateAngle).y);
@@ -2195,9 +2100,9 @@ class TriangleSub {;
       ctx.save();
         ctx.translate(0.8, -Math.sqrt(1.92));
         ctx.beginPath();
-        ctx.moveTo(triangleOuterBigR * Math.cos(0), triangleOuterBigR * Math.sin(0));
-        ctx.lineTo(triangleOuterBigR * Math.cos(120 * degToPi), triangleOuterBigR * Math.sin(120 * degToPi));
-        ctx.lineTo(triangleOuterBigR * Math.cos(240 * degToPi), triangleOuterBigR * Math.sin(240 * degToPi));
+        ctx.moveTo(triOuterBigR * Math.cos(0), triOuterBigR * Math.sin(0));
+        ctx.lineTo(triOuterBigR * Math.cos(120 * degToPi), triOuterBigR * Math.sin(120 * degToPi));
+        ctx.lineTo(triOuterBigR * Math.cos(240 * degToPi), triOuterBigR * Math.sin(240 * degToPi));
         ctx.closePath();
         ctx.fillStyle = 'rgba(54, 118, 187, 0.34)';
         ctx.fill();
@@ -2215,16 +2120,16 @@ class TriangleSub {;
       ctx.fillStyle = globalColor.white;
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(triangleInnerBigR * Math.cos(30 * degToPi), triangleInnerBigR * Math.sin(30 * degToPi));
-      ctx.lineTo(triangleInnerBigR * Math.cos(90 * degToPi), triangleInnerBigR * Math.sin(90 * degToPi));
+      ctx.lineTo(triInnerBigR * Math.cos(30 * degToPi), triInnerBigR * Math.sin(30 * degToPi));
+      ctx.lineTo(triInnerBigR * Math.cos(90 * degToPi), triInnerBigR * Math.sin(90 * degToPi));
       ctx.closePath();
       ctx.fill();
       // 小白三角
       ctx.translate(0, -3.52);
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(triangleInnerSmallR * Math.cos(30 * degToPi), triangleInnerSmallR * Math.sin(30 * degToPi));
-      ctx.lineTo(triangleInnerSmallR * Math.cos(90 * degToPi), triangleInnerSmallR * Math.sin(90 * degToPi));
+      ctx.lineTo(triInnerSmallR * Math.cos(30 * degToPi), triInnerSmallR * Math.sin(30 * degToPi));
+      ctx.lineTo(triInnerSmallR * Math.cos(90 * degToPi), triInnerSmallR * Math.sin(90 * degToPi));
       ctx.closePath();
       ctx.fill();
     ctx.restore();
@@ -2250,8 +2155,10 @@ class TriangleSub {;
 }
 
 
-/* Circle 子彈 */
-class CircleBullet {
+/**
+ * Circle 子彈
+ */
+class CirBullet {
   constructor(args) {
     const def = {
       p: {
@@ -2272,12 +2179,8 @@ class CircleBullet {
     ctx.save();
       ctx.translate(this.p.x, this.p.y);
       ctx.rotate(this.rotateAngle * degToPi); 
-      // ctx.scale(1.6, 0.68);
-      // ctx.scale(1, 0.9);
       ctx.beginPath();
-      // ctx.arc(this.moveX + 22 + 10, 0, 4, 0, Math.PI * 2);
       ctx.arc(this.moveX, 0, 4, 0, Math.PI * 2);
-      // ctx.arc(this.axisRotateR + 16, 0, 4, 0, Math.PI * 2);
       ctx.fillStyle = this.color;
       ctx.fill();
     ctx.restore();
@@ -2291,8 +2194,10 @@ class CircleBullet {
 }
 
 
-/* Triangle 子彈 */
-class TriangleBullet {;
+/**
+ * Triangle 子彈
+ */
+class TriBullet {;
   constructor(args) {
     const def = {
       p: {
@@ -2349,7 +2254,6 @@ class TriangleBullet {;
 
 
 
-
 // 繪製電池
 function drawBattery(p) {
   ctx.save();
@@ -2387,54 +2291,11 @@ function drawBattery(p) {
       ctx.fill();
     ctx.restore();
     // 閃電
-    // ctx.strokeStyle = globalColor.white;
     drawLightning({ x: -11, y: 9 });
-    // ctx.translate(-11, 9);
-    // ctx.beginPath();
-    // ctx.moveTo(0, 0);
-    // ctx.rotate(18 * degToPi);
-    // ctx.lineTo(0, 10);
-    // ctx.translate(0, 10);
-    // ctx.rotate(-18 * degToPi);
-
-    // ctx.lineTo(10, 0);
-    // ctx.translate(10, 0);
-
-    // ctx.rotate(28 * degToPi);
-    // ctx.lineTo(0, 16);
-    // ctx.translate(0, 16);
-    // ctx.rotate(-28 * degToPi);
-
-    // ctx.rotate(3.6 * degToPi);
-    // ctx.lineTo(0, -10);
-    // ctx.translate(0, -10);
-    // ctx.rotate(-3.6 * degToPi);
-
-    // ctx.lineTo(-8, 0);
-    // ctx.closePath();
-    // ctx.fill();
   ctx.restore();
 }
-
-
-function originalPos(axisRotateR, axisRotateAngle) {
-  return {
-    x: (gameW / 2) + axisRotateR * Math.cos(axisRotateAngle * degToPi),
-    y: (gameH / 2) + axisRotateR * Math.sin(axisRotateAngle * degToPi),
-  };
-}
-
-// 餘弦定理
-function cosineFormula(a, b, angle) {
-  return Math.sqrt(a * a + b * b - 2 * a * b * Math.cos(angle * degToPi));
-}
-
-function getAngleB(a, b, c) {
-  return Math.acos((a * a + c * c - b * b) / (2 * a * c));
-}
-
 // 繪製閃電
-function drawLightning(translate =  { x: 0, y: 0 }, scale = 1 ) {
+function drawLightning(translate = { x: 0, y: 0 }, scale = 1) {
   ctx.fillStyle = globalColor.white;
   ctx.translate(translate.x, translate.y);
   ctx.beginPath();
@@ -2462,16 +2323,34 @@ function drawLightning(translate =  { x: 0, y: 0 }, scale = 1 ) {
   ctx.fill();
 }
 
+function originalPos(axisRotateR, axisRotateAngle) {
+  return {
+    x: (gameW / 2) + axisRotateR * Math.cos(axisRotateAngle * degToPi),
+    y: (gameH / 2) + axisRotateR * Math.sin(axisRotateAngle * degToPi),
+  };
+}
+// 以 x 為底的 y 的對數：logxy
+function baseLog(x, y) {
+  return Math.log(y) / Math.log(x);
+}
+// 餘弦定理
+function cosineFormula(a, b, angle) {
+  return Math.sqrt(a * a + b * b - 2 * a * b * Math.cos(angle * degToPi));
+}
+
+function getAngleB(a, b, c) {
+  return Math.acos((a * a + c * c - b * b) / (2 * a * c));
+}
 
 
 
 
-/* Page Loaded */
+
+// Page Loaded
 function handleLoad() {
   game = new Game();
   initCanvas();
   game.init();
-  // init();
   // requestAnimationFrame(draw);
   // setInterval(update, 1000 / updateFPS);
 }
@@ -2482,31 +2361,15 @@ window.addEventListener('resize', initCanvas);
 
 
 
-
-
-/* Mouse Events & Recording */
-// const mouseMovePos = new Vec2(0, 0);
+// Mouse Events & Recording
 let mouseMovePos = {};
 let mouseMoveAngle = 0;
-// let mouseUpPos = new Vec2(0, 0);
-// let mouseDownPos = new Vec2(0, 0);
-
-// window.addEventListener('mousemove', handleMouseMove);
-// window.addEventListener('mouseup', handleMouseUp);
-// window.addEventListener('mousedown', handleMouseDown);
-// canvas.addEventListener('mousemove', handleMouseMove);
-
 function handleMouseMove(evt) {
-  // if (game.isPause) return;
   mouseMovePos.x = evt.x - ww / 2;
   mouseMovePos.y = evt.y - wh / 2;
   const angle = Math.atan2(mouseMovePos.y, mouseMovePos.x);
   mouseMoveAngle = angle < 0 ? (angle + 2 * Math.PI) : angle;
-  // mouseMoveAngle = Math.atan2(mouseMovePos.y, mouseMovePos.x);
 };
-
-// canvas.addEventListener('click', handleClick);
-// window.addEventListener('keyup', handleKeyup);
 
 let beforeShootTime = new Date();
 function handleClick() {
@@ -2522,11 +2385,3 @@ function handleKeyup(evt) {
     game.pauseGame();
   }
 }
-
-// function handleMouseUp(evt) {
-//   mouseUpPos = mouseMovePos.clone();
-// }
-
-// function handleMouseDown(evt) {
-//   mouseDownPos = mouseMovePos.clone();
-// }
