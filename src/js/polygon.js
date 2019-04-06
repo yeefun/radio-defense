@@ -1,0 +1,254 @@
+class Polygon {
+  constructor(args) {
+    const def = {
+      axisRotateR: {
+        whole: 0,
+        big: 0,
+        small: 0,
+      },
+      axisRotateAngle: {
+        whole: 0,
+        big: 0,
+        small: 0,
+      },
+      rotate: {
+        whole: 0,
+        big: 0,
+        small: 0,
+      },
+      HP: {
+        whole: 1,
+        big: 1,
+        small: 1,
+      },
+      axisRotateRV: 0,
+      axisRotateAngleV: {
+        whole: 0.4,
+        big: 0.4,
+        small: 0.4,
+      },
+      rotateV: {
+        whole: 0.4,
+        big: 0.4,
+        small: 0.4,
+      },
+      color: globalColor.red,
+      // 是否已經分裂
+      isSplited: false,
+      // 是否正好要分裂
+      isJustSplite: true,
+      // 是否正在進行分裂
+      // isSpliting: true,
+      scale: 0,
+      beginAppear: true,
+      isBossGenerate: false,
+    }
+    Object.assign(def, args);
+    Object.assign(this, def);
+  }
+
+
+  originalPos(form) {
+    return {
+      x: (gameW / 2) + this.axisRotateR[form] * Math.cos(this.axisRotateAngle[form] * degToPi),
+      y: (gameH / 2) + this.axisRotateR[form] * Math.sin(this.axisRotateAngle[form] * degToPi),
+    };
+  }
+
+
+  draw() {
+    if (this.HP.whole) {
+      ctx.save();
+      ctx.translate(this.originalPos('whole').x, this.originalPos('whole').y);
+      ctx.rotate(this.rotate.whole * degToPi);
+      ctx.scale(this.scale, this.scale);
+      // 主體多邊形
+      ctx.beginPath();
+      ctx.fillStyle = this.color;
+      ctx.moveTo(21 * Math.cos(8 * degToPi), 21 * Math.sin(8 * degToPi));
+      ctx.$triLineTo(23, 70);
+      ctx.$triLineTo(23, 150);
+      ctx.$triLineTo(34, 202);
+      ctx.$triLineTo(22, 255);
+      ctx.$triLineTo(22, 324);
+      ctx.closePath();
+      ctx.fill();
+      // 右淡五邊形
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
+      ctx.moveTo(9.6, -2);
+      ctx.$triLineTo(22, 324);
+      ctx.$triLineTo(21, 8);
+      ctx.$triLineTo(23, 70);
+      ctx.$triLineTo(10, 36);
+      ctx.closePath();
+      ctx.fill();
+      // 下淡四邊形
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.21)';
+      ctx.moveTo(10 * Math.cos(40 * degToPi), 10 * Math.sin(40 * degToPi));
+      ctx.$triLineTo(23, 70);
+      ctx.$triLineTo(23, 150);
+      ctx.lineTo(-8.8, 0);
+      ctx.closePath();
+      ctx.fill();
+      // 閃電
+      drawLightning({
+        x: -0.8,
+        y: -16
+      });
+      ctx.restore();
+    } else {
+      // 大分裂四邊形
+      if (this.HP.big) {
+        ctx.save();
+        ctx.translate(this.originalPos('big').x, this.originalPos('big').y);
+        ctx.rotate(this.rotate.big * degToPi);
+        // 大分裂主體
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.moveTo(23 * Math.cos(70 * degToPi), 23 * Math.sin(70 * degToPi));
+        ctx.$triLineTo(23, 150);
+        ctx.$triLineTo(34, 202);
+        ctx.$triLineTo(22, 255);
+        ctx.closePath();
+        ctx.fill();
+        // 大分裂內下四邊形
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.21)';
+        ctx.beginPath();
+        ctx.moveTo(-8.8, 0);
+        ctx.$triLineTo(4.8, 64);
+        ctx.$triLineTo(23, 70);
+        ctx.$triLineTo(23, 150);
+        ctx.closePath();
+        ctx.fill();
+        // 大分裂左閃電
+        drawLightning({
+          x: -12,
+          y: -8
+        }, 0.6);
+        ctx.restore();
+      }
+      // 小分裂四邊形
+      if (this.HP.small) {
+        ctx.save();
+        ctx.translate(this.originalPos('small').x, this.originalPos('small').y);
+        ctx.rotate(this.rotate.small * degToPi);
+        // 小分裂主體
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.moveTo(23 * Math.cos(70 * degToPi), 23 * Math.sin(70 * degToPi));
+        ctx.$triLineTo(22, 255);
+        ctx.$triLineTo(22, 324);
+        ctx.$triLineTo(21, 8);
+        ctx.closePath();
+        ctx.fill();
+        // 小分裂內下三角形
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.21)';
+        ctx.moveTo(10 * Math.cos(40 * degToPi), 10 * Math.sin(40 * degToPi));
+        ctx.$triLineTo(4.8, 64);
+        ctx.$triLineTo(23, 70);
+        ctx.closePath();
+        ctx.fill();
+        // 小分裂內右五邊形
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
+        ctx.moveTo(9.6, -2);
+        ctx.$triLineTo(22, 324);
+        ctx.$triLineTo(21, 8);
+        ctx.$triLineTo(23, 70);
+        ctx.$triLineTo(10, 36);
+        ctx.closePath();
+        ctx.fill();
+        // ctx.fillStyle = 'yellow';
+        // ctx.beginPath();
+        // ctx.arc(0, 0, 2, 0, Math.PI * 2)
+        // ctx.fill();
+        // 小分裂閃電
+        drawLightning({
+          x: 10,
+          y: -8
+        }, 0.5);
+        ctx.restore();
+      }
+    }
+  }
+
+
+  update(idx) {
+    this.beginAppear && this.appear(this.isBossGenerate);
+    this.beginAppear = false;
+    enemyMethods.approach(this);
+    // if (!this.HP.whole) {
+    //   this.isSplited = true;
+    // }
+    // 如果尚未分裂
+    // if (!this.isSplited) {
+    if (this.HP.whole) {
+      this.rotate.whole = this.rotate.big = this.rotate.small += this.rotateV.whole;
+      // 當多邊形撞上 shooter
+      enemyMethods.hitShooter(game.polygons, idx, 'polyWhole', this.axisRotateR.whole, this.axisRotateAngle.whole);
+    } else {
+      // 如果正好要分裂
+      if (this.isJustSplite) {
+        // const rotateOriginPos = 90 - 70;
+        // const rotateDirection = (((this.rotate.whole % 360) >= rotateOriginPos) && ((this.rotate.whole % 360) < (180 + rotateOriginPos))) ? -1 : 1;
+        const rotateDirection = Math.random() > 0.5 ? 1 : -1;
+        TweenLite.to(this.axisRotateAngle, 2.4, {
+          big: `+=${(Math.random() * 15 + 15) * rotateDirection}`,
+          small: `-=${(Math.random() * 15 + 15) * rotateDirection}`,
+          ease: Circ.easeOut,
+        });
+        TweenLite.to(this.axisRotateR, 2.4, {
+          big: `+=${(Math.random() * 100 + 50)}`,
+          small: `+=${(Math.random() * 100 + 50)}`,
+          ease: Circ.easeOut,
+          onComplete: () => {
+            // this.isSpliting = false;
+            // 處於已分裂狀態
+            this.isSplited = true;
+          }
+        });
+        TweenLite.to(this.rotate, 3.2, {
+          big: `-=${Math.random() * 90 + 180}`,
+          small: `+=${Math.random() * 90 + 180}`,
+          ease: Power2.easeOut,
+        });
+        this.isJustSplite = false;
+      }
+      // 當大分裂撞上 shooter
+      if (this.HP.big && this.isSplited) {
+        enemyMethods.hitShooter(game.polygons, idx, 'polyBig', this.axisRotateR.big, this.axisRotateAngle.big);
+      }
+      // 當小分裂撞上 shooter
+      if (this.HP.small && this.isSplited) {
+        enemyMethods.hitShooter(game.polygons, idx, 'polySmall', this.axisRotateR.small, this.axisRotateAngle.small);
+      }
+    }
+  }
+
+
+  appear(isBossGenerate) {
+    TweenLite.to(this, 0.8, {
+      scale: 1,
+      ease: Back.easeOut.config(1.7),
+    });
+    if (isBossGenerate) {
+      const rotateNum = Math.random() * 40 + 40;
+      const rNum = Math.random() * 40 + 40;
+      TweenLite.to(this.axisRotateAngle, 1.6, {
+        whole: `-=${rotateNum}`,
+        big: `-=${rotateNum}`,
+        small: `-=${rotateNum}`,
+        ease: Power2.easeOut,
+      });
+      TweenLite.to(this.axisRotateR, 1.6, {
+        whole: `+=${rNum}`,
+        big: `+=${rNum}`,
+        small: `+=${rNum}`,
+        ease: Power2.easeOut,
+      });
+    }
+  }
+}
