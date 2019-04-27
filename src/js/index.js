@@ -9,7 +9,8 @@ const globalColor = {
   blue: '#3676bb',
   blueDark: '#001d2e',
   white: '#fff',
-};
+}
+const props = ['shield', 'double', 'heart', 'crackdown', 'wave'];
 
 
 /* GUI Controls */
@@ -60,7 +61,7 @@ function initCanvas() {
 
 
 
-const degToPi = Math.PI / 180;
+const degToPi = (Math.PI / 180);
 let coverCircle;
 let coverTriangle;
 let coverPolygon;
@@ -72,8 +73,6 @@ class Game {
   constructor(args) {
     const def = {
       shooter: null,
-      // currentLevel: 1,
-      // inLevel1: false,
       props: [],
       batteryNum: 0,
       circles: [],
@@ -81,13 +80,16 @@ class Game {
       polygons: [],
       subTris: [],
       isStart: true,
+      // isStarting: true,
       isPause: false,
       blockV: {
         x: -2,
         y: 2,
       },
+      currentLevel: 0,
+      downTime: 0,
       recoverHPTimer: null,
-      // countdownTimer: null,
+      countdownTimer: null,
       boss: null,
     };
     Object.assign(def, args);
@@ -177,11 +179,6 @@ class Game {
   update() {
     updateTime += 1;
     if (this.isStart && !this.isPause) {
-      // 判斷現在是第幾關
-      // if (this.currentLevel === 1 && !this.inLevel1) {
-      //   this.setLevel1();
-      //   this.inLevel1 = true;
-      // }
       // 更新 shooter
       this.shooter.update();
       // 更新每個 circle
@@ -206,8 +203,6 @@ class Game {
       });
       // 更新魔王
       this.boss && this.boss.update();
-      // 產生道具
-      this.generateProp();
     }
     setTimeout(() => {
       this.update();
@@ -320,23 +315,38 @@ class Game {
     // 讓滑鼠點擊無效
     panel.style.pointerEvents = 'none';
     // 倒數計時 3 秒
-    let time = 3;
+    this.downTime = 3;
     gameCrawler.textContent = 'READY!';
-    gameTime.textContent = `00:0${time}”`;
+    gameTime.textContent = `00:0${this.downTime}”`;
     const countdownStartTime = () => {
       setTimeout(() => {
-        if (!time) {
-          this.setLevel(1);
-          return
+        if (!this.downTime) {
+          this.currentLevel += 1;
+          this.setLevel(this.currentLevel);
+          // 開始產生道具
+          this.generateProp();
+          // 定時清除跑馬燈
+          const clearCrawler = () => {
+            gameCrawler.textContent = '';
+            setTimeout(clearCrawler, 2000);
+          }
+          clearCrawler();
+          return;
         }
-        time -= 1;
-        gameTime.textContent = `00:0${time}”`;
-        if (time === 2) {
-          gameCrawler.textContent = 'READY!!';
-        } else if (time === 1) {
-          gameCrawler.textContent = 'READY!!!';
-        } else if (!time) {
-          gameCrawler.textContent = 'GO!';
+        this.downTime -= 1;
+        gameTime.textContent = `00:0${this.downTime}”`;
+        switch (this.downTime) {
+          case 2:
+            gameCrawler.textContent = 'READY!!';
+            break;
+          case 1:
+            gameCrawler.textContent = 'READY!!!';
+            break;
+          case 0:
+            gameCrawler.textContent = 'GO!';
+            break;
+          default:
+            break;
         }
         countdownStartTime();
       }, 1000);
@@ -364,7 +374,7 @@ class Game {
     batteryInfo.style.opacity = 1;
     // 顯示鍵盤指示
     keyboard.style.opacity = 1;
-    this.inLevel1 = false;
+    // this.inLevel1 = false;
   }
   // 遊戲結束
   endGame() {
@@ -386,22 +396,36 @@ class Game {
   }
   // 暫停遊戲
   pauseGame() {
+    if (!this.currentLevel) return;
     this.isPause = !this.isPause;
+    if (this.isPause) {
+      clearTimeout(this.countdownTimer);
+    } else {
+      this.countdownTime();
+    }
   }
   // 產生道具
   generateProp() {
-
-  }
-  countdownTime(time, level) {
     setTimeout(() => {
-      if (!time) {
-        const nextLevel = level + 1;
-        this.setLevel(nextLevel);
+      this.props.push(new Prop({
+        src: `../img/${props[Math.floor(Math.random() * 5)]}.svg`,
+        axisRotateR: 200,
+        axisRotateAngle: 40,
+      }));
+      this.generateProp();
+    }, 2000);
+  }
+  countdownTime() {
+    this.countdownTimer = setTimeout(() => {
+      if (!this.downTime) {
+        this.currentLevel += 1;
+        this.setLevel(this.currentLevel);
         return;
       }
-      time -= 1;
-      gameTime.textContent = `00:${time < 10 ? `0${time}` : time}”`;
-      this.countdownTime(time, level);
+      this.downTime -= 1;
+      gameTime.textContent = `00:${this.downTime < 10 ? `0${this.downTime}` : this.downTime}”`;
+      // gameTime.textContent = `00:${this.downTime}”`;
+      this.countdownTime();
     }, 1000);
   }
   // 自動恢復 shooter 生命條
@@ -421,26 +445,39 @@ class Game {
   }
   // 設定關卡
   setLevel(level) {
-    let time;
     switch (level) {
       case 1:
-        time = 4;
-        gameTime.textContent = `00:0${time}”`;
+        this.downTime = 4;
+        gameTime.textContent = `00:0${this.downTime}”`;
         gameLevel.textContent = 'Wave 01';
-        gameCrawler.textContent = 'ENEMIES COMING';
-        this.countdownTime(time, level);
-        this.circles.push(new Circle({
-          axisRotateR: 240,
-          axisRotateAngle: 270,
-          rotate: 235,
-        }));
+        this.countdownTime();
+        // this.props.push(new Prop({
+        //   src: '../img/wave.svg',
+        //   axisRotateR: 200,
+        //   axisRotateAngle: 40,
+        // }));
+        // this.props.push(new Prop({
+        //   src: '../img/double.svg',
+        //   axisRotateR: 200,
+        //   axisRotateAngle: 80,
+        // }));
+        // this.circles.push(new Circle({
+        //   axisRotateR: 240,
+        //   axisRotateAngle: 0,
+        //   rotate: 235,
+        // }));
+        // this.triangles.push(new Triangle({
+        //   axisRotateR: 280,
+        //   // axisRotateAngle 與 rotate 必須相同
+        //   axisRotateAngle: 230,
+        //   rotate: 230,
+        // }));
         break;
       case 2:
-        time = 5;
-        gameTime.textContent = `00:0${time}”`;
+        this.downTime = 5;
+        gameTime.textContent = `00:0${this.downTime}”`;
         gameLevel.textContent = 'Wave 02';
-        gameCrawler.textContent = 'BOSS COMING';
-        this.countdownTime(time, level);
+        this.countdownTime();
         break;
       default:
         break;
@@ -510,6 +547,7 @@ function handleMouseMove(evt) {
   mouseMovePos.y = evt.y - wh / 2;
   const angle = Math.atan2(mouseMovePos.y, mouseMovePos.x);
   mouseMoveAngle = angle < 0 ? (angle + 2 * Math.PI) : angle;
+  // mouseMoveAngle = Math.abs(angle);
 };
 
 let beforeShootTime = new Date();

@@ -170,8 +170,8 @@ class Shooter {
         lastTime = 20000;
         break;
       case 'wave':
-        lastTime = 30000;
-        // lastTime = 2000;
+        // lastTime = 30000;
+        lastTime = 11000;
         break;
       default:
         lastTime = 0;
@@ -206,8 +206,10 @@ class Shooter {
   drawCrackdownEffect() {
     let crackdownTime = 1;
     const effect = () => {
+      if (!game.isPause) {
+        crackdownTime += 1;
+      }
       ctx.save();
-      crackdownTime += 1;
       ctx.beginPath();
       ctx.shadowColor = 'rgba(255, 255, 255, 0.72)';
       ctx.shadowBlur = 2;
@@ -278,12 +280,10 @@ class Shooter {
     heartWrapper.insertBefore(heart, heartWrapper.firstChild);
   }
   displayPropInfo(propName, lastTime) {
-    if (propName === 'crackdown' || propName === 'heart') {
-      return;
-    }
+    if (propName === 'crackdown' || propName === 'heart') return;
     prop.style.opacity = 1;
     propImg.src = `../img/${propName}--panel.svg`;
-    lastTime /= 1000;
+    lastTime /= 1000;  
     propLastTime.textContent = lastTime;
     const countLastTime = () => {
       const propInfoTimer = setTimeout(() => {
@@ -298,7 +298,7 @@ class Shooter {
           return;
         }
         lastTime -= 1;
-        propLastTime.textContent = lastTime;
+        propLastTime.textContent = lastTime >= 10 ? lastTime : `0${lastTime}`;
         if (lastTime) {
           countLastTime();
         } else {

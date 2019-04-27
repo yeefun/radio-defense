@@ -11,6 +11,7 @@ const enemyMethods = {
       const shooterBody = (shooter.r + (shooter.cirSolidLineW / 2));
       const distance = (isPolygon ? axisRotateR.whole : (axisRotateR - enemy.r)) - shooterBody;
       const seconds = 30 + (10 * Math.random());
+      // const seconds = 100 + (10 * Math.random());
       enemy.axisRotateRV = -(distance / (seconds * updateFPS));
     }
     if (isPolygon) {
@@ -106,9 +107,10 @@ const enemyMethods = {
       bullets.splice(bulletIdx, 1);
     }
     // 當敵人子彈射中 shooter 的護盾
-    // FIXME Circle 轉到 0-180 時，護盾檔不住
-    const angleGap = Math.abs(mouseMoveAngle - (bullet.rotateAngle % 360) * degToPi);
-    const shieldAngleRange = angleGap >= (135 * degToPi) && angleGap <= (225 * degToPi);
+    // const angleGap = Math.abs(mouseMoveAngle - (bullet.rotateAngle % 360) * degToPi);
+    // const shieldAngleRange = angleGap >= (135 * degToPi) && angleGap <= (225 * degToPi);
+    const angleGap = Math.abs((mouseMoveAngle / degToPi) - ((bullet.rotateAngle % 360) + (bullet.rotateAngle < 0 ? 360 : 0)));
+    const shieldAngleRange = (angleGap >= 135) && (angleGap <= 225);
     if (shieldAngleRange && (-bullet.moveX >= (bullet.axisRotateR - (shooterShield + bulletLen)))) {
       // 移除子彈
       bullets.splice(bulletIdx, 1);

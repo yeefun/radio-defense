@@ -133,6 +133,7 @@ canvas {
           bottom: 12px;
           display: flex;
           align-items: flex-start;
+          font-weight: 300;
           & img {
             // width: 25.5px;
             width: 25px;
@@ -154,16 +155,23 @@ canvas {
     &-time {
       font-size: 4.8rem;
       font-weight: 500;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
     &-alert, &-level {
-      font-size: 1.8rem;
+      // font-size: 1.8rem;
       color: #f5af5f;
-      font-weight: 300;
+      // font-weight: 300;
+      // 130.95 - 109.83
       margin-left: -21.12px;
     }
+    &-level {
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+    }
     &-alert {
-      margin-bottom: 4px;
+      font-weight: 300;
+      margin-bottom: 6px;
+      font-size: 1.8rem;
       display: flex;
       align-items: center;
     }
@@ -214,7 +222,7 @@ canvas {
       display: flex;
       align-items: center;
       border: 0.8px solid #fff;
-      padding: 6px 18px;
+      padding: 8px 18px;
       // display: none;
       opacity: 0;
       // height: 32px;
@@ -232,7 +240,7 @@ canvas {
         font-size: 2rem;
         // line-height: 1.2;
         // line-height: 1.1;
-        // font-weight: 300;
+        font-weight: 300;
       }
     }
     &-end {

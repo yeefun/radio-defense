@@ -112,6 +112,7 @@ class Circle {
 
   shoot() {
     // 射 1-2 發
+    gameCrawler.textContent = 'ATTACK!';
     for (let i = 0; i < 2 * Math.random(); i += 1) {
       const timer = setTimeout(() => {
         this.bullets.push(new CirBullet({
@@ -132,6 +133,7 @@ class Circle {
 
 
   appear(isBossGenerate) {
+    gameCrawler.textContent = 'ENEMY IS COMING';
     TweenLite.to(this, 0.8, {
       scale: 1,
       ease: Back.easeOut.config(1.7),
@@ -169,6 +171,7 @@ class CirBullet {
     Object.assign(this, def);
   }
   draw() {
+    // console.log(this.rotateAngle);
     ctx.save();
       ctx.translate(this.p.x, this.p.y);
       ctx.rotate(this.rotateAngle * degToPi); 
