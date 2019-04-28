@@ -10,7 +10,7 @@ const globalColor = {
   blueDark: '#001d2e',
   white: '#fff',
 }
-const props = ['shield', 'double', 'heart', 'crackdown', 'wave'];
+const props = ['heart', 'crackdown', 'shield', 'double', 'wave'];
 
 
 /* GUI Controls */
@@ -29,6 +29,7 @@ const cover = document.getElementById('cover');
 const gamePanel = document.getElementById('game-panel');
 const batteryInfo = document.getElementById('battery-info');
 const shooterHPBar = document.getElementById('hp');
+const heartWrapper = document.getElementById('heart-wrapper');
 const prop = document.getElementById('prop');
 const propImg = document.getElementById('prop__img');
 const propLastTime = document.getElementById('prop__last-time');
@@ -51,17 +52,19 @@ let ww;
 let wh;
 let gameW;
 let gameH;
+let gameHalfDiagonalL;
 
 function initCanvas() {
   gameW = canvas.width;
   gameH = canvas.height;
+  gameHalfDiagonalL = Math.round(Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 2);
   ww = document.documentElement.clientWidth;
   wh = document.documentElement.clientHeight;
 }
 
 
 
-const degToPi = (Math.PI / 180);
+const degToPi = Math.PI / 180;
 let coverCircle;
 let coverTriangle;
 let coverPolygon;
@@ -73,14 +76,14 @@ class Game {
   constructor(args) {
     const def = {
       shooter: null,
-      props: [],
+      prop: null,
+      propName: '',
       batteryNum: 0,
       circles: [],
       triangles: [],
       polygons: [],
       subTris: [],
       isStart: true,
-      // isStarting: true,
       isPause: false,
       blockV: {
         x: -2,
@@ -90,6 +93,8 @@ class Game {
       downTime: 0,
       recoverHPTimer: null,
       countdownTimer: null,
+      generatePropTimer: null,
+      generatePropInterval: 20,
       boss: null,
     };
     Object.assign(def, args);
@@ -159,10 +164,8 @@ class Game {
     this.subTris.forEach((subTriangle) => {
       subTriangle.draw();
     });
-    // 繪製每個 prop（道具）
-    this.props.forEach((prop) => {
-      prop.draw();
-    });
+    // 繪製 prop（道具）
+    this.prop && this.prop.draw();
     // 繪製魔王
     this.boss && this.boss.draw();
     // 繪製滑鼠
@@ -197,10 +200,8 @@ class Game {
       this.subTris.forEach((subTriangle, idx) => {
         subTriangle.update(idx);
       });
-      // 更新每個 prop（道具）
-      this.props.forEach((prop, idx) => {
-        prop.update(idx);
-      });
+      // 更新 prop（道具）
+      this.prop && this.prop.update();
       // 更新魔王
       this.boss && this.boss.update();
     }
@@ -400,20 +401,38 @@ class Game {
     this.isPause = !this.isPause;
     if (this.isPause) {
       clearTimeout(this.countdownTimer);
+      clearTimeout(this.generatePropTimer);
     } else {
       this.countdownTime();
+      this.generateProp();
     }
   }
   // 產生道具
   generateProp() {
-    setTimeout(() => {
-      this.props.push(new Prop({
-        src: `../img/${props[Math.floor(Math.random() * 5)]}.svg`,
-        axisRotateR: 200,
-        axisRotateAngle: 40,
-      }));
+    if (!this.propName) {
+      // 如果已經有 5 顆心，便排除愛心
+      if (this.shooter.hearts === 5) {
+        this.propName = props[getRandom(1, 4)];
+      } else {
+        this.propName = props[getRandom(0, 4)];
+      }
+    }
+    // 在當前有道具起作用的狀況下，如果道具不是愛心或清場，那就繼續停止計時
+    if (this.prop && this.propName !== 'heart' && this.propName !== 'crackdown') return;
+    this.generatePropTimer = setTimeout(() => {
+      this.generatePropInterval -= 1;
+      if (this.generatePropInterval === 0) {
+        this.prop = new Prop({
+          src: `../img/${this.propName}.svg`,
+          axisRotateR: Math.random() + gameHalfDiagonalL,
+          axisRotateAngle: Math.random() * 360,
+        });
+        this.propName = '';
+        // 每 20 秒產生一個道具
+        this.generatePropInterval = 20;
+      }
       this.generateProp();
-    }, 2000);
+    }, 100);
   }
   countdownTime() {
     this.countdownTimer = setTimeout(() => {
@@ -451,27 +470,6 @@ class Game {
         gameTime.textContent = `00:0${this.downTime}”`;
         gameLevel.textContent = 'Wave 01';
         this.countdownTime();
-        // this.props.push(new Prop({
-        //   src: '../img/wave.svg',
-        //   axisRotateR: 200,
-        //   axisRotateAngle: 40,
-        // }));
-        // this.props.push(new Prop({
-        //   src: '../img/double.svg',
-        //   axisRotateR: 200,
-        //   axisRotateAngle: 80,
-        // }));
-        // this.circles.push(new Circle({
-        //   axisRotateR: 240,
-        //   axisRotateAngle: 0,
-        //   rotate: 235,
-        // }));
-        // this.triangles.push(new Triangle({
-        //   axisRotateR: 280,
-        //   // axisRotateAngle 與 rotate 必須相同
-        //   axisRotateAngle: 230,
-        //   rotate: 230,
-        // }));
         break;
       case 2:
         this.downTime = 5;
@@ -485,12 +483,7 @@ class Game {
     // this.boss = new Boss({
     //   axisRotateR: 200,
     //   axisRotateAngle: 90,
-    // });
-    // this.props.push(new Prop({
-    //   src: '../img/wave.svg',
-    //   axisRotateR: 200,
-    //   axisRotateAngle: 40,
-    // }));
+    // });;
     // this.circles.push(new Circle({
     //   axisRotateR: 240,
     //   axisRotateAngle: 270,
@@ -547,7 +540,6 @@ function handleMouseMove(evt) {
   mouseMovePos.y = evt.y - wh / 2;
   const angle = Math.atan2(mouseMovePos.y, mouseMovePos.x);
   mouseMoveAngle = angle < 0 ? (angle + 2 * Math.PI) : angle;
-  // mouseMoveAngle = Math.abs(angle);
 };
 
 let beforeShootTime = new Date();

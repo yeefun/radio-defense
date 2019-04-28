@@ -10,8 +10,7 @@ const enemyMethods = {
       const shooter = game.shooter;
       const shooterBody = (shooter.r + (shooter.cirSolidLineW / 2));
       const distance = (isPolygon ? axisRotateR.whole : (axisRotateR - enemy.r)) - shooterBody;
-      const seconds = 30 + (10 * Math.random());
-      // const seconds = 100 + (10 * Math.random());
+      const seconds =  getRandom(30, 40);
       enemy.axisRotateRV = -(distance / (seconds * updateFPS));
     }
     if (isPolygon) {
@@ -107,8 +106,6 @@ const enemyMethods = {
       bullets.splice(bulletIdx, 1);
     }
     // 當敵人子彈射中 shooter 的護盾
-    // const angleGap = Math.abs(mouseMoveAngle - (bullet.rotateAngle % 360) * degToPi);
-    // const shieldAngleRange = angleGap >= (135 * degToPi) && angleGap <= (225 * degToPi);
     const angleGap = Math.abs((mouseMoveAngle / degToPi) - ((bullet.rotateAngle % 360) + (bullet.rotateAngle < 0 ? 360 : 0)));
     const shieldAngleRange = (angleGap >= 135) && (angleGap <= 225);
     if (shieldAngleRange && (-bullet.moveX >= (bullet.axisRotateR - (shooterShield + bulletLen)))) {
@@ -122,18 +119,21 @@ const enemyMethods = {
   attackShooterResult() {
     const shooter = game.shooter;
     const shooterHPBarOriginW = 216;
+    // 命條減 1/3
     const shooterHPBarW = shooterHPBar.offsetWidth - (shooterHPBarOriginW / 3);
     shooter.isAttacked = true;
     // shooter 命減 1
     // shooter.HP -= 1;
     shooterHPBar.style.width = `${shooterHPBarW < 0 ? 0 : shooterHPBarW}px`;
+    // 若 shooter 已經沒有命條
     if (shooterHPBarW <= 0) {
-      const shooterHeart = document.querySelectorAll('.panel__game-heart');
-      // 如果 shooter 還有愛心
-      if (shooterHeart.length) {
-        // 減掉一個愛心
+      // 若 shooter 還有愛心
+      if (shooter.hearts) {
+        // 減掉一顆愛心
+        const shooterHeart = document.querySelectorAll('.panel__game-heart');
         shooterHeart[0].parentNode.removeChild(shooterHeart[0]);
-        // 命條減 1/3
+        shooter.hearts -= 1;
+        // 回復命條
         shooterHPBar.style.width = `${shooterHPBarOriginW}px`;
       } else {
         // 如果沒有愛心，結束遊戲

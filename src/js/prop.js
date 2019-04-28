@@ -5,6 +5,7 @@ class Prop {
       img: new Image(),
       src: '',
       axisRotateR: 0,
+      axisRotateRV: 0,
       axisRotateAngle: 0,
       r: 32,
     }
@@ -27,13 +28,18 @@ class Prop {
       ctx.restore();
     }
   }
-  update(idx) {
-    this.axisRotateR -= 3.2;
+  update() {
+    if (!this.axisRotateRV) {
+      const seconds = getRandom(5, 10);
+      this.axisRotateRV = -(gameHalfDiagonalL / (seconds * updateFPS));
+    }
+    this.axisRotateR += this.axisRotateRV;
     // 當道具撞上 shooter 主體
     const shooter = game.shooter;
     // 判斷是否撞上
     if ((this.axisRotateR + this.r) <= (shooter.r + (shooter.cirSolidLineW / 2))) {
-      game.props.splice(idx, 1);
+      // 清掉該道具
+      game.prop = '';
       const propName = this.src.replace('../img/', '').split('.')[0];
       shooter.getProp(propName);
     }

@@ -13,7 +13,8 @@ class Shooter {
       rotateAngle: 0,
       bullets: [],
       // HP: 6,
-      states: [],
+      hearts: 3,
+      state: '',
       isAttacked: false,
       isProtect: false,
       beforeShootTime: new Date(),
@@ -71,7 +72,7 @@ class Shooter {
     ctx.beginPath();
     ctx.lineWidth = this.shieldLineW;
     // 如果 shooter 狀態為 shield，護盾變為 180°
-    if (!this.judgeState('shield')) {
+    if (this.state !== 'shield') {
       ctx.arc(0, 0, this.shieldR, 135 * degToPi + this.rotateAngle, 225 * degToPi + this.rotateAngle);
     } else {
       ctx.arc(0, 0, this.shieldR, 90 * degToPi + this.rotateAngle, 270 * degToPi + this.rotateAngle);
@@ -128,13 +129,13 @@ class Shooter {
     if (shootTime - beforeShootTime > 400) {
       let bulletNum;
       // 如果 shooter 狀態為 double，每次射兩發，兩發之間隔 0.16 秒
-      if (!this.judgeState('double')) {
+      if (this.state !== 'double') {
         bulletNum = 1;
       } else {
         bulletNum = 2;
       }
       for (let i = 0; i < bulletNum; i++) {
-        if (!this.judgeState('wave')) {
+        if (this.state !== 'wave') {
           setTimeout(() => {
             this.bullets.push(new ShooterBullet({
               // axisRotateR: 62 * 0.85,
@@ -163,44 +164,35 @@ class Shooter {
     // 持續秒數
     let lastTime;
     switch (propName) {
+      case 'heart':
+        this.recoverHeart();
+        lastTime = 0;
+        break;
+      case 'crackdown':
+        this.drawCrackdownEffect();
+        lastTime = 0;
+        break;
       case 'shield':
-        lastTime = 10000;
+        lastTime = 30000;
         break;
       case 'double':
         lastTime = 20000;
         break;
       case 'wave':
-        // lastTime = 30000;
-        lastTime = 11000;
+        lastTime = 10000;
         break;
       default:
         lastTime = 0;
     }
-    // 將道具推入 shooter 的狀態
-    this.states.push(propName);
+    // 將道具設為 shooter 的狀態
+    this.state = propName;
     // 時間到後，移除道具效果
-    const propEffectTimer = setTimeout(() => {
-      for (let i = 0; i < this.states.length; i += 1) {
-        if (this.states[i] === propName) {
-          this.states.splice(i, 1);
-          clearTimeout(propEffectTimer);
-          break;
-        }
-      }
+    setTimeout(() => {
+      this.state = '';
+      game.generateProp();
     }, lastTime);
-    // 如果 shooter 狀態為 heart，就恢復一個愛心
-    if (this.judgeState('heart')) {
-      this.recoverHeart();
-    }
-    // 如果 shooter 狀態為 crackdown，就發出清場效果
-    if (this.judgeState('crackdown')) {
-      this.drawCrackdownEffect();
-    }
     // 顯示道具效果持續時間
     this.displayPropInfo(propName, lastTime);
-  }
-  judgeState(currentState) {
-    return this.states.find((state) => state === currentState);
   }
   // 繪製清場效果
   drawCrackdownEffect() {
@@ -274,10 +266,10 @@ class Shooter {
   // 恢復一個愛心命
   recoverHeart() {
     // this.HP += 3;
-    const heartWrapper = document.getElementById('heart-wrapper');
     const heart = document.createElement('DIV');
     heart.classList.add('panel__game-heart');
     heartWrapper.insertBefore(heart, heartWrapper.firstChild);
+    this.hearts += 1;
   }
   displayPropInfo(propName, lastTime) {
     if (propName === 'crackdown' || propName === 'heart') return;
@@ -334,7 +326,7 @@ class ShooterBullet {
     ctx.save();
     ctx.translate(gameW / 2, gameH / 2);
     ctx.rotate(this.rotateAngle);
-    if (!game.shooter.judgeState('wave')) {
+    if (game.shooter.state !== 'wave') {
       // 殘影
       ctx.beginPath();
       ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
@@ -379,7 +371,7 @@ class ShooterBullet {
     let shotRRangeFn;
     // 判斷子彈為哪一類型
     // 一般類型
-    if (!game.shooter.judgeState('wave')) {
+    if (game.shooter.state !== 'wave') {
       const bulletMoveLen = this.axisRotateR + this.bodyLen;
       // 判斷子彈有無射中圓形
       game.circles.forEach((circle, cirIdx) => {

@@ -103,6 +103,15 @@ function getAngleB(a, b, c) {
   return Math.acos((a * a + c * c - b * b) / (2 * a * c));
 }
 
+
+
+// 取得某區間的隨機亂數
+function getRandom(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+
+
 /* 2D Vector Class */
 class Vec2 {
   constructor(x, y) {
