@@ -173,13 +173,13 @@ class Shooter {
         lastTime = 0;
         break;
       case 'shield':
-        lastTime = 30000;
+        lastTime = 25000;
         break;
       case 'double':
         lastTime = 20000;
         break;
       case 'wave':
-        lastTime = 10000;
+        lastTime = 15000;
         break;
       default:
         lastTime = 0;
@@ -189,6 +189,7 @@ class Shooter {
     // 時間到後，移除道具效果
     setTimeout(() => {
       this.state = '';
+      // 重新道具計時
       game.generateProp();
     }, lastTime);
     // 顯示道具效果持續時間
@@ -406,7 +407,7 @@ class ShooterBullet {
             const sideA = polygon.axisRotateR.whole;
             return (bulletMoveLen >= sideA) && (bulletMoveLen <= (sideA + 9));
           }
-          this.attackPolygon(polygon, polyIdx, 'whole', 34, 21, (360 - (202 + 75)), (8 + 75), 75, bulletIdx, shotRRangeFn, '231, 70, 93');
+          this.attackPolygon(polygon, polyIdx, 'whole', 34, 21, (360 - (202 + 75)), (8 + 75), 75, bulletIdx, shotRRangeFn);
         } else {
           // 當多邊形分裂
           // 大分裂
@@ -415,7 +416,7 @@ class ShooterBullet {
               const sideA = polygon.axisRotateR.big;
               return (bulletMoveLen >= sideA + 8) && (bulletMoveLen <= (sideA + 16));
             }
-            this.attackPolygon(polygon, polyIdx, 'big', 34, 23, ((202 + 44) - 180), (180 - (70 + 44)), 44, bulletIdx, shotRRangeFn, '231, 70, 93');
+            this.attackPolygon(polygon, polyIdx, 'big', 34, 23, ((202 + 44) - 180), (180 - (70 + 44)), 44, bulletIdx, shotRRangeFn);
           }
           // 小分裂
           if (polygon.HP.small) {
@@ -423,12 +424,11 @@ class ShooterBullet {
               const sideA = polygon.axisRotateR.small;
               return (bulletMoveLen >= sideA + 8) && (bulletMoveLen <= (sideA + 16));
             }
-            this.attackPolygon(polygon, polyIdx, 'small', 22, 23, ((255 + 17.5) - 180), (180 - (70 + 17.5)), 17.5, bulletIdx, shotRRangeFn, '231, 70, 93');
+            this.attackPolygon(polygon, polyIdx, 'small', 22, 23, ((255 + 17.5) - 180), (180 - (70 + 17.5)), 17.5, bulletIdx, shotRRangeFn);
           }
         }
       });
     } else {
-      // FIXME 多邊形判斷不準
       // 波狀類型
       // 有無射中圓形
       game.circles.forEach((circle, cirIdx) => {
@@ -460,7 +460,7 @@ class ShooterBullet {
             const sideA = polygon.axisRotateR.whole;
             return (this.axisRotateR >= sideA) && (this.axisRotateR <= (sideA + 9));
           }
-          this.attackPolygon(polygon, polyIdx, 'whole', 34, 21, (360 - (202 + 75)), (8 + 75), 75, bulletIdx, shotRRangeFn, '231, 70, 93', 'wave');
+          this.attackPolygon(polygon, polyIdx, 'whole', 34, 21, (360 - (202 + 75)), (8 + 75), 75, bulletIdx, shotRRangeFn, 'wave');
         } else {
           // 當多邊形已經分裂
           // 大分裂
@@ -469,7 +469,7 @@ class ShooterBullet {
               const sideA = polygon.axisRotateR.big;
               return (this.axisRotateR >= sideA + 8) && (this.axisRotateR <= (sideA + 16));
             }
-            this.attackPolygon(polygon, polyIdx, 'big', 34, 23, ((202 + 44) - 180), (180 - (70 + 44)), 44, bulletIdx, shotRRangeFn, '231, 70, 93', 'wave');
+            this.attackPolygon(polygon, polyIdx, 'big', 34, 23, ((202 + 44) - 180), (180 - (70 + 44)), 44, bulletIdx, shotRRangeFn, 'wave');
           }
           // 小分裂
           if (polygon.HP.small) {
@@ -477,7 +477,7 @@ class ShooterBullet {
               const sideA = polygon.axisRotateR.small;
               return (this.axisRotateR >= sideA + 8) && (this.axisRotateR <= (sideA + 16));
             }
-            this.attackPolygon(polygon, polyIdx, 'small', 22, 23, ((255 + 17.5) - 180), (180 - (70 + 17.5)), 17.5, bulletIdx, shotRRangeFn, '231, 70, 93', 'wave');
+            this.attackPolygon(polygon, polyIdx, 'small', 22, 23, ((255 + 17.5) - 180), (180 - (70 + 17.5)), 17.5, bulletIdx, shotRRangeFn, 'wave');
           }
           // 如果大小分裂都已被擊斃，移除此多邊形
           if (!polygon.HP.big && !polygon.HP.small) {
@@ -514,6 +514,7 @@ class ShooterBullet {
     ctx.stroke();
   }
   // 攻擊敵人（圓形、三角形）
+  // FIXME 當敵人太靠近會打不到
   attackEnemy(enemy, enemyIdx, enemies, bulletIdx, anglePanFn, shotRRangeFn, colorRGB, type = 'ordinary') {
     /**
      * 射中角度範圍

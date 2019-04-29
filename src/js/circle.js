@@ -7,7 +7,7 @@ class Circle {
       rotate: 0,
       scale: 0,
       axisRotateRV: 0,
-      axisRotateAngleV: -0.8,
+      axisRotateAngleV: 0,
       rotateV: 0.4,
       color: globalColor.orange,
       HP: 2,
@@ -88,9 +88,9 @@ class Circle {
     if (!this.isRotating) {
       this.axisRotateAngle += this.axisRotateAngleV;
     }
-    // 每 2-4 秒，自身旋轉一次
+    // 每 4-8 秒，自身旋轉一次
     const rotateTime = new Date();
-    if (rotateTime - this.beforeRotateTime > 2000 * Math.random() + 2000) {
+    if ((rotateTime - this.beforeRotateTime) > getRandom(4000, 8000)) {
       this.isRotating = true;
       TweenLite.to(this, 0.4, {
         // rotate: this.axisRotateAngle - 180,

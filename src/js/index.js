@@ -10,16 +10,17 @@ const globalColor = {
   blueDark: '#001d2e',
   white: '#fff',
 }
+
 const props = ['heart', 'crackdown', 'shield', 'double', 'wave'];
 
 
 /* GUI Controls */
-const controls = {
-  // amp: 8,
-  // freq: 0.3,
-}
+// const controls = {
+//   amp: 8,
+//   freq: 0.3,
+// }
 
-const gui = new dat.GUI();
+// const gui = new dat.GUI();
 // gui.add(controls, 'amp', 0, 30).step(1).onChange((value) => {});
 // gui.add(controls, 'freq', 0, 1).step(0.1).onChange((value) => {});
 
@@ -77,7 +78,6 @@ class Game {
     const def = {
       shooter: null,
       prop: null,
-      propName: '',
       batteryNum: 0,
       circles: [],
       triangles: [],
@@ -90,11 +90,12 @@ class Game {
         y: 2,
       },
       currentLevel: 0,
-      downTime: 0,
-      recoverHPTimer: null,
+      countdownSeconds: 0,
+      hpRecoverTimer: null,
       countdownTimer: null,
-      generatePropTimer: null,
-      generatePropInterval: 20,
+      propGeneratedTimer: null,
+      crawlerClearedTimer: null,
+      propGeneratedInterval: 200,
       boss: null,
     };
     Object.assign(def, args);
@@ -316,27 +317,23 @@ class Game {
     // 讓滑鼠點擊無效
     panel.style.pointerEvents = 'none';
     // 倒數計時 3 秒
-    this.downTime = 3;
+    this.countdownSeconds = 3;
     gameCrawler.textContent = 'READY!';
-    gameTime.textContent = `00:0${this.downTime}”`;
+    gameTime.textContent = `00:0${this.countdownSeconds}”`;
     const countdownStartTime = () => {
       setTimeout(() => {
-        if (!this.downTime) {
+        if (!this.countdownSeconds) {
           this.currentLevel += 1;
           this.setLevel(this.currentLevel);
           // 開始產生道具
           this.generateProp();
-          // 定時清除跑馬燈
-          const clearCrawler = () => {
-            gameCrawler.textContent = '';
-            setTimeout(clearCrawler, 2000);
-          }
-          clearCrawler();
+          // 開始清除跑馬燈
+          this.clearCrawler();
           return;
         }
-        this.downTime -= 1;
-        gameTime.textContent = `00:0${this.downTime}”`;
-        switch (this.downTime) {
+        this.countdownSeconds -= 1;
+        gameTime.textContent = `00:0${this.countdownSeconds}”`;
+        switch (this.countdownSeconds) {
           case 2:
             gameCrawler.textContent = 'READY!!';
             break;
@@ -401,55 +398,57 @@ class Game {
     this.isPause = !this.isPause;
     if (this.isPause) {
       clearTimeout(this.countdownTimer);
-      clearTimeout(this.generatePropTimer);
+      clearTimeout(this.propGeneratedTimer);
+      clearTimeout(this.crawlerClearedTimer);
     } else {
       this.countdownTime();
       this.generateProp();
+      this.clearCrawler();
     }
   }
   // 產生道具
   generateProp() {
-    if (!this.propName) {
-      // 如果已經有 5 顆心，便排除愛心
-      if (this.shooter.hearts === 5) {
-        this.propName = props[getRandom(1, 4)];
-      } else {
-        this.propName = props[getRandom(0, 4)];
-      }
-    }
-    // 在當前有道具起作用的狀況下，如果道具不是愛心或清場，那就繼續停止計時
-    if (this.prop && this.propName !== 'heart' && this.propName !== 'crackdown') return;
-    this.generatePropTimer = setTimeout(() => {
-      this.generatePropInterval -= 1;
-      if (this.generatePropInterval === 0) {
+    // 如果已有道具，便停止計時
+    if (this.prop) return;
+    this.propGeneratedTimer = setTimeout(() => {
+      this.propGeneratedInterval -= 1;
+      // 20 秒過後
+      if (this.propGeneratedInterval === 0) {
+        let propName;
+        // 如果大於 5 顆心，便排除愛心
+        if (this.shooter.hearts < 5) {
+          propName = props[getRandom(0, 4)];
+        } else {
+          propName = props[getRandom(1, 4)];
+        }
         this.prop = new Prop({
-          src: `../img/${this.propName}.svg`,
-          axisRotateR: Math.random() + gameHalfDiagonalL,
-          axisRotateAngle: Math.random() * 360,
+          src: `../img/${propName}.svg`,
+          axisRotateR: gameHalfDiagonalL,
+          axisRotateAngle: getRandom(0, 360),
         });
-        this.propName = '';
-        // 每 20 秒產生一個道具
-        this.generatePropInterval = 20;
+        // 每 20 (200 * 100) 秒產生一個道具
+        this.propGeneratedInterval = 200;
       }
       this.generateProp();
     }, 100);
   }
+  // 倒數遊戲時間
   countdownTime() {
     this.countdownTimer = setTimeout(() => {
-      if (!this.downTime) {
+      if (!this.countdownSeconds) {
         this.currentLevel += 1;
         this.setLevel(this.currentLevel);
         return;
       }
-      this.downTime -= 1;
-      gameTime.textContent = `00:${this.downTime < 10 ? `0${this.downTime}` : this.downTime}”`;
-      // gameTime.textContent = `00:${this.downTime}”`;
+      this.countdownSeconds -= 1;
+      gameTime.textContent = `00:${this.countdownSeconds < 10 ? `0${this.countdownSeconds}` : this.countdownSeconds}”`;
+      // gameTime.textContent = `00:${this.countdownSeconds}”`;
       this.countdownTime();
     }, 1000);
   }
   // 自動恢復 shooter 生命條
   recoverShooterHPBar() {
-    this.recoverHPTimer = setTimeout(() => {
+    this.hpRecoverTimer = setTimeout(() => {
       if (this.isPause || !this.isStart) {
         this.recoverShooterHPBar();
         return;
@@ -462,21 +461,87 @@ class Game {
       this.recoverShooterHPBar();
     }, 500);
   }
+  // 每 2 秒清除一次跑馬燈
+  clearCrawler() {
+    gameCrawler.textContent = '';
+    // CONFUSED 為什麼這樣寫不行？（只會觸發兩次）
+    // setTimeout(this.clearCrawler, 2000);
+    this.crawlerClearedTimer = setTimeout(() => {
+      this.clearCrawler();
+    }, 2000);
+  }
+  // 設定敵人出場
+  setEnemy(form, seconds = 0) {
+    setTimeout(() => {
+      switch (form) {
+        case 'circle': {
+          this.circles.push(new Circle({
+            axisRotateR: getRandom(gameHalfDiagonalL / 3, gameHalfDiagonalL),
+            axisRotateAngle: getRandom(0, 360),
+            axisRotateAngleV: -(getRandom(2, 8) / 10),
+            rotate: getRandom(0, 360),
+          }));
+          break;
+        }
+        case 'triangle': {
+          // axisRotateAngle 與 rotate 必須相同
+          const angle = getRandom(0, 360);
+          this.triangles.push(new Triangle({
+            axisRotateR: getRandom(gameHalfDiagonalL / 3, gameHalfDiagonalL),
+            axisRotateAngle: angle,
+            rotate: angle,
+          }));
+          break;
+        }
+        case 'polygon': {
+          const rotateR = getRandom(gameHalfDiagonalL / 3, gameHalfDiagonalL);
+          const rotateAngle = getRandom(0, 360);
+          const rotate = getRandom(0, 360);
+          this.polygons.push(new Polygon({
+            axisRotateR: {
+              whole: rotateR,
+              big: rotateR,
+              small: rotateR,
+            },
+            axisRotateAngle: {
+              whole: rotateAngle,
+              big: rotateAngle,
+              small: rotateAngle,
+            },
+            rotate: {
+              whole: rotate,
+              big: rotate,
+              small: rotate,
+            },
+          }));
+          break;
+        }
+        default:
+          break;
+      }
+    }, seconds * 1000);
+  }
   // 設定關卡
   setLevel(level) {
     switch (level) {
-      case 1:
-        this.downTime = 4;
-        gameTime.textContent = `00:0${this.downTime}”`;
+      case 1: {
+        this.countdownSeconds = 30;
+        gameTime.textContent = `00:${this.countdownSeconds}”`;
         gameLevel.textContent = 'Wave 01';
         this.countdownTime();
+        // 設定敵人出場
+        this.setEnemy('circle', 0);
+        this.setEnemy('triangle', 10);
+        this.setEnemy('polygon', 20);
         break;
-      case 2:
-        this.downTime = 5;
-        gameTime.textContent = `00:0${this.downTime}”`;
+      }
+      case 2: {
+        this.countdownSeconds = 5;
+        gameTime.textContent = `00:0${this.countdownSeconds}”`;
         gameLevel.textContent = 'Wave 02';
         this.countdownTime();
         break;
+      }
       default:
         break;
     }
@@ -484,34 +549,6 @@ class Game {
     //   axisRotateR: 200,
     //   axisRotateAngle: 90,
     // });;
-    // this.circles.push(new Circle({
-    //   axisRotateR: 240,
-    //   axisRotateAngle: 270,
-    //   rotate: 235,
-    // }));
-    // this.triangles.push(new Triangle({
-    //   axisRotateR: 280,
-    //   // axisRotateAngle 與 rotate 必須相同
-    //   axisRotateAngle: 230,
-    //   rotate: 230,
-    // }));
-    // this.polygons.push(new Polygon({
-    //   axisRotateR: {
-    //     whole: 280,
-    //     big: 280,
-    //     small: 280,
-    //   },
-    //   axisRotateAngle: {
-    //     whole: 210,
-    //     big: 210,
-    //     small: 210,
-    //   },
-    //   rotate: {
-    //     whole: 56,
-    //     big: 56,
-    //     small: 56,
-    //   },
-    // }));
   }
 }
 
