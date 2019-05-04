@@ -8,7 +8,7 @@ class Circle {
       scale: 0,
       axisRotateRV: 0,
       axisRotateAngleV: 0,
-      rotateV: 0.4,
+      // rotateV: 0,
       color: globalColor.orange,
       HP: 2,
       bullets: [],

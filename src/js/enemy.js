@@ -17,8 +17,10 @@ const enemyMethods = {
       if (enemy.HP.whole) {
         axisRotateR.small = axisRotateR.big = axisRotateR.whole += enemy.axisRotateRV;
       } else {
-        axisRotateR.big += enemy.axisRotateRV;
-        axisRotateR.small += enemy.axisRotateRV;
+        // 重物引力較強
+        axisRotateR.big += enemy.axisRotateRV * getRandom(3, 4);
+        // 輕物引力較弱
+        axisRotateR.small += enemy.axisRotateRV * getRandom(1, 4);
       }
     } else {
       enemy.axisRotateR += enemy.axisRotateRV;
@@ -61,10 +63,10 @@ const enemyMethods = {
     const shieldAngleRange = Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) >= (135 * degToPi) && Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) <= (225 * degToPi);
     // 判斷是多邊形或其它敵人撞上 shooter
     const judgeWhatEnemyHit = function () {
-      if (type !== 'polyBig' && type !== 'polySmall') {
+      if (type !== 'big' && type !== 'small') {
         enemies.splice(enemyIdx, 1);
         // 移除敵人效果
-        if (type !== 'polyWhole') {
+        if (type !== 'whole') {
           const colorRGB = type === 'circle' ? '245, 175, 95' : '54, 118, 187';
           enemyMethods.dieEffect(enemy.r, originalPos(enemyAxisRotateR, enemyAxisRotateAngle).x, originalPos(enemyAxisRotateR, enemyAxisRotateAngle).y, colorRGB);
         } else {
@@ -73,7 +75,7 @@ const enemyMethods = {
         }
       } else {
         enemy.HP[type] -= 1;
-        const polygonR = type === 'polyBig' ? (34 + 22) / 2 : (23 + 21) / 2;
+        const polygonR = type === 'big' ? (34 + 22) / 2 : (23 + 21) / 2;
         enemyMethods.dieEffect(polygonR, enemy.originalPos(type).x, enemy.originalPos(type).y, '231, 70, 93');
         if (!enemy.HP.big && !enemy.HP.small) {
           enemies.splice(enemyIdx, 1);

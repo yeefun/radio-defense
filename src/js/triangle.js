@@ -8,7 +8,7 @@ class Triangle {
       scale: 0,
       axisRotateRV: 0,
       axisRotateAngleV: 0.4,
-      rotateV: -2.4,
+      // rotateV: -2.4,
       color: globalColor.blue,
       bullets: [],
       beforeRotateAxisAngleTime: new Date(),

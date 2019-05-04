@@ -22,19 +22,15 @@ class Polygon {
         small: 1,
       },
       axisRotateRV: 0,
-      axisRotateAngleV: {
-        whole: 0.4,
-        big: 0.4,
-        small: 0.4,
-      },
-      rotateV: {
-        whole: 0.4,
-        big: 0.4,
-        small: 0.4,
-      },
+      // axisRotateAngleV: {
+      //   whole: 0.4,
+      //   big: 0.4,
+      //   small: 0.4,
+      // },
+      rotateV: 0,
       color: globalColor.red,
-      // 是否已經分裂
-      isSplited: false,
+      // 是否已經分裂完畢
+      // isSplited: false,
       // 是否正好要分裂
       isJustSplite: true,
       // 是否正在進行分裂
@@ -186,44 +182,48 @@ class Polygon {
     // 如果尚未分裂
     // if (!this.isSplited) {
     if (this.HP.whole) {
-      this.rotate.whole = this.rotate.big = this.rotate.small += this.rotateV.whole;
+      this.rotate.whole = this.rotate.big = this.rotate.small += this.rotateV;
       // 當多邊形撞上 shooter
-      enemyMethods.hitShooter(game.polygons, idx, 'polyWhole', this.axisRotateR.whole, this.axisRotateAngle.whole);
+      enemyMethods.hitShooter(game.polygons, idx, 'whole', this.axisRotateR.whole, this.axisRotateAngle.whole);
     } else {
+      // let rotateDirection;
       // 如果正好要分裂
       if (this.isJustSplite) {
         // const rotateOriginPos = 90 - 70;
         // const rotateDirection = (((this.rotate.whole % 360) >= rotateOriginPos) && ((this.rotate.whole % 360) < (180 + rotateOriginPos))) ? -1 : 1;
         const rotateDirection = Math.random() > 0.5 ? 1 : -1;
         TweenLite.to(this.axisRotateAngle, 2.4, {
-          big: `+=${(Math.random() * 15 + 15) * rotateDirection}`,
-          small: `-=${(Math.random() * 15 + 15) * rotateDirection}`,
+          big: `+=${getRandom(15, 30) * rotateDirection}`,
+          small: `-=${getRandom(15, 30) * rotateDirection}`,
           ease: Circ.easeOut,
         });
         TweenLite.to(this.axisRotateR, 2.4, {
-          big: `+=${(Math.random() * 100 + 50)}`,
-          small: `+=${(Math.random() * 100 + 50)}`,
+          big: `+=${getRandom(50, 150)}`,
+          small: `+=${getRandom(50, 150)}`,
           ease: Circ.easeOut,
-          onComplete: () => {
-            // this.isSpliting = false;
-            // 處於已分裂狀態
-            this.isSplited = true;
-          }
         });
-        TweenLite.to(this.rotate, 3.2, {
-          big: `-=${Math.random() * 90 + 180}`,
-          small: `+=${Math.random() * 90 + 180}`,
-          ease: Power2.easeOut,
+        TweenLite.to(this.rotate, 2.4, {
+          big: `+=${getRandom(180, 270)}`,
+          small: `-=${getRandom(180, 270)}`,
+          ease: Circ.easeOut,
+          // onComplete: () => {
+            // 處於已分裂狀態
+            // this.isSplited = true;
+          // },
         });
         this.isJustSplite = false;
       }
       // 當大分裂撞上 shooter
-      if (this.HP.big && this.isSplited) {
-        enemyMethods.hitShooter(game.polygons, idx, 'polyBig', this.axisRotateR.big, this.axisRotateAngle.big);
+      if (this.HP.big) {
+        // 重物自轉較慢
+        this.rotate.big += this.rotateV * 1.4;
+        enemyMethods.hitShooter(game.polygons, idx, 'big', this.axisRotateR.big, this.axisRotateAngle.big);
       }
       // 當小分裂撞上 shooter
-      if (this.HP.small && this.isSplited) {
-        enemyMethods.hitShooter(game.polygons, idx, 'polySmall', this.axisRotateR.small, this.axisRotateAngle.small);
+      if (this.HP.small) {
+        // 輕物自轉較快
+        this.rotate.small -= this.rotateV * 1.6;
+        enemyMethods.hitShooter(game.polygons, idx, 'small', this.axisRotateR.small, this.axisRotateAngle.small);
       }
     }
   }

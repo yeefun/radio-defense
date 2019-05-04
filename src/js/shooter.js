@@ -590,10 +590,10 @@ class ShooterBullet {
     }
     /**
      * 射中角度範圍
-     * 多邊形不會繞軸旋轉，axisRotateAngle 固定，不用 % 360
+     * 多邊形雖不會繞軸旋轉，axisRotateAngle 固定，但分裂時可能會超過 360°，故 %360
      */
-    const polyAngleMinus = polyAxisRotateAngle * degToPi - angleB1;
-    const polyAngleAdd = polyAxisRotateAngle * degToPi + angleB2;
+    const polyAngleMinus = (polyAxisRotateAngle % 360) * degToPi - angleB1;
+    const polyAngleAdd = (polyAxisRotateAngle % 360) * degToPi + angleB2;
     const shotAngleRange = this.judgeShotAngleRange(polyAngleMinus, polyAngleAdd, type);
     // 射中距離範圍
     const shotRRange = shotRRangeFn();
@@ -620,7 +620,15 @@ class ShooterBullet {
   }
   // 判斷射中角度範圍
   judgeShotAngleRange(enemyAngleMinus, enemyAngleAdd, type) {
-    const shooterRotateAngle = (enemyAngleMinus < 0 && this.rotateAngle > Math.PI) ? (this.rotateAngle - Math.PI * 2) : this.rotateAngle;
+    let shooterRotateAngle;
+    if (enemyAngleAdd > Math.PI * 2 && this.rotateAngle < Math.PI) {
+      shooterRotateAngle = this.rotateAngle + Math.PI * 2;
+    // } else if (enemyAngleMinus < 0 && this.rotateAngle > Math.PI) {
+    } else if (enemyAngleMinus < 0) {
+      shooterRotateAngle = this.rotateAngle - Math.PI * 2;
+    } else {
+      shooterRotateAngle = this.rotateAngle;
+    }
     // 判斷子彈為哪一類型
     // 一般子彈
     if (type !== 'wave') {
