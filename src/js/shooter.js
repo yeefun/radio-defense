@@ -621,10 +621,14 @@ class ShooterBullet {
   // 判斷射中角度範圍
   judgeShotAngleRange(enemyAngleMinus, enemyAngleAdd, type) {
     let shooterRotateAngle;
+    // 當敵人 axisRotateAngle 在 360° 附近，且 shooter 槍口朝下（0° 下方）
     if (enemyAngleAdd > Math.PI * 2 && this.rotateAngle < Math.PI) {
       shooterRotateAngle = this.rotateAngle + Math.PI * 2;
-    // } else if (enemyAngleMinus < 0 && this.rotateAngle > Math.PI) {
-    } else if (enemyAngleMinus < 0) {
+    } else if (
+      // 當敵人 axisRotateAngle 皆小於 0
+      (enemyAngleMinus < 0 && enemyAngleAdd < 0) || 
+      // 當敵人 axisRotateAngle 在 0° 附近，且 shooter 槍口朝上（0° 上方）
+      (enemyAngleMinus < 0 && enemyAngleAdd > 0 && this.rotateAngle > Math.PI)) {
       shooterRotateAngle = this.rotateAngle - Math.PI * 2;
     } else {
       shooterRotateAngle = this.rotateAngle;

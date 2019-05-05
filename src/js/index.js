@@ -477,8 +477,7 @@ class Game {
         case 'circle': {
           this.circles.push(new Circle({
             axisRotateR: getRandom(gameHalfDiagonalL / 3, gameHalfDiagonalL),
-            // axisRotateAngle: getRandom(0, 360),
-            axisRotateAngle: 0,
+            axisRotateAngle: getRandom(0, 360),
             axisRotateAngleV: -(getRandom(2, 8) / 10),
             rotate: getRandom(0, 360),
             // rotateV: Math.random() * 0.4 + 0.4,
@@ -488,11 +487,10 @@ class Game {
         case 'triangle': {
           // axisRotateAngle 與 rotate 必須相同
           const angle = getRandom(0, 360);
-          // const rotateV = getRandom(0, 360);
-          // const angle = 359;
           this.triangles.push(new Triangle({
             axisRotateR: getRandom(gameHalfDiagonalL / 3, gameHalfDiagonalL),
             axisRotateAngle: angle,
+            axisRotateAngleV: getRandom(2, 8) / 10,
             rotate: angle,
           }));
           break;
@@ -500,7 +498,6 @@ class Game {
         case 'polygon': {
           const rotateR = getRandom(gameHalfDiagonalL / 3, gameHalfDiagonalL / 1.5);
           const rotateAngle = getRandom(0, 360);
-          // const rotateAngle = 359;
           const rotate = getRandom(0, 360);
           const rotateV = (getRandom(4, 8) / 10);
           this.polygons.push(new Polygon({
@@ -528,27 +525,36 @@ class Game {
       }
     }, seconds * 1000);
   }
+  // 初始化關卡
+  initLevel(level, seconds) {
+    gameLevel.textContent = `Wave ${level}`;
+    this.countdownSeconds = seconds;
+    gameTime.textContent = `00:${this.countdownSeconds}”`;
+    this.countdownTime();
+  }
   // 設定關卡
   setLevel(level) {
     switch (level) {
       case 1: {
-        this.countdownSeconds = 10;
-        gameTime.textContent = `00:${this.countdownSeconds}”`;
-        gameLevel.textContent = 'Wave 01';
-        this.countdownTime();
+        this.initLevel('01', 20);
         // 設定敵人出場
         this.setEnemy('circle', 0);
-        // this.setEnemy('triangle', 0);
-        // this.setEnemy('polygon', 0);
+        this.setEnemy('polygon', 10);
         break;
       }
       case 2: {
-        this.countdownSeconds = 20;
-        gameTime.textContent = `00:${this.countdownSeconds}”`;
-        gameLevel.textContent = 'Wave 02';
-        this.countdownTime();
-        // this.setEnemy('triangle', 0);
-        // this.setEnemy('polygon', 10);
+        this.initLevel('02', 20);
+        this.setEnemy('triangle', 0);
+        this.setEnemy('polygon', 10);
+        break;
+      }
+      case 3: {
+        break;
+      }
+      case 4: {
+        break;
+      }
+      case 5: {
         break;
       }
       default:
