@@ -112,8 +112,7 @@ class Circle {
 
   shoot() {
     // 射 1-2 發
-    gameCrawler.textContent = 'ATTACK!';
-    for (let i = 0; i < 2 * Math.random(); i += 1) {
+    for (let i = 0; i < getRandom(1, 2); i += 1) {
       const timer = setTimeout(() => {
         this.bullets.push(new CirBullet({
           p: {
@@ -127,13 +126,15 @@ class Circle {
         }));
         clearTimeout(timer);
         // 間隔 0.2-0.4 秒
-      }, i * (200 * Math.random() + 200));
+      }, i * getRandom(200, 400));
     }
+    gameCrawler.textContent = Math.random() >= 0.9 ? 'UNDER ATTACK' : 'ATTACK!';
   }
 
 
   appear(isBossGenerate) {
     gameCrawler.textContent = 'ENEMY IS COMING';
+    // gameCrawler.innerHTML = '<i class="fas fa-exclamation-triangle"></i>ENEMY IS COMING!';
     TweenLite.to(this, 0.8, {
       scale: 1,
       ease: Back.easeOut.config(1.7),
@@ -144,7 +145,7 @@ class Circle {
     });
     if (isBossGenerate) {
       TweenLite.to(this, 1.6, {
-        axisRotateR: `+=${Math.random() * 80 + 80}`,
+        axisRotateR: `+=${getRandom(80, 160)}`,
         ease: Power2.easeOut,
       });
     }

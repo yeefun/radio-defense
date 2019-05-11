@@ -85,13 +85,13 @@ class Triangle {
     this.bullets.forEach((bullet, idx, arr) => {
       bullet.update(idx, arr);
     });
-    // 每 8-16 秒，三角移動 + 自身旋轉
+    // 每 4-8 秒，三角移動 + 自身旋轉
     const rotateAxisAngleTime = new Date();
     let randomRotateAngle;
-    if (rotateAxisAngleTime - this.beforeRotateAxisAngleTime > (Math.random() * 8000 + 8000)) {
+    if (rotateAxisAngleTime - this.beforeRotateAxisAngleTime > getRandom(4000, 8000)) {
       // 旋轉時不發射子彈
       if (this.shootTimer) clearTimeout(this.shootTimer);
-      randomRotateAngle = (Math.random() > 0.25 ? 1 : -1) * (30 * Math.random() + 45);
+      randomRotateAngle = (Math.random() >= 0.25 ? 1 : -1) * getRandom(45, 75);
       // 以 0.8 秒移動
       TweenLite.to(this, 0.8, {
         axisRotateAngle: `+=${randomRotateAngle}`,
@@ -104,10 +104,10 @@ class Triangle {
         onComplete: () => {
           // 移動完後發射子彈
           this.shoot();
-          // 發射一顆子彈後，每 2.4-10.4 秒發射第二發子彈
+          // 發射一顆子彈後，每 2.4-8.4 秒發射第二發子彈
           this.shootTimer = setTimeout(() => {
             this.shoot();
-          }, (Math.random() * 8000 + 2400));
+          }, getRandom(2400, 8400));
         }
       });
       this.beforeRotateAxisAngleTime = rotateAxisAngleTime;
@@ -122,6 +122,7 @@ class Triangle {
           order: i,
         }));
       }
+      gameCrawler.textContent = 'COUNTERATTACK!';
       this.isGeneratedSub = true;
     }
     // 當三角形撞上 shooter
@@ -131,6 +132,7 @@ class Triangle {
 
 
   shoot() {
+    gameCrawler.textContent = Math.random() >= 0.9 ? 'UNDER ATTACK' : 'ATTACK!';
     this.bullets.push(new TriBullet({
       p: {
         x: originalPos(this.axisRotateR, this.axisRotateAngle).x,
@@ -144,14 +146,15 @@ class Triangle {
 
 
   appear(isBossGenerate) {
+    gameCrawler.textContent = 'ENEMY IS COMING';
     TweenLite.to(this, 0.8, {
       scale: 1,
       ease: Back.easeOut.config(1.7),
     });
     let rotateNum = 0;
     if (isBossGenerate) {
-      rotateNum = Math.random() * 40 + 40;
-      const rNum = Math.random() * 40 + 40;
+      rotateNum = getRandom(40, 80);
+      const rNum = getRandom(40, 80);
       TweenLite.to(this, 1.6, {
         axisRotateAngle: `+=${rotateNum}`,
         axisRotateR: `+=${rNum}`,

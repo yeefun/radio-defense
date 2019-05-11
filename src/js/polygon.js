@@ -191,7 +191,7 @@ class Polygon {
       if (this.isJustSplite) {
         // const rotateOriginPos = 90 - 70;
         // const rotateDirection = (((this.rotate.whole % 360) >= rotateOriginPos) && ((this.rotate.whole % 360) < (180 + rotateOriginPos))) ? -1 : 1;
-        const rotateDirection = Math.random() > 0.5 ? 1 : -1;
+        const rotateDirection = Math.random() >= 0.5 ? 1 : -1;
         TweenLite.to(this.axisRotateAngle, 2.4, {
           big: `+=${getRandom(15, 30) * rotateDirection}`,
           small: `-=${getRandom(15, 30) * rotateDirection}`,
@@ -211,6 +211,7 @@ class Polygon {
             // this.isSplited = true;
           // },
         });
+        gameCrawler.textContent = 'ENEMY SPLITS';
         this.isJustSplite = false;
       }
       // 當大分裂撞上 shooter
@@ -230,13 +231,14 @@ class Polygon {
 
 
   appear(isBossGenerate) {
+    gameCrawler.textContent = 'ENEMY IS COMING';
     TweenLite.to(this, 0.8, {
       scale: 1,
       ease: Back.easeOut.config(1.7),
     });
     if (isBossGenerate) {
-      const rotateNum = Math.random() * 40 + 40;
-      const rNum = Math.random() * 40 + 40;
+      const rotateNum = getRandom(40, 80);
+      const rNum = getRandom(40, 80);
       TweenLite.to(this.axisRotateAngle, 1.6, {
         whole: `-=${rotateNum}`,
         big: `-=${rotateNum}`,

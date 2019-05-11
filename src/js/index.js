@@ -372,6 +372,7 @@ class Game {
     batteryInfo.style.opacity = 1;
     // 顯示鍵盤指示
     keyboard.style.opacity = 1;
+    this.setLevel(this.currentLevel);
     // this.inLevel1 = false;
   }
   // 遊戲結束
@@ -391,6 +392,7 @@ class Game {
     panel.style.pointerEvents = 'auto';
     // 移除道具顯示介面
     prop.style.opacity = 0;
+    clearTimeout(this.countdownTimer);
   }
   // 暫停遊戲
   pauseGame() {
@@ -461,14 +463,14 @@ class Game {
       this.recoverShooterHPBar();
     }, 500);
   }
-  // 每 2 秒清除一次跑馬燈
+  // 每 3 秒清除一次跑馬燈
   clearCrawler() {
     gameCrawler.textContent = '';
     // CONFUSED 為什麼這樣寫不行？（只會觸發兩次）
-    // setTimeout(this.clearCrawler, 2000);
+    // setTimeout(this.clearCrawler, 3000);
     this.crawlerClearedTimer = setTimeout(() => {
       this.clearCrawler();
-    }, 2000);
+    }, 3000);
   }
   // 設定敵人出場
   setEnemy(form, seconds = 0) {
@@ -536,10 +538,10 @@ class Game {
   setLevel(level) {
     switch (level) {
       case 1: {
-        this.initLevel('01', 20);
+        this.initLevel('01', 10);
         // 設定敵人出場
         this.setEnemy('circle', 0);
-        this.setEnemy('polygon', 10);
+        // this.setEnemy('polygon', 10);
         break;
       }
       case 2: {
@@ -549,12 +551,85 @@ class Game {
         break;
       }
       case 3: {
+        this.initLevel('03', 20);
+        this.setEnemy('polygon', 0);
+        this.setEnemy('circle', 5);
+        this.setEnemy('polygon', 10);
         break;
       }
       case 4: {
+        this.initLevel('04', 30);
+        this.setEnemy('circle', 0);
+        this.setEnemy('triangle', 0);
+        this.setEnemy('polygon', 10);
+        this.setEnemy('triangle', 15);
+        this.setEnemy('polygon', 20);
         break;
       }
       case 5: {
+        this.initLevel('05', 30);
+        this.setEnemy('circle', 0);
+        this.setEnemy('circle', 0);
+        this.setEnemy('circle', 5);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('triangle', 20);
+        break;
+      }
+      case 6: {
+        this.initLevel('06', 40);
+        this.setEnemy('triangle', 0);
+        this.setEnemy('triangle', 5);
+        this.setEnemy('circle', 15);
+        this.setEnemy('circle', 25);
+        this.setEnemy('polygon', 25);
+        break;
+      }
+      case 7: {
+        this.initLevel('07', 60);
+        this.setEnemy('circle', 0);
+        this.setEnemy('triangle', 0);
+        this.setEnemy('circle', 10);
+        this.setEnemy('triangle', 10);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('polygon', 20);
+        this.setEnemy('triangle', 25);
+        this.setEnemy('polygon', 25);
+        this.setEnemy('polygon', 35);
+        this.setEnemy('triangle', 35);
+        this.setEnemy('polygon', 40);
+        this.setEnemy('circle', 45);
+        this.setEnemy('circle', 50);
+        break;
+      }
+      case 8: {
+        this.initLevel('08', 60);
+        this.setEnemy('circle', 5);
+        this.setEnemy('triangle', 10);
+        this.setEnemy('triangle', 10);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('circle', 15);
+        this.setEnemy('circle', 20);
+        this.setEnemy('polygon', 30);
+        this.setEnemy('circle', 35);
+        this.setEnemy('triangle', 35);
+        this.setEnemy('polygon', 35);
+        this.setEnemy('circle', 45);
+        this.setEnemy('triangle', 45);
+        this.setEnemy('circle', 50);
+        this.setEnemy('polygon', 50);
+        break;
+      }
+      case 9: {
+        this.initLevel('09', 30);
+        this.setEnemy('circle', 0);
+        this.setEnemy('circle', 0);
+        this.setEnemy('triangle', 0);
+        this.setEnemy('triangle', 0);
+        this.setEnemy('polygon', 10);
+        this.setEnemy('circle', 15);
+        this.setEnemy('triangle', 15);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('polygon', 25);
         break;
       }
       default:

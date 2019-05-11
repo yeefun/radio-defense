@@ -146,10 +146,10 @@ class Shooter {
         } else {
           setTimeout(() => {
             this.bullets.push(new ShooterBullet({
-              waveLength: Math.random() * 40 + 40,
-              waveFreq: Math.random() * 0.2 + 0.2,
-              waveAmp: Math.random() * 4 + 4,
-              waveFlow: Math.random() * 4 + 4,
+              waveLength: getRandom(40, 80),
+              waveFreq: getRandom(2, 4) / 10,
+              waveAmp: getRandom(4, 8),
+              waveFlow: getRandom(4, 8),
               // axisRotateR: 70 * 0.85,
               axisRotateR: 59.5,
               rotateAngle: mouseMoveAngle,
@@ -167,19 +167,24 @@ class Shooter {
       case 'heart':
         this.recoverHeart();
         lastTime = 0;
+        gameCrawler.textContent = 'GAIN LIFE';
         break;
       case 'crackdown':
         this.drawCrackdownEffect();
         lastTime = 0;
+        gameCrawler.textContent = 'BOOM!!!';
         break;
       case 'shield':
         lastTime = 25000;
+        gameCrawler.textContent = 'EXTEND SHIELD';
         break;
       case 'double':
         lastTime = 20000;
+        gameCrawler.textContent = 'DOUBLE SHOOT';
         break;
       case 'wave':
         lastTime = 15000;
+        gameCrawler.textContent = 'WAVE BULLET';
         break;
       default:
         lastTime = 0;
@@ -527,6 +532,10 @@ class ShooterBullet {
     const shotAngleRange = this.judgeShotAngleRange(enemyAngleMinus, enemyAngleAdd, type);
     // 射中距離範圍
     const shotRRange = shotRRangeFn();
+
+    if (!gameCrawler.textContent) {
+      gameCrawler.textContent = Math.random() >= 0.5 ? 'FIRE' : 'BANG!';
+    }
     // 判斷子彈有無射中敵人
     if (shotAngleRange && shotRRange) {
       // 移除子彈
@@ -542,7 +551,11 @@ class ShooterBullet {
         game.batteryNum += 1;
         batteryNum.textContent = game.batteryNum;
       }
+      gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE!" : 'HIT';
     }
+    // } else {
+    //   gameCrawler.textContent = Math.random() >= 0.5 ? 'DODGE' : "MISS";
+    // }
   }
   // 攻擊多邊形
   attackPolygon(polygon, polyIdx, form, sideB1Len, sideB2Len, angleAB1, angleAB2, rotateAngleJudge, bulletIdx, shotRRangeFn, type = 'ordinary') {
@@ -581,6 +594,10 @@ class ShooterBullet {
     const topJudge = (polyAxisRotateAngle > 180) && ((polyRotate % 360) >= rotateAngleJudge || (polyRotate % 360) < (rotateAngleJudge + 180));
     let angleB1;
     let angleB2;
+
+    if (!gameCrawler.textContent) {
+      gameCrawler.textContent = Math.random() >= 0.5 ? 'FIRE' : 'BANG!';
+    }
     if (bottomJudge || topJudge) {
       angleB1 = getAngleB(sideA, sideB2, sideC2);
       angleB2 = getAngleB(sideA, sideB1, sideC1);
@@ -616,7 +633,11 @@ class ShooterBullet {
         game.batteryNum += 1;
         batteryNum.textContent = game.batteryNum;
       }
+      gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE!" : 'HIT';
     }
+    // } else {
+    //   gameCrawler.textContent = Math.random() >= 0.5 ? 'DODGE' : "MISS";
+    // }
   }
   // 判斷射中角度範圍
   judgeShotAngleRange(enemyAngleMinus, enemyAngleAdd, type) {

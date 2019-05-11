@@ -53,6 +53,9 @@ const enemyMethods = {
       }
     }
     requestAnimationFrame(effect);
+    setTimeout(() => {
+      gameCrawler.textContent = 'ENEMY DIES';
+    }, 0);
   },
 
 
@@ -91,6 +94,7 @@ const enemyMethods = {
     } else if (shieldAngleRange && (enemyAxisRotateR <= (shooter.shieldR + (shooter.shieldLineW / 2)))) {
       judgeWhatEnemyHit();
       shooter.isProtect = true;
+      gameCrawler.textContent = 'BLOCK';
     }
   },
 
@@ -113,6 +117,7 @@ const enemyMethods = {
     if (shieldAngleRange && (-bullet.moveX >= (bullet.axisRotateR - (shooterShield + bulletLen)))) {
       // 移除子彈
       bullets.splice(bulletIdx, 1);
+      gameCrawler.textContent = 'BLOCK';
     }
   },
 
@@ -142,5 +147,6 @@ const enemyMethods = {
         game.endGame();
       }
     }
+    gameCrawler.textContent = Math.random() >= 0.5 ? 'OUCH!' : 'UGGH!';
   },
 }
