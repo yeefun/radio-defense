@@ -122,7 +122,7 @@ class Triangle {
           order: i,
         }));
       }
-      gameCrawler.textContent = 'COUNTERATTACK!';
+      gameCrawler.textContent = 'COUNTERATTACK🤛';
       this.isGeneratedSub = true;
     }
     // 當三角形撞上 shooter
@@ -132,7 +132,7 @@ class Triangle {
 
 
   shoot() {
-    gameCrawler.textContent = Math.random() >= 0.9 ? 'UNDER ATTACK' : 'ATTACK!';
+    gameCrawler.textContent = Math.random() >= 0.9 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
     this.bullets.push(new TriBullet({
       p: {
         x: originalPos(this.axisRotateR, this.axisRotateAngle).x,
@@ -146,7 +146,7 @@ class Triangle {
 
 
   appear(isBossGenerate) {
-    gameCrawler.textContent = 'ENEMY IS COMING';
+    gameCrawler.textContent = '⚠ ENEMY IS COMING';
     TweenLite.to(this, 0.8, {
       scale: 1,
       ease: Back.easeOut.config(1.7),

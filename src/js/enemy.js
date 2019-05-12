@@ -54,7 +54,7 @@ const enemyMethods = {
     }
     requestAnimationFrame(effect);
     setTimeout(() => {
-      gameCrawler.textContent = 'ENEMY DIES';
+      gameCrawler.textContent = 'ENEMY DIES💀';
     }, 0);
   },
 
@@ -63,7 +63,13 @@ const enemyMethods = {
   hitShooter(enemies, enemyIdx, type, enemyAxisRotateR, enemyAxisRotateAngle) {
     const enemy = enemies[enemyIdx];
     const shooter = game.shooter;
-    const shieldAngleRange = Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) >= (135 * degToPi) && Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) <= (225 * degToPi);
+    let shieldAngleRange;
+    if (shooter.state !== 'shield') {
+      shieldAngleRange = Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) >= (135 * degToPi) && Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) <= (225 * degToPi);
+    } else {
+      shieldAngleRange = Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) >= (90 * degToPi) && Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) <= (270 * degToPi);
+    }
+    // const shieldAngleRange = Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) >= (135 * degToPi) && Math.abs(mouseMoveAngle - enemyAxisRotateAngle * degToPi) <= (225 * degToPi);
     // 判斷是多邊形或其它敵人撞上 shooter
     const judgeWhatEnemyHit = function () {
       if (type !== 'big' && type !== 'small') {
@@ -94,7 +100,7 @@ const enemyMethods = {
     } else if (shieldAngleRange && (enemyAxisRotateR <= (shooter.shieldR + (shooter.shieldLineW / 2)))) {
       judgeWhatEnemyHit();
       shooter.isProtect = true;
-      gameCrawler.textContent = 'BLOCK';
+      gameCrawler.textContent = 'BLOCK😉';
     }
   },
 
@@ -113,11 +119,17 @@ const enemyMethods = {
     }
     // 當敵人子彈射中 shooter 的護盾
     const angleGap = Math.abs((mouseMoveAngle / degToPi) - ((bullet.rotateAngle % 360) + (bullet.rotateAngle < 0 ? 360 : 0)));
-    const shieldAngleRange = (angleGap >= 135) && (angleGap <= 225);
+    let shieldAngleRange;
+    if (shooter.state !== 'shield') {
+      shieldAngleRange = (angleGap >= 135) && (angleGap <= 225);
+    } else {
+      shieldAngleRange = (angleGap >= 90) && (angleGap <= 270);
+    }
+    // const shieldAngleRange = (angleGap >= 135) && (angleGap <= 225);
     if (shieldAngleRange && (-bullet.moveX >= (bullet.axisRotateR - (shooterShield + bulletLen)))) {
       // 移除子彈
       bullets.splice(bulletIdx, 1);
-      gameCrawler.textContent = 'BLOCK';
+      gameCrawler.textContent = 'BLOCK😉';
     }
   },
 
@@ -147,6 +159,6 @@ const enemyMethods = {
         game.endGame();
       }
     }
-    gameCrawler.textContent = Math.random() >= 0.5 ? 'OUCH!' : 'UGGH!';
+    gameCrawler.textContent = Math.random() >= 0.5 ? 'OUCH😣' : 'UGGH😫';
   },
 }

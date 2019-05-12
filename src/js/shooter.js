@@ -167,24 +167,24 @@ class Shooter {
       case 'heart':
         this.recoverHeart();
         lastTime = 0;
-        gameCrawler.textContent = 'GAIN LIFE';
+        gameCrawler.textContent = 'GAIN LIFE💕';
         break;
       case 'crackdown':
         this.drawCrackdownEffect();
         lastTime = 0;
-        gameCrawler.textContent = 'BOOM!!!';
+        gameCrawler.textContent = 'BOOM💥';
         break;
       case 'shield':
         lastTime = 25000;
-        gameCrawler.textContent = 'EXTEND SHIELD';
+        gameCrawler.textContent = 'EXTEND SHIELD💪';
         break;
       case 'double':
         lastTime = 20000;
-        gameCrawler.textContent = 'DOUBLE SHOOT';
+        gameCrawler.textContent = 'DOUBLE SHOOT✌️';
         break;
       case 'wave':
         lastTime = 15000;
-        gameCrawler.textContent = 'WAVE BULLET';
+        gameCrawler.textContent = 'WAVE BULLET🌊';
         break;
       default:
         lastTime = 0;
@@ -534,7 +534,7 @@ class ShooterBullet {
     const shotRRange = shotRRangeFn();
 
     if (!gameCrawler.textContent) {
-      gameCrawler.textContent = Math.random() >= 0.5 ? 'FIRE' : 'BANG!';
+      gameCrawler.textContent = Math.random() >= 0.5 ? 'FIRE🔥' : 'BANG👊';
     }
     // 判斷子彈有無射中敵人
     if (shotAngleRange && shotRRange) {
@@ -551,7 +551,7 @@ class ShooterBullet {
         game.batteryNum += 1;
         batteryNum.textContent = game.batteryNum;
       }
-      gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE!" : 'HIT';
+      gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE😤" : 'HIT👍';
     }
     // } else {
     //   gameCrawler.textContent = Math.random() >= 0.5 ? 'DODGE' : "MISS";
@@ -596,7 +596,7 @@ class ShooterBullet {
     let angleB2;
 
     if (!gameCrawler.textContent) {
-      gameCrawler.textContent = Math.random() >= 0.5 ? 'FIRE' : 'BANG!';
+      gameCrawler.textContent = Math.random() >= 0.5 ? 'FIRE🔥' : 'BANG👊';
     }
     if (bottomJudge || topJudge) {
       angleB1 = getAngleB(sideA, sideB2, sideC2);
@@ -633,7 +633,7 @@ class ShooterBullet {
         game.batteryNum += 1;
         batteryNum.textContent = game.batteryNum;
       }
-      gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE!" : 'HIT';
+      gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE😤!" : 'HIT👍';
     }
     // } else {
     //   gameCrawler.textContent = Math.random() >= 0.5 ? 'DODGE' : "MISS";

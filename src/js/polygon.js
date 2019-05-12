@@ -211,7 +211,7 @@ class Polygon {
             // this.isSplited = true;
           // },
         });
-        gameCrawler.textContent = 'ENEMY SPLITS';
+        // gameCrawler.textContent = 'ENEMY SPLITS';
         this.isJustSplite = false;
       }
       // 當大分裂撞上 shooter
@@ -231,7 +231,7 @@ class Polygon {
 
 
   appear(isBossGenerate) {
-    gameCrawler.textContent = 'ENEMY IS COMING';
+    gameCrawler.textContent = '⚠ ENEMY IS COMING';
     TweenLite.to(this, 0.8, {
       scale: 1,
       ease: Back.easeOut.config(1.7),

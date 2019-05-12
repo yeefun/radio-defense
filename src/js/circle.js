@@ -128,12 +128,12 @@ class Circle {
         // 間隔 0.2-0.4 秒
       }, i * getRandom(200, 400));
     }
-    gameCrawler.textContent = Math.random() >= 0.9 ? 'UNDER ATTACK' : 'ATTACK!';
+    gameCrawler.textContent = Math.random() >= 0.9 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
   }
 
 
   appear(isBossGenerate) {
-    gameCrawler.textContent = 'ENEMY IS COMING';
+    gameCrawler.textContent = '⚠ ENEMY IS COMING';
     // gameCrawler.innerHTML = '<i class="fas fa-exclamation-triangle"></i>ENEMY IS COMING!';
     TweenLite.to(this, 0.8, {
       scale: 1,
