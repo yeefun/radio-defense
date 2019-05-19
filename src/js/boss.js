@@ -4,10 +4,14 @@ class Boss {
       axisRotateR: 0,
       axisRotateAngle: 0,
       rotate: 0,
-      axisRotateRV: 1,
+      scale: 0,
+      // axisRotateRV: 1,
       axisRotateAngleV: 1,
       rotateV: 1,
       beforeGenerateEnemyTime: new Date(),
+      beginAppear: true,
+      isAppearing: false,
+      isDisappeared: false,
     }
     Object.assign(def, args);
     Object.assign(this, def);
@@ -15,6 +19,7 @@ class Boss {
   draw() {
     ctx.save();
       ctx.translate(originalPos(this.axisRotateR, this.axisRotateAngle).x, originalPos(this.axisRotateR, this.axisRotateAngle).y);
+      ctx.scale(this.scale, this.scale);
       ctx.rotate(this.rotate * degToPi);
       // 透明頭
       ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
@@ -134,41 +139,84 @@ class Boss {
     ctx.restore();
   }
   update() {
-    const generateEnemyTime = new Date();
-    if (generateEnemyTime - this.beforeGenerateEnemyTime > 2000) {
-      this.generateEnemy();
-      this.beforeGenerateEnemyTime = generateEnemyTime;
+    // boss 出現
+    this.beginAppear && this.appear();
+    this.beginAppear = false;
+    if (!this.isAppearing && !this.isDisappeared) {
+      // 產生敵人
+      const generateEnemyTime = new Date();
+      if (generateEnemyTime - this.beforeGenerateEnemyTime > 2000) {
+        this.generateEnemy();
+        this.beforeGenerateEnemyTime = generateEnemyTime;
+      }
+      this.axisRotateAngle += this.axisRotateAngleV;
+      this.rotate += this.rotateV;
     }
-    // this.axisRotateAngle += this.axisRotateAngleV;
-    // this.rotate += this.rotateV;
+  }
+  appear() {
+    this.isDisappeared = false;
+    this.isAppearing = true;
+    gameCrawler.textContent = '⚠ BOSS IS COMING';
+    // setTimeout(() => {
+      TweenLite.to(this, 1.2, {
+        scale: 1,
+        ease: Expo.easeOut,
+      });
+      TweenLite.from(this, 1.6, {
+        axisRotateAngle: '-=45',
+        rotate: '-=45',
+        ease: Expo.easeOut,
+        onComplete: () => {
+          this.isAppearing = false;
+        },
+      });
+    // }, 3000);
+    setTimeout(() => {
+      this.disappear();
+    }, 4000);
+  }
+  disappear() {
+    this.isDisappeared = true;
+    TweenLite.to(this, 1.2, {
+      scale: 0,
+      ease: Expo.easeOut,
+    });
+    TweenLite.to(this, 1.6, {
+      axisRotateAngle: '-=45',
+      rotate: '-=45',
+      ease: Expo.easeOut,
+      // onComplete: () => {
+      //   this.isDisappearing = false;
+      // },
+    });
+    setTimeout(() => {
+      this.appear();
+    }, 4000);
   }
   generateEnemy() {
-    const generateEnemyTime = new Date();
-    if (generateEnemyTime - this.beforeGenerateEnemyTime > 2000) {
-      // game.circles.push(new Circle({
-      //   axisRotateR: this.axisRotateR,
-      //   axisRotateAngle: this.axisRotateAngle % 360,
-      //   isBossGenerate: true,
-      // }));
-      // game.triangles.push(new Triangle({
-      //   axisRotateR: this.axisRotateR,
-      //   axisRotateAngle: this.axisRotateAngle % 360,
-      //   rotate: this.axisRotateAngle % 360,
-      //   isBossGenerate: true,
-      // }));
-      game.polygons.push(new Polygon({
-        axisRotateR: {
-          whole: this.axisRotateR,
-          big: this.axisRotateR,
-          small: this.axisRotateR,
-        },
-        axisRotateAngle: {
-          whole: this.axisRotateAngle % 360,
-          big: this.axisRotateAngle % 360,
-          small: this.axisRotateAngle % 360,
-        },
-        isBossGenerate: true,
-      }));
-    }
+    // game.circles.push(new Circle({
+    //   axisRotateR: this.axisRotateR,
+    //   axisRotateAngle: this.axisRotateAngle % 360,
+    //   isBossGenerate: true,
+    // }));
+    // game.triangles.push(new Triangle({
+    //   axisRotateR: this.axisRotateR,
+    //   axisRotateAngle: this.axisRotateAngle % 360,
+    //   rotate: this.axisRotateAngle % 360,
+    //   isBossGenerate: true,
+    // }));
+    game.polygons.push(new Polygon({
+      axisRotateR: {
+        whole: this.axisRotateR,
+        big: this.axisRotateR,
+        small: this.axisRotateR,
+      },
+      axisRotateAngle: {
+        whole: this.axisRotateAngle % 360,
+        big: this.axisRotateAngle % 360,
+        small: this.axisRotateAngle % 360,
+      },
+      isBossGenerate: true,
+    }));
   }
 }

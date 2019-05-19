@@ -317,7 +317,7 @@ class Game {
     // 讓滑鼠點擊無效
     panel.style.pointerEvents = 'none';
     // 倒數計時 3 秒
-    this.countdownSeconds = 3;
+    this.countdownSeconds = 1;
     gameCrawler.textContent = 'READY!';
     gameTime.textContent = `00:0${this.countdownSeconds}”`;
     const countdownStartTime = () => {
@@ -539,106 +539,112 @@ class Game {
     switch (level) {
       case 1: {
         this.initLevel('01', 10);
+        // this.boss = new Boss();
+        const rotateNum = getRandom(0, 360);
+        this.boss = new Boss({
+          axisRotateR: getRandom(gameH / 3, gameH / 2.5),
+          axisRotateAngle: rotateNum,
+          rotate: rotateNum - 90,
+        });
         // 設定敵人出場
-        this.setEnemy('circle', 0);
-        // this.setEnemy('polygon', 10);
+        // this.setEnemy('circle', 0);
         break;
       }
-      case 2: {
-        this.initLevel('02', 20);
-        this.setEnemy('triangle', 0);
-        this.setEnemy('polygon', 10);
-        break;
-      }
-      case 3: {
-        this.initLevel('03', 20);
-        this.setEnemy('polygon', 0);
-        this.setEnemy('circle', 5);
-        this.setEnemy('polygon', 10);
-        break;
-      }
-      case 4: {
-        this.initLevel('04', 30);
-        this.setEnemy('circle', 0);
-        this.setEnemy('triangle', 0);
-        this.setEnemy('polygon', 10);
-        this.setEnemy('triangle', 15);
-        this.setEnemy('polygon', 20);
-        break;
-      }
-      case 5: {
-        this.initLevel('05', 30);
-        this.setEnemy('circle', 0);
-        this.setEnemy('circle', 0);
-        this.setEnemy('circle', 5);
-        this.setEnemy('polygon', 15);
-        this.setEnemy('triangle', 20);
-        break;
-      }
-      case 6: {
-        this.initLevel('06', 40);
-        this.setEnemy('triangle', 0);
-        this.setEnemy('triangle', 5);
-        this.setEnemy('circle', 15);
-        this.setEnemy('circle', 25);
-        this.setEnemy('polygon', 25);
-        break;
-      }
-      case 7: {
-        this.initLevel('07', 60);
-        this.setEnemy('circle', 0);
-        this.setEnemy('triangle', 0);
-        this.setEnemy('circle', 10);
-        this.setEnemy('triangle', 10);
-        this.setEnemy('polygon', 15);
-        this.setEnemy('polygon', 20);
-        this.setEnemy('triangle', 25);
-        this.setEnemy('polygon', 25);
-        this.setEnemy('polygon', 35);
-        this.setEnemy('triangle', 35);
-        this.setEnemy('polygon', 40);
-        this.setEnemy('circle', 45);
-        this.setEnemy('circle', 50);
-        break;
-      }
-      case 8: {
-        this.initLevel('08', 60);
-        this.setEnemy('circle', 5);
-        this.setEnemy('triangle', 10);
-        this.setEnemy('triangle', 10);
-        this.setEnemy('polygon', 15);
-        this.setEnemy('circle', 15);
-        this.setEnemy('circle', 20);
-        this.setEnemy('polygon', 30);
-        this.setEnemy('circle', 35);
-        this.setEnemy('triangle', 35);
-        this.setEnemy('polygon', 35);
-        this.setEnemy('circle', 45);
-        this.setEnemy('triangle', 45);
-        this.setEnemy('circle', 50);
-        this.setEnemy('polygon', 50);
-        break;
-      }
-      case 9: {
-        this.initLevel('09', 30);
-        this.setEnemy('circle', 0);
-        this.setEnemy('circle', 0);
-        this.setEnemy('triangle', 0);
-        this.setEnemy('triangle', 0);
-        this.setEnemy('polygon', 10);
-        this.setEnemy('circle', 15);
-        this.setEnemy('triangle', 15);
-        this.setEnemy('polygon', 15);
-        this.setEnemy('polygon', 25);
-        break;
-      }
+      // case 2: {
+      //   this.initLevel('02', 20);
+      //   this.setEnemy('triangle', 0);
+      //   this.setEnemy('polygon', 10);
+      //   break;
+      // }
+      // case 3: {
+      //   this.initLevel('03', 20);
+      //   this.setEnemy('polygon', 0);
+      //   this.setEnemy('circle', 5);
+      //   this.setEnemy('polygon', 10);
+      //   break;
+      // }
+      // case 4: {
+      //   this.initLevel('04', 30);
+      //   this.setEnemy('circle', 0);
+      //   this.setEnemy('triangle', 0);
+      //   this.setEnemy('polygon', 10);
+      //   this.setEnemy('triangle', 15);
+      //   this.setEnemy('polygon', 20);
+      //   break;
+      // }
+      // case 5: {
+      //   this.initLevel('05', 30);
+      //   this.setEnemy('circle', 0);
+      //   this.setEnemy('circle', 0);
+      //   this.setEnemy('circle', 5);
+      //   this.setEnemy('polygon', 15);
+      //   this.setEnemy('triangle', 20);
+      //   break;
+      // }
+      // case 6: {
+      //   this.initLevel('06', 40);
+      //   this.setEnemy('triangle', 0);
+      //   this.setEnemy('triangle', 5);
+      //   this.setEnemy('circle', 15);
+      //   this.setEnemy('circle', 25);
+      //   this.setEnemy('polygon', 25);
+      //   break;
+      // }
+      // case 7: {
+      //   this.initLevel('07', 60);
+      //   this.setEnemy('circle', 0);
+      //   this.setEnemy('triangle', 0);
+      //   this.setEnemy('circle', 10);
+      //   this.setEnemy('triangle', 10);
+      //   this.setEnemy('polygon', 15);
+      //   this.setEnemy('polygon', 20);
+      //   this.setEnemy('triangle', 25);
+      //   this.setEnemy('polygon', 25);
+      //   this.setEnemy('polygon', 35);
+      //   this.setEnemy('triangle', 35);
+      //   this.setEnemy('polygon', 40);
+      //   this.setEnemy('circle', 45);
+      //   this.setEnemy('circle', 50);
+      //   break;
+      // }
+      // case 8: {
+      //   this.initLevel('08', 60);
+      //   this.setEnemy('circle', 5);
+      //   this.setEnemy('triangle', 10);
+      //   this.setEnemy('triangle', 10);
+      //   this.setEnemy('polygon', 15);
+      //   this.setEnemy('circle', 15);
+      //   this.setEnemy('circle', 20);
+      //   this.setEnemy('polygon', 30);
+      //   this.setEnemy('circle', 35);
+      //   this.setEnemy('triangle', 35);
+      //   this.setEnemy('polygon', 35);
+      //   this.setEnemy('circle', 45);
+      //   this.setEnemy('triangle', 45);
+      //   this.setEnemy('circle', 50);
+      //   this.setEnemy('polygon', 50);
+      //   break;
+      // }
+      // case 9: {
+      //   this.initLevel('09', 30);
+      //   this.setEnemy('circle', 0);
+      //   this.setEnemy('circle', 0);
+      //   this.setEnemy('triangle', 0);
+      //   this.setEnemy('triangle', 0);
+      //   this.setEnemy('polygon', 10);
+      //   this.setEnemy('circle', 15);
+      //   this.setEnemy('triangle', 15);
+      //   this.setEnemy('polygon', 15);
+      //   this.setEnemy('polygon', 25);
+      //   break;
+      // }
       default:
         break;
     }
     // this.boss = new Boss({
     //   axisRotateR: 200,
     //   axisRotateAngle: 90,
-    // });;
+    // });
   }
 }
 
