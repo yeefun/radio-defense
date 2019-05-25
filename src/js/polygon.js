@@ -44,7 +44,7 @@ class Polygon {
   }
 
 
-  originalPos(form) {
+  originPos(form) {
     return {
       x: (gameW / 2) + this.axisRotateR[form] * Math.cos(this.axisRotateAngle[form] * degToPi),
       y: (gameH / 2) + this.axisRotateR[form] * Math.sin(this.axisRotateAngle[form] * degToPi),
@@ -55,7 +55,7 @@ class Polygon {
   draw() {
     if (this.HP.whole) {
       ctx.save();
-      ctx.translate(this.originalPos('whole').x, this.originalPos('whole').y);
+      ctx.translate(this.originPos('whole').x, this.originPos('whole').y);
       ctx.rotate(this.rotate.whole * degToPi);
       ctx.scale(this.scale, this.scale);
       // 主體多邊形
@@ -98,7 +98,7 @@ class Polygon {
       // 大分裂四邊形
       if (this.HP.big) {
         ctx.save();
-        ctx.translate(this.originalPos('big').x, this.originalPos('big').y);
+        ctx.translate(this.originPos('big').x, this.originPos('big').y);
         ctx.rotate(this.rotate.big * degToPi);
         // 大分裂主體
         ctx.beginPath();
@@ -128,7 +128,7 @@ class Polygon {
       // 小分裂四邊形
       if (this.HP.small) {
         ctx.save();
-        ctx.translate(this.originalPos('small').x, this.originalPos('small').y);
+        ctx.translate(this.originPos('small').x, this.originPos('small').y);
         ctx.rotate(this.rotate.small * degToPi);
         // 小分裂主體
         ctx.beginPath();

@@ -8,17 +8,19 @@ class Boss {
       // axisRotateRV: 1,
       axisRotateAngleV: 1,
       rotateV: 1,
+      bullets: [],
       beforeGenerateEnemyTime: new Date(),
       beginAppear: true,
       isAppearing: false,
       isDisappeared: false,
+      appearTimes: 0,
     }
     Object.assign(def, args);
     Object.assign(this, def);
   }
   draw() {
     ctx.save();
-      ctx.translate(originalPos(this.axisRotateR, this.axisRotateAngle).x, originalPos(this.axisRotateR, this.axisRotateAngle).y);
+      ctx.translate(originPos(this.axisRotateR, this.axisRotateAngle).x, originPos(this.axisRotateR, this.axisRotateAngle).y);
       ctx.scale(this.scale, this.scale);
       ctx.rotate(this.rotate * degToPi);
       // 透明頭
@@ -137,6 +139,10 @@ class Boss {
       ctx.closePath();
       ctx.fill();
     ctx.restore();
+    // 繪製 boss 子彈
+    this.bullets.forEach((bullet) => {
+      bullet.draw();
+    });
   }
   update() {
     // boss 出現
@@ -144,36 +150,52 @@ class Boss {
     this.beginAppear = false;
     if (!this.isAppearing && !this.isDisappeared) {
       // 產生敵人
-      const generateEnemyTime = new Date();
-      if (generateEnemyTime - this.beforeGenerateEnemyTime > 2000) {
-        this.generateEnemy();
-        this.beforeGenerateEnemyTime = generateEnemyTime;
-      }
-      this.axisRotateAngle += this.axisRotateAngleV;
-      this.rotate += this.rotateV;
+      // const generateEnemyTime = new Date();
+      // if (generateEnemyTime - this.beforeGenerateEnemyTime > 2000) {
+      //   this.generateEnemy();
+      //   this.beforeGenerateEnemyTime = generateEnemyTime;
+      // }
+      // this.axisRotateAngle += this.axisRotateAngleV;
+      // this.rotate += this.rotateV;
     }
+    // 更新 boss 子彈
+    this.bullets.forEach((bullet, idx, arr) => {
+      bullet.update(idx, arr);
+    });
   }
   appear() {
+    this.appearTimes += 1;
     this.isDisappeared = false;
     this.isAppearing = true;
     gameCrawler.textContent = '⚠ BOSS IS COMING';
-    // setTimeout(() => {
-      TweenLite.to(this, 1.2, {
-        scale: 1,
-        ease: Expo.easeOut,
-      });
-      TweenLite.from(this, 1.6, {
-        axisRotateAngle: '-=45',
-        rotate: '-=45',
-        ease: Expo.easeOut,
-        onComplete: () => {
-          this.isAppearing = false;
-        },
-      });
-    // }, 3000);
-    setTimeout(() => {
-      this.disappear();
-    }, 4000);
+    TweenLite.to(this, 1.2, {
+      scale: 1,
+      ease: Expo.easeOut,
+    });
+    const rotateNum = getRandom(45, 135);
+    TweenLite.to(this, 1.6, {
+      axisRotateAngle: `+=${rotateNum}`,
+      rotate: `+=${rotateNum}`,
+      ease: Expo.easeOut,
+      onComplete: () => {
+        this.isAppearing = false;
+      },
+    });
+    if (this.appearTimes && this.appearTimes % 3) {
+      setTimeout(() => {
+        this.shoot();
+      }, 2000);
+      setTimeout(() => {
+        this.disappear();
+      }, 4000);
+    } else {
+      setTimeout(() => {
+        this.generateEnemy();
+      }, 2000);
+      setTimeout(() => {
+        this.disappear();
+      }, 4000);
+    }
   }
   disappear() {
     this.isDisappeared = true;
@@ -181,17 +203,36 @@ class Boss {
       scale: 0,
       ease: Expo.easeOut,
     });
+    const rotateNum = getRandom(45, 135);
     TweenLite.to(this, 1.6, {
-      axisRotateAngle: '-=45',
-      rotate: '-=45',
+      axisRotateAngle: `+=${rotateNum}`,
+      rotate: `+=${rotateNum}`,
       ease: Expo.easeOut,
-      // onComplete: () => {
-      //   this.isDisappearing = false;
-      // },
     });
     setTimeout(() => {
       this.appear();
-    }, 4000);
+    }, 2000);
+  }
+  shoot() {
+    this.bullets.push(new BossBullet({
+      p: {
+        x: originPos(this.axisRotateR, this.axisRotateAngle).x,
+        y: originPos(this.axisRotateR, this.axisRotateAngle).y,
+      },
+      rotateAngle: this.rotate,
+      axisRotateR: this.axisRotateR,
+    }));
+    setTimeout(() => {
+      this.bullets.push(new BossBullet({
+        p: {
+          x: originPos(this.axisRotateR, this.axisRotateAngle).x,
+          y: originPos(this.axisRotateR, this.axisRotateAngle).y,
+        },
+        rotateAngle: this.rotate,
+        waveLength: 14,
+        axisRotateR: this.axisRotateR,
+      }));
+    }, 200);
   }
   generateEnemy() {
     // game.circles.push(new Circle({
@@ -218,5 +259,41 @@ class Boss {
       },
       isBossGenerate: true,
     }));
+  }
+}
+
+class BossBullet {
+  constructor(args) {
+    const def = {
+      p: {
+        x: 0,
+        y: 0,
+      },
+      axisRotateR: 0,
+      color: globalColor.orange,
+      moveX: 8,
+      moveXV: 4,
+      rotateAngle: 0,
+      waveLength: 22,
+      waveFreq: 0.3,
+      waveAmp: 4,
+      waveFlow: 3,
+      isBoss: true,
+    }
+    Object.assign(def, args);
+    Object.assign(this, def);
+  }
+  draw() {
+    ctx.save();
+      ctx.translate(this.p.x, this.p.y);
+      ctx.rotate((this.rotateAngle - 90) * degToPi);
+      // 開始畫 boss 子彈
+      drawWaveBullet(this, 'moveX', 2.4, 'rgba(245, 175, 95, 0.72)');
+    ctx.restore();
+  }
+  update(idx, arr) {
+    // boss 子彈移動
+    this.moveX += this.moveXV;
+    enemyMethods.attackShooter(this, idx, arr);
   }
 }

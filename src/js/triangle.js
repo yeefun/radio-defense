@@ -30,7 +30,7 @@ class Triangle {
     const triInnerSmallR = this.r - 22;
     ctx.save();
     // 淡三角
-    ctx.translate(originalPos(this.axisRotateR, this.axisRotateAngle).x, originalPos(this.axisRotateR, this.axisRotateAngle).y);
+    ctx.translate(originPos(this.axisRotateR, this.axisRotateAngle).x, originPos(this.axisRotateR, this.axisRotateAngle).y);
     ctx.scale(this.scale, this.scale);
     ctx.rotate(this.rotate * degToPi);
     ctx.save();
@@ -135,8 +135,8 @@ class Triangle {
     gameCrawler.textContent = Math.random() >= 0.9 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
     this.bullets.push(new TriBullet({
       p: {
-        x: originalPos(this.axisRotateR, this.axisRotateAngle).x,
-        y: originalPos(this.axisRotateR, this.axisRotateAngle).y,
+        x: originPos(this.axisRotateR, this.axisRotateAngle).x,
+        y: originPos(this.axisRotateR, this.axisRotateAngle).y,
       },
       axisRotateR: this.axisRotateR,
       rotateAngle: this.rotate,
@@ -193,7 +193,7 @@ class TriSub {
     const triInnerSmallR = this.r - 8.8;
     ctx.save();
     // 淡三角
-    ctx.translate(originalPos(this.axisRotateR, this.axisRotateAngle).x, originalPos(this.axisRotateR, this.axisRotateAngle).y);
+    ctx.translate(originPos(this.axisRotateR, this.axisRotateAngle).x, originPos(this.axisRotateR, this.axisRotateAngle).y);
     // ctx.scale(0.4, 0.4);
     ctx.rotate(this.rotate * degToPi);
     ctx.save();

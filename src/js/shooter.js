@@ -228,13 +228,13 @@ class Shooter {
       // 清除敵人
       game.circles.forEach((circle, idx) => {
         if (effectR > circle.axisRotateR) {
-          enemyMethods.dieEffect(circle.r, originalPos(circle.axisRotateR, circle.axisRotateAngle).x, originalPos(circle.axisRotateR, circle.axisRotateAngle).y, '245, 175, 95');
+          enemyMethods.dieEffect(circle.r, originPos(circle.axisRotateR, circle.axisRotateAngle).x, originPos(circle.axisRotateR, circle.axisRotateAngle).y, '245, 175, 95');
           game.circles.splice(idx, 1);
         }
       });
       game.triangles.forEach((triangle, idx) => {
         if (effectR > triangle.axisRotateR) {
-          enemyMethods.dieEffect(triangle.r, originalPos(triangle.axisRotateR, triangle.axisRotateAngle).x, originalPos(triangle.axisRotateR, triangle.axisRotateAngle).y, '54, 118, 187');
+          enemyMethods.dieEffect(triangle.r, originPos(triangle.axisRotateR, triangle.axisRotateAngle).x, originPos(triangle.axisRotateR, triangle.axisRotateAngle).y, '54, 118, 187');
           game.triangles.splice(idx, 1);
         }
       });
@@ -242,16 +242,16 @@ class Shooter {
         if (effectR > polygon.axisRotateR.whole) {
           if (polygon.HP.whole) {
             const polygonWholeR = (34 + 21) / 2;
-            enemyMethods.dieEffect(polygonWholeR, polygon.originalPos('whole').x, polygon.originalPos('whole').y, '231, 70, 93');
+            enemyMethods.dieEffect(polygonWholeR, polygon.originPos('whole').x, polygon.originPos('whole').y, '231, 70, 93');
           } else {
             if (polygon.HP.big) {
               const polygonBigR = (34 + 22) / 2;
-              enemyMethods.dieEffect(polygonBigR, polygon.originalPos('big').x, polygon.originalPos('big').y, '231, 70, 93');
+              enemyMethods.dieEffect(polygonBigR, polygon.originPos('big').x, polygon.originPos('big').y, '231, 70, 93');
               game.polygons.splice(idx, 1);
             }
             if (polygon.HP.small) {
               const polygonSmallR = (23 + 21) / 2;
-              enemyMethods.dieEffect(polygonSmallR, polygon.originalPos('small').x, polygon.originalPos('small').y, '231, 70, 93');
+              enemyMethods.dieEffect(polygonSmallR, polygon.originPos('small').x, polygon.originPos('small').y, '231, 70, 93');
               game.polygons.splice(idx, 1);
             }
           }
@@ -332,6 +332,7 @@ class ShooterBullet {
     ctx.save();
     ctx.translate(gameW / 2, gameH / 2);
     ctx.rotate(this.rotateAngle);
+    // 如果 shooter 狀態非 wave
     if (game.shooter.state !== 'wave') {
       // 殘影
       ctx.beginPath();
@@ -364,9 +365,9 @@ class ShooterBullet {
       ctx.lineTo(2.55 + this.axisRotateR, -2.55);
       ctx.closePath();
       ctx.fill();
-      // 如果 shooter 狀態為 wave
     } else {
-      this.drawWaveBullet();
+      // this.drawWaveBullet();
+      drawWaveBullet(this, 'axisRotateR', 1.6, 'rgba(255, 255, 255, 0.72)');
     }
     ctx.restore();
   }
@@ -497,27 +498,6 @@ class ShooterBullet {
     // 當子彈超出邊界
     this.beyondBoundary(bulletIdx);
   }
-  // 繪製波狀子彈
-  drawWaveBullet() {
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = 1.6;
-    ctx.shadowColor = 'rgba(255, 255, 255, 0.72)';
-    ctx.shadowBlur = 2;
-    // 正半波
-    ctx.beginPath();
-    for (let i = 0; i < this.waveLength; i += 1) {
-      const degree = (i * this.waveFreq) + (updateTime / this.waveFlow);
-      ctx.lineTo(this.axisRotateR + (this.waveAmp * Math.sin(degree)), i);
-    }
-    ctx.stroke();
-    // 負半波
-    ctx.beginPath();
-    for (let i = 0; i < this.waveLength; i += 1) {
-      const degree = (i * this.waveFreq) + (updateTime / this.waveFlow);
-      ctx.lineTo(this.axisRotateR + (this.waveAmp * Math.sin(degree)), -i);
-    }
-    ctx.stroke();
-  }
   // 攻擊敵人（圓形、三角形）
   // FIXME 當敵人太靠近會打不到
   attackEnemy(enemy, enemyIdx, enemies, bulletIdx, anglePanFn, shotRRangeFn, colorRGB, type = 'ordinary') {
@@ -546,7 +526,7 @@ class ShooterBullet {
         // 若生命值 0，移除敵人
         enemies.splice(enemyIdx, 1);
         // 移除效果
-        enemyMethods.dieEffect(enemy.r, originalPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originalPos(enemy.axisRotateR, enemy.axisRotateAngle).y, colorRGB);
+        enemyMethods.dieEffect(enemy.r, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, colorRGB);
         // 電池加一
         game.batteryNum += 1;
         batteryNum.textContent = game.batteryNum;
@@ -624,7 +604,7 @@ class ShooterBullet {
       if (!polygon.HP.big || !polygon.HP.small) {
         // 移除效果
         const polygonR = form === 'big' ? (34 + 22) / 2 : (23 + 21) / 2;
-        enemyMethods.dieEffect(polygonR, polygon.originalPos(form).x, polygon.originalPos(form).y, '231, 70, 93');
+        enemyMethods.dieEffect(polygonR, polygon.originPos(form).x, polygon.originPos(form).y, '231, 70, 93');
       }
       // 如果大小分裂都被擊斃了，那就移除此多邊形
       if (!polygon.HP.big && !polygon.HP.small) {

@@ -2,7 +2,27 @@ ctx.$triLineTo = function (r, angle, angleAdd = 0) {
   return ctx.lineTo(r * Math.cos(angle * degToPi + angleAdd), r * Math.sin(angle * degToPi + angleAdd));
 }
 
-
+// 繪製波狀子彈
+function drawWaveBullet(bullet, originPos, lineWidth, shadowColor) {
+  ctx.strokeStyle = bullet.color;
+  ctx.lineWidth = lineWidth;
+  ctx.shadowColor = shadowColor;
+  ctx.shadowBlur = 2;
+  // 正半波
+  ctx.beginPath();
+  for (let i = 0; i < bullet.waveLength; i += 1) {
+    const degree = (i * bullet.waveFreq) + (updateTime / bullet.waveFlow);
+    ctx.lineTo(bullet[originPos] + (bullet.waveAmp * Math.sin(degree)), i);
+  }
+  ctx.stroke();
+  // 負半波
+  ctx.beginPath();
+  for (let i = 0; i < bullet.waveLength; i += 1) {
+    const degree = (i * bullet.waveFreq) + (updateTime / bullet.waveFlow);
+    ctx.lineTo(bullet[originPos] + (bullet.waveAmp * Math.sin(degree)), -i);
+  }
+  ctx.stroke();
+}
 
 // 繪製電池
 function drawBattery(p) {
@@ -78,7 +98,7 @@ function drawLightning(translate = { x: 0, y: 0 }, scale = 1) {
 
 
 
-function originalPos(axisRotateR, axisRotateAngle) {
+function originPos(axisRotateR, axisRotateAngle) {
   return {
     x: (gameW / 2) + axisRotateR * Math.cos(axisRotateAngle * degToPi),
     y: (gameH / 2) + axisRotateR * Math.sin(axisRotateAngle * degToPi),

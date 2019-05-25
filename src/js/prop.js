@@ -19,7 +19,7 @@ class Prop {
     }
     if (this.img.complete) {
       ctx.save();
-      ctx.translate(originalPos(this.axisRotateR, this.axisRotateAngle).x, originalPos(this.axisRotateR, this.axisRotateAngle).y);
+      ctx.translate(originPos(this.axisRotateR, this.axisRotateAngle).x, originPos(this.axisRotateR, this.axisRotateAngle).y);
       ctx.drawImage(this.img, 0, 0);
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';

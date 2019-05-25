@@ -77,15 +77,15 @@ const enemyMethods = {
         // 移除敵人效果
         if (type !== 'whole') {
           const colorRGB = type === 'circle' ? '245, 175, 95' : '54, 118, 187';
-          enemyMethods.dieEffect(enemy.r, originalPos(enemyAxisRotateR, enemyAxisRotateAngle).x, originalPos(enemyAxisRotateR, enemyAxisRotateAngle).y, colorRGB);
+          enemyMethods.dieEffect(enemy.r, originPos(enemyAxisRotateR, enemyAxisRotateAngle).x, originPos(enemyAxisRotateR, enemyAxisRotateAngle).y, colorRGB);
         } else {
           const polygonR = (34 + 22) / 2;
-          enemyMethods.dieEffect(polygonR, enemy.originalPos(type).x, enemy.originalPos(type).y, '231, 70, 93');
+          enemyMethods.dieEffect(polygonR, enemy.originPos(type).x, enemy.originPos(type).y, '231, 70, 93');
         }
       } else {
         enemy.HP[type] -= 1;
         const polygonR = type === 'big' ? (34 + 22) / 2 : (23 + 21) / 2;
-        enemyMethods.dieEffect(polygonR, enemy.originalPos(type).x, enemy.originalPos(type).y, '231, 70, 93');
+        enemyMethods.dieEffect(polygonR, enemy.originPos(type).x, enemy.originPos(type).y, '231, 70, 93');
         if (!enemy.HP.big && !enemy.HP.small) {
           enemies.splice(enemyIdx, 1);
         }
@@ -111,14 +111,15 @@ const enemyMethods = {
     const shooterBody = shooter.r + (shooter.cirSolidLineW / 2);
     const shooterShield = shooter.shieldR + (shooter.shieldLineW / 2);
     // 當敵人子彈擊中 shooter 主體
-    if (-bullet.moveX >= (bullet.axisRotateR - (shooterBody + bulletLen))) {
+    if (Math.abs(bullet.moveX) >= (bullet.axisRotateR - (shooterBody + bulletLen))) {
       // 子彈擊中後
       enemyMethods.attackShooterResult();
       // 移除敵人子彈
       bullets.splice(bulletIdx, 1);
     }
     // 當敵人子彈射中 shooter 的護盾
-    const angleGap = Math.abs((mouseMoveAngle / degToPi) - ((bullet.rotateAngle % 360) + (bullet.rotateAngle < 0 ? 360 : 0)));
+    const bulletRotate = bullet.isBoss ? bullet.rotateAngle + 90 : bullet.rotateAngle;
+    const angleGap = Math.abs((mouseMoveAngle / degToPi) - ((bulletRotate % 360) + (bulletRotate < 0 ? 360 : 0)));
     let shieldAngleRange;
     if (shooter.state !== 'shield') {
       shieldAngleRange = (angleGap >= 135) && (angleGap <= 225);
@@ -126,7 +127,7 @@ const enemyMethods = {
       shieldAngleRange = (angleGap >= 90) && (angleGap <= 270);
     }
     // const shieldAngleRange = (angleGap >= 135) && (angleGap <= 225);
-    if (shieldAngleRange && (-bullet.moveX >= (bullet.axisRotateR - (shooterShield + bulletLen)))) {
+    if (shieldAngleRange && (Math.abs(bullet.moveX) >= (bullet.axisRotateR - (shooterShield + bulletLen)))) {
       // 移除子彈
       bullets.splice(bulletIdx, 1);
       gameCrawler.textContent = 'BLOCK😉';

@@ -27,7 +27,7 @@ class Circle {
     const circleSmallR = this.r - 10;
     const subAxisRotateR = 14;
     ctx.save();
-    ctx.translate(originalPos(this.axisRotateR, this.axisRotateAngle).x, originalPos(this.axisRotateR, this.axisRotateAngle).y);
+    ctx.translate(originPos(this.axisRotateR, this.axisRotateAngle).x, originPos(this.axisRotateR, this.axisRotateAngle).y);
     ctx.rotate(this.rotate * degToPi);
     ctx.scale(this.scale, this.scale);
     // 大淡圓
@@ -116,8 +116,8 @@ class Circle {
       const timer = setTimeout(() => {
         this.bullets.push(new CirBullet({
           p: {
-            x: originalPos(this.axisRotateR, this.axisRotateAngle).x,
-            y: originalPos(this.axisRotateR, this.axisRotateAngle).y,
+            x: originPos(this.axisRotateR, this.axisRotateAngle).x,
+            y: originPos(this.axisRotateR, this.axisRotateAngle).y,
           },
           rotateAngle: this.rotate,
           moveX: -this.r - 10,

@@ -16,12 +16,13 @@ const props = ['heart', 'crackdown', 'shield', 'double', 'wave'];
 
 /* GUI Controls */
 // const controls = {
-//   amp: 8,
-//   freq: 0.3,
+  // amp: 8,
+  // freq: 0.3,
+  // testAngle: 40,
 // }
 
 // const gui = new dat.GUI();
-// gui.add(controls, 'amp', 0, 30).step(1).onChange((value) => {});
+// gui.add(controls, 'testAngle', 0, 90).step(1).onChange((value) => {});
 // gui.add(controls, 'freq', 0, 1).step(0.1).onChange((value) => {});
 
 const startBtn = document.getElementById('start-btn');
