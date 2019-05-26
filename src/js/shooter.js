@@ -434,6 +434,11 @@ class ShooterBullet {
           }
         }
       });
+      // 判斷子彈有無射中 boss
+      const boss = game.boss;
+      if (boss) {
+        // this.attackEnemy(boss, triIdx, game.triangles, bulletIdx, anglePanFn, shotRRangeFn, '54, 118, 187');
+      }
     } else {
       // 波狀類型
       // 有無射中圓形

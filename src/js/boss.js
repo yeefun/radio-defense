@@ -47,6 +47,18 @@ class Boss {
       ctx.lineTo(-11, 9);
       ctx.closePath();
       ctx.fill();
+      // 裝飾內透明頭
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.beginPath();
+      ctx.moveTo(0, 9 + 8);
+      ctx.lineTo(4, 9 + 8);
+      ctx.lineTo(14, 24);
+      ctx.lineTo(14, 36 - 8);
+      ctx.lineTo(-14, 36 - 8);
+      ctx.lineTo(-14, 24);
+      ctx.lineTo(-4, 9 + 8);
+      ctx.closePath();
+      ctx.fill();
       // 右白肩
       ctx.fillStyle = globalColor.white;
       ctx.beginPath();
@@ -117,18 +129,6 @@ class Boss {
       ctx.moveTo(-18 - 8 - 8 + 4 - 3.2 - 9.6, 9 + 16);
       ctx.lineTo(-18 - 8 - 8 + 4 - 3.2, 9 + 16 + 9.6);
       ctx.stroke();
-      // 裝飾內透明頭
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-      ctx.beginPath();
-      ctx.moveTo(0, 9 + 8);
-      ctx.lineTo(4, 9 + 8);
-      ctx.lineTo(14, 24);
-      ctx.lineTo(14, 36 - 8);
-      ctx.lineTo(-14, 36 - 8);
-      ctx.lineTo(-14, 24);
-      ctx.lineTo(-4, 9 + 8);
-      ctx.closePath();
-      ctx.fill();
       // 左裝飾透明四邊形
       ctx.fillStyle = 'rgba(255, 255, 255, 0.24)';
       ctx.beginPath();
@@ -185,16 +185,16 @@ class Boss {
       setTimeout(() => {
         this.shoot();
       }, 2000);
-      setTimeout(() => {
-        this.disappear();
-      }, 4000);
+      // setTimeout(() => {
+      //   this.disappear();
+      // }, 4000);
     } else {
       setTimeout(() => {
         this.generateEnemy();
       }, 2000);
-      setTimeout(() => {
-        this.disappear();
-      }, 4000);
+      // setTimeout(() => {
+      //   this.disappear();
+      // }, 4000);
     }
   }
   disappear() {
