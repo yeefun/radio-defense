@@ -541,7 +541,8 @@ class Game {
       case 1: {
         this.initLevel('01', 10);
         // this.boss = new Boss();
-        const rotateNum = getRandom(0, 360);
+        // const rotateNum = getRandom(0, 360);
+        const rotateNum = 360;
         this.boss = new Boss({
           axisRotateR: getRandom(gameH / 3, gameH / 2.5),
           axisRotateAngle: rotateNum,

@@ -437,7 +437,13 @@ class ShooterBullet {
       // 判斷子彈有無射中 boss
       const boss = game.boss;
       if (boss) {
-        // this.attackEnemy(boss, triIdx, game.triangles, bulletIdx, anglePanFn, shotRRangeFn, '54, 118, 187');
+        anglePanFn = () => {
+          return Math.asin(18 / (boss.axisRotateR + 6));
+        }
+        shotRRangeFn = () => {
+          return (bulletMoveLen >= (boss.axisRotateR + 9 + 8)) && (bulletMoveLen <= (boss.axisRotateR + 28));
+        }
+        this.attackEnemy(boss, NaN, null, bulletIdx, anglePanFn, shotRRangeFn, '255, 255, 255', 'ordinary', true);
       }
     } else {
       // 波狀類型
@@ -499,13 +505,24 @@ class ShooterBullet {
           }
         }
       });
+      // 判斷子彈有無射中 boss
+      const boss = game.boss;
+      if (boss) {
+        anglePanFn = () => {
+          return Math.asin(18 / (boss.axisRotateR + 6));
+        }
+        shotRRangeFn = () => {
+          return (this.axisRotateR >= (boss.axisRotateR + 9 + 8)) && (this.axisRotateR <= (boss.axisRotateR + 28));
+        }
+        this.attackEnemy(boss, NaN, null, bulletIdx, anglePanFn, shotRRangeFn, '255, 255, 255', 'wave', true);
+      }
     }
     // 當子彈超出邊界
     this.beyondBoundary(bulletIdx);
   }
   // 攻擊敵人（圓形、三角形）
   // FIXME 當敵人太靠近會打不到
-  attackEnemy(enemy, enemyIdx, enemies, bulletIdx, anglePanFn, shotRRangeFn, colorRGB, type = 'ordinary') {
+  attackEnemy(enemy, enemyIdx, enemies, bulletIdx, anglePanFn, shotRRangeFn, colorRGB, type = 'ordinary', isBoss = false) {
     /**
      * 射中角度範圍
      * 圓形：取得兩個外切線所構成角度的一半
@@ -528,13 +545,19 @@ class ShooterBullet {
       // 扣敵人 1 生命值
       enemy.HP -= 1;
       if (!enemy.HP) {
-        // 若生命值 0，移除敵人
-        enemies.splice(enemyIdx, 1);
-        // 移除效果
-        enemyMethods.dieEffect(enemy.r, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, colorRGB);
-        // 電池加一
-        game.batteryNum += 1;
-        batteryNum.textContent = game.batteryNum;
+        if (isBoss) {
+          game.boss = null;
+          gameCrawler.textContent = 'BOSS DIES!!!🎊';
+          return;
+        } else {
+          // 若生命值 0，移除敵人
+          enemies.splice(enemyIdx, 1);
+          // 移除效果
+          enemyMethods.dieEffect(enemy.r, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, colorRGB);
+          // 電池加一
+          game.batteryNum += 1;
+          batteryNum.textContent = game.batteryNum;
+        }
       }
       gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE😤" : 'HIT👍';
     }

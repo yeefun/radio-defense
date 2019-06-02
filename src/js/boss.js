@@ -9,6 +9,7 @@ class Boss {
       axisRotateAngleV: 1,
       rotateV: 1,
       bullets: [],
+      HP: 20,
       beforeGenerateEnemyTime: new Date(),
       beginAppear: true,
       isAppearing: false,

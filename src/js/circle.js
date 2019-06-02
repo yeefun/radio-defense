@@ -172,7 +172,6 @@ class CirBullet {
     Object.assign(this, def);
   }
   draw() {
-    // console.log(this.rotateAngle);
     ctx.save();
       ctx.translate(this.p.x, this.p.y);
       ctx.rotate(this.rotateAngle * degToPi); 
