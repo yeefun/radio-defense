@@ -84,7 +84,7 @@ class Game {
       triangles: [],
       polygons: [],
       subTris: [],
-      isStart: true,
+      isStart: false,
       isPause: false,
       blockV: {
         x: -2,
@@ -98,6 +98,7 @@ class Game {
       crawlerClearedTimer: null,
       propGeneratedInterval: 200,
       boss: null,
+      playerName: '',
     };
     Object.assign(def, args);
     Object.assign(this, def);
@@ -133,7 +134,8 @@ class Game {
     restartBtn.addEventListener('click', () => {
       this.restartGame();
     });
-    this.startGame();
+    this.drawCover();
+    // this.startGame();
     this.render();
     this.update();
     // 初始化方格移動速率與計時器
@@ -145,38 +147,36 @@ class Game {
     // if (!this.isPause) {
     ctx.fillStyle = globalColor.blueDark;
     ctx.fillRect(0, 0, gameW, gameH);
-    // if (this.isStart) {
     // 繪製方格
     this.drawBlock();
-    // 繪製 shooter
-    this.shooter.draw();
-    // 繪製每個 circle
-    this.circles.forEach((circle) => {
-      circle.draw();
-    });
-    // 繪製每個 triangle
-    this.triangles.forEach((triangle) => {
-      triangle.draw();
-    });
-    // 繪製每個 polygon
-    this.polygons.forEach((polygon) => {
-      polygon.draw();
-    });
-    // 繪製每個 sub triangle
-    this.subTris.forEach((subTriangle) => {
-      subTriangle.draw();
-    });
-    // 繪製 prop（道具）
-    this.prop && this.prop.draw();
-    // 繪製魔王
-    this.boss && this.boss.draw();
-    // 繪製滑鼠
-    this.drawMouse();
-    // } else {
-      // this.startGame();
-      // this.drawCover();
-    // }
-    // }
+    if (this.isStart) {
+      // 繪製 shooter
+      this.shooter.draw();
+      // 繪製每個 circle
+      this.circles.forEach((circle) => {
+        circle.draw();
+      });
+      // 繪製每個 triangle
+      this.triangles.forEach((triangle) => {
+        triangle.draw();
+      });
+      // 繪製每個 polygon
+      this.polygons.forEach((polygon) => {
+        polygon.draw();
+      });
+      // 繪製每個 sub triangle
+      this.subTris.forEach((subTriangle) => {
+        subTriangle.draw();
+      });
+      // 繪製 prop（道具）
+      this.prop && this.prop.draw();
+      // 繪製魔王
+      this.boss && this.boss.draw();
+      // 繪製滑鼠
+      this.drawMouse();
+    } else {
+      this.drawCover();
+    }
     requestAnimationFrame(() => {
       this.render();
     });
@@ -213,21 +213,6 @@ class Game {
   }
   // 繪製封面
   drawCover() {
-    // if (this.rLogo.complete) {
-    //   ctx.drawImage(this.rLogo, gameW / 2 - 12, gameH / 2 - 70, 31 * 1.7, 38 * 1.7);
-    // }
-    // 中央兩白圈
-    // ctx.save();
-    //   ctx.translate(gameW / 2, gameH / 2);
-    //   ctx.beginPath();
-    //   ctx.arc(0, 0, 180, 0, Math.PI * 2);
-    //   ctx.strokeStyle = globalColor.white;
-    //   ctx.stroke();
-    //   ctx.beginPath();
-    //   ctx.arc(0, 0, 264, 0, Math.PI * 2);
-    //   ctx.globalAlpha = 0.3;
-    //   ctx.stroke();
-    // ctx.restore();
     // 黃圓
     // coverCircle.draw();
     // coverCircle.update();
@@ -237,24 +222,6 @@ class Game {
     // 紅多邊形
     // coverPolygon.draw();
     // coverPolygon.update();
-    // 電池
-    // drawBattery({
-    //   x: gameW / 2 - 24,
-    //   y: gameH / 2 - 52,
-    // });
-    // R 字小角裝飾
-    // ctx.save();
-    //   ctx.translate(gameW / 2 + 24, gameH / 2 - 30);
-    //   ctx.rotate(-132 * degToPi);
-    //   ctx.beginPath();
-    //   ctx.moveTo(0, 0);
-    //   ctx.lineTo(4, 0);
-    //   ctx.lineTo(0, -8.4);
-    //   ctx.lineTo(-4.2, 0);
-    //   ctx.closePath();
-    //   ctx.fillStyle = globalColor.white;
-    //   ctx.fill();
-    // ctx.restore();
   }
   // 畫方格
   drawBlock() {
@@ -311,15 +278,17 @@ class Game {
     cover.style.display = 'none';
     // 顯示遊戲介面
     gamePanel.style.display = 'block';
+    const playerName = document.getElementById('player-name').value;
+    this.playerName = playerName;
     // 初始化 shooter
     this.shooter = new Shooter();
     // 隱藏預設滑鼠
     container.style.cursor = 'none';
     // 讓滑鼠點擊無效
     panel.style.pointerEvents = 'none';
-    // 倒數計時 3 秒
-    this.countdownSeconds = 1;
-    gameCrawler.textContent = 'READY!';
+    // 倒數計時 2 秒
+    this.countdownSeconds = 2;
+    gameCrawler.textContent = this.playerName;
     gameTime.textContent = `00:0${this.countdownSeconds}”`;
     const countdownStartTime = () => {
       setTimeout(() => {
@@ -335,11 +304,11 @@ class Game {
         this.countdownSeconds -= 1;
         gameTime.textContent = `00:0${this.countdownSeconds}”`;
         switch (this.countdownSeconds) {
-          case 2:
-            gameCrawler.textContent = 'READY!!';
-            break;
+          // case 2:
+          //   gameCrawler.textContent = 'READY?';
+          //   break;
           case 1:
-            gameCrawler.textContent = 'READY!!!';
+            gameCrawler.textContent = 'ARE YOU READY?';
             break;
           case 0:
             gameCrawler.textContent = 'GO!';

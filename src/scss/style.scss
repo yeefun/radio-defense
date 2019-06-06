@@ -42,10 +42,12 @@ canvas {
   // pointer-events: none;
   &__cover {
     height: 100%;
-    display: none;
+    // SWITCH
+    // display: none;
     &-img-wrapper {
       position: absolute;
-      top: 37%;
+      // top: 37%;
+      top: 32%;
       left: 50%;
       transform: translateX(-50%);
       & .battery {
@@ -78,12 +80,15 @@ canvas {
       line-height: 30px;
       box-shadow: 0 0 4px rgba(#fff, 0.8);
       position: absolute;
-      top: 60.2%;
+      // top: 60.2%;
+      // top: 64%;
+      bottom: 32%;
       left: 50%;
       transform: translateX(-50%);
       border-radius: 18px;
       font-size: 1.6rem;
       animation: shine 1.2s infinite ease-out alternate;
+      z-index: 99;
       @keyframes shine {
         100% {
           box-shadow: 0 0 12px rgba(#fff, 0.8);
@@ -391,12 +396,43 @@ button {
 
 h1 {
   position: absolute;
-  top: 50.2%;
+  // top: 50.2%;
+  top: 45%;
   left: 50%;
   transform: translateX(-50%);
   font-size: 2.4rem;
   // font-weight: 300;
   // letter-spacing: 0.4px;
+}
+
+input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: #fff;
+  text-align: center;
+}
+
+#player-name {
+  width: 136px;
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: Yantramanav, "Microsoft JhengHei", sans-serif;
+  font-size: 1.6rem;
+  border-bottom: 0.8px solid #fff;
+  z-index: 99;
+  padding: 2px;
+  &::placeholder {
+    color: #fff;
+    opacity: 0.2;
+    transition: opacity 0.2s ease-in;
+  }
+  &:focus::placeholder {
+    // color: rgba(255, 255, 255, 1);
+    opacity: 1;
+  }
 }
 
 .mr-0 {
