@@ -63,16 +63,16 @@ canvas {
       left: 50%;
       transform: translate(-50%, -50%);
       border-radius: 50%;
-      &--outer {
-        width: 528px;
-        height: 528px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-      }
-      &--inner {
-        width: 368px;
-        height: 368px;
-        border: 1.6px solid #fff;
-      }
+      // &--outer {
+      //   width: 528px;
+      //   height: 528px;
+      //   border: 1px solid rgba(255, 255, 255, 0.3);
+      // }
+      // &--inner {
+      //   width: 368px;
+      //   height: 368px;
+      //   border: 1.6px solid #fff;
+      // }
     }
     & button {
       width: 112px;
@@ -196,7 +196,10 @@ canvas {
       position: relative;
       width: 32px;
       height: 24px;
-      margin-right: 6px;
+      margin-left: 6px;
+      // & + .panel__game-heart {
+      //   margin-left: 6px;
+      // }
       &:before, &:after {
         content: "";
         position: absolute;
@@ -439,9 +442,9 @@ input {
   // }
 }
 
-.mr-0 {
-  margin-right: 0 !important;
-}
+// .mr-0 {
+//   margin-right: 0 !important;
+// }
 
 img {
   height: auto;

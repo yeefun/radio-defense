@@ -54,7 +54,7 @@ const enemyMethods = {
     }
     requestAnimationFrame(effect);
     setTimeout(() => {
-      gameCrawler.textContent = 'ENEMY DIES💀';
+      gameCrawler.textContent = 'ENEMY DIES😇';
     }, 0);
   },
 
@@ -159,6 +159,7 @@ const enemyMethods = {
       } else {
         // 如果沒有愛心，結束遊戲
         game.endGame();
+        return;
       }
     }
     gameCrawler.textContent = Math.random() >= 0.5 ? 'OUCH😣' : 'UGGH😫';

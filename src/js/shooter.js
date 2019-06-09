@@ -12,7 +12,6 @@ class Shooter {
       shieldLineW: 4,
       rotateAngle: 0,
       bullets: [],
-      // HP: 6,
       hearts: 3,
       state: '',
       isAttacked: false,
@@ -276,7 +275,8 @@ class Shooter {
     // this.HP += 3;
     const heart = document.createElement('DIV');
     heart.classList.add('panel__game-heart');
-    heartWrapper.insertBefore(heart, heartWrapper.firstChild);
+    // heartWrapper.insertBefore(heart, heartWrapper.firstChild);
+    heartWrapper.appendChild(heart);
     this.hearts += 1;
   }
   displayPropInfo(propName, lastTime) {

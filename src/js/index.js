@@ -85,6 +85,7 @@ class Game {
       polygons: [],
       subTris: [],
       isStart: false,
+      isEnd: false,
       isPause: false,
       blockV: {
         x: -2,
@@ -104,27 +105,6 @@ class Game {
     Object.assign(this, def);
   }
   init() {
-    // coverCircle = new Circle({
-    //   axisRotateR: 380,
-    //   axisRotateAngle: -36,
-    //   r: 39,
-    // });
-    // coverTriangle = new Triangle({
-    //   axisRotateR: {
-    //     x: 320,
-    //     y: 320,
-    //   },
-    //   axisRotateAngle: 40,
-    //   rotate: 32,
-    //   r: 44,
-    // });
-    // coverPolygon = new Polygon({
-    //   p: {
-    //     x: 72,
-    //     y: 96,
-    //   },
-    //   scale: 1.25,
-    // });
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('click', handleClick);
     window.addEventListener('keyup', handleKeyup);
@@ -132,7 +112,8 @@ class Game {
       this.startGame();
     }, { once: true });
     restartBtn.addEventListener('click', () => {
-      this.restartGame();
+      // this.restartGame();
+      this.startGame();
     });
     this.drawCover();
     // this.startGame();
@@ -149,6 +130,19 @@ class Game {
     ctx.fillRect(0, 0, gameW, gameH);
     // 繪製方格
     this.drawBlock();
+    if (!this.isStart && !this.isEnd) {
+      ctx.save();
+        ctx.beginPath();
+        ctx.arc(gameW / 2, gameH / 2, 264, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(gameW / 2, gameH / 2, 184, 0, Math.PI * 2);
+        ctx.lineWidth = 1.6;
+        ctx.strokeStyle = globalColor.white;
+        ctx.stroke();
+      ctx.restore();
+    }
     // 繪製 shooter
     this.shooter.draw();
     // 繪製每個 circle
@@ -175,26 +169,13 @@ class Game {
       // 繪製滑鼠
       this.drawMouse();
     }
-    // } else {
-    //   ctx.save();
-    //     ctx.beginPath();
-    //     ctx.arc(gameW / 2, gameH / 2, 264, 0, Math.PI * 2);
-    //     ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-    //     ctx.stroke();
-    //     ctx.beginPath();
-    //     ctx.arc(gameW / 2, gameH / 2, 184, 0, Math.PI * 2);
-    //     ctx.lineWidth = 1.6;
-    //     ctx.strokeStyle = globalColor.white;
-    //     ctx.stroke();
-    //   ctx.restore();
-    // }
     requestAnimationFrame(() => {
       this.render();
     });
   }
   update() {
     updateTime += 1;
-    if (!this.isPause) {
+    if (!this.isPause && !this.isEnd) {
       // 更新 shooter
       this.shooter.update();
       // 更新每個 circle
@@ -310,36 +291,63 @@ class Game {
       this.setBlockV();
     }, 8000);
   }
-  // 開始遊戲（當讀者按下 'Start Play' 按鈕）
+  // 開始遊戲（當讀者按下 'Start Play' or 'Restart' 按鈕）
   startGame() {
     this.isStart = true;
+    this.isEnd = false;
     // 移除封面
     cover.style.display = 'none';
     // 顯示遊戲介面
     gamePanel.style.display = 'block';
+    // 電池資訊歸零
+    batteryNum.textContent = 0;
+    // 重設生命條
+    shooterHPBar.style.width = '216px';
+    // 三個愛心命
+    for (let i = 0; i < 3; i++) {
+      const heart = document.createElement('DIV');
+      heart.classList.add('panel__game-heart');
+      heartWrapper.appendChild(heart);
+    }
+    // 取得玩家名
     const playerName = document.getElementById('player-name').value;
     this.playerName = playerName;
     // 初始化 shooter
     this.shooter = new Shooter();
     // 清空敵人與子彈
-    this.circles[0].bullets = [];
-    this.triangles[0].bullets = [];
-    clearTimeout(this.triangles[0].shootTimer);
-    this.circles = [];
-    this.triangles = [];
+    const circle = this.circles[0];
+    const triangle = this.triangles[0];
+    if (circle) {
+      circle.bullets = [];
+      this.circles = [];
+    }
+    if (triangle) {
+      triangle.bullets = [];
+      this.triangles = [];
+    }
     this.polygons = [];
     // 隱藏預設滑鼠
     container.style.cursor = 'none';
+    // 隱藏結果
+    result.style.opacity = 0;
     // 讓滑鼠點擊無效
     panel.style.pointerEvents = 'none';
+    // 顯示獲得電池資訊
+    batteryInfo.style.opacity = 1;
+    // 顯示鍵盤指示
+    keyboard.style.opacity = 1;
+    // 清空關卡字
+    gameLevel.textContent = '';
+    // 回到第 0 關
+    this.currentLevel = 0;
     // 倒數計時 2 秒
     this.countdownSeconds = 2;
 
-    gameCrawler.textContent = `Hello, ${this.playerName}`;
+    gameCrawler.textContent = `HEY! ${this.playerName}`;
     gameTime.textContent = `00:0${this.countdownSeconds}”`;
     const countdownStartTime = () => {
       setTimeout(() => {
-        if (!this.countdownSeconds) {
+        if (this.countdownSeconds === 0) {
           this.currentLevel += 1;
           this.setLevel(this.currentLevel);
           // 開始產生道具
@@ -351,9 +359,6 @@ class Game {
         this.countdownSeconds -= 1;
         gameTime.textContent = `00:0${this.countdownSeconds}”`;
         switch (this.countdownSeconds) {
-          // case 2:
-          //   gameCrawler.textContent = 'READY?';
-          //   break;
           case 1:
             gameCrawler.textContent = 'ARE YOU READY?';
             break;
@@ -368,33 +373,41 @@ class Game {
     }
     countdownStartTime();
   }
-  restartGame() {
-    this.isStart = true;
-    // 重設敵人
-    this.circles = [];
-    this.triangles = [];
-    this.polygons = [];
-    this.subTris = [];
-    // 電池資訊歸零
-    batteryNum.textContent = 0;
-    // 重設生命條
-    shooterHPBar.style.width = '216px';
-    // 重設 shooter
-    this.shooter = new Shooter();
-    // 隱藏結果
-    result.style.opacity = 0;
-    // 讓滑鼠點擊無效
-    panel.style.pointerEvents = 'none';
-    // 顯示獲得電池資訊
-    batteryInfo.style.opacity = 1;
-    // 顯示鍵盤指示
-    keyboard.style.opacity = 1;
-    this.setLevel(this.currentLevel);
-    // this.inLevel1 = false;
-  }
+  // restartGame() {
+  //   this.isStart = true;
+  //   // 重設敵人
+  //   const circle = this.circles[0];
+  //   const triangle = this.triangles[0];
+  //   if (circle) {
+  //     circle.bullets = [];
+  //     this.circles = [];
+  //   }
+  //   if (triangle) {
+  //     triangle.bullets = [];
+  //     this.triangles = [];
+  //   }
+  //   this.polygons = [];
+  //   this.subTris = [];
+  //   // 電池資訊歸零
+  //   batteryNum.textContent = 0;
+  //   // 重設生命條
+  //   shooterHPBar.style.width = '216px';
+  //   // 重設 shooter
+  //   this.shooter = new Shooter();
+  //   // 隱藏結果
+  //   result.style.opacity = 0;
+  //   // 讓滑鼠點擊無效
+  //   panel.style.pointerEvents = 'none';
+  //   // 顯示獲得電池資訊
+  //   batteryInfo.style.opacity = 1;
+  //   // 顯示鍵盤指示
+  //   keyboard.style.opacity = 1;
+  //   this.setLevel(this.currentLevel);
+  // }
   // 遊戲結束
   endGame() {
     this.isStart = false;
+    this.isEnd = true;
     // 隱藏電池分數資訊
     batteryInfo.style.opacity = 0;
     // 隱藏鍵盤指示
@@ -410,6 +423,9 @@ class Game {
     // 移除道具顯示介面
     prop.style.opacity = 0;
     clearTimeout(this.countdownTimer);
+    clearTimeout(this.crawlerClearedTimer);
+    clearTimeout(this.propGeneratedTimer);
+    gameCrawler.textContent = 'YOU ARE DEAD💀';
   }
   // 暫停遊戲
   pauseGame() {
@@ -556,16 +572,16 @@ class Game {
     switch (level) {
       case 1: {
         this.initLevel('01', 10);
-        // this.boss = new Boss();
-        // const rotateNum = getRandom(0, 360);
-        const rotateNum = 360;
-        this.boss = new Boss({
-          axisRotateR: getRandom(gameH / 3, gameH / 2.5),
-          axisRotateAngle: rotateNum,
-          rotate: rotateNum - 90,
-        });
+        // const rotateNum = 360;
+        // this.boss = new Boss({
+        //   axisRotateR: getRandom(gameH / 3, gameH / 2.5),
+        //   axisRotateAngle: rotateNum,
+        //   rotate: rotateNum - 90,
+        // });
         // 設定敵人出場
-        // this.setEnemy('circle', 0);
+        this.setEnemy('circle', 0);
+        this.setEnemy('circle', 0);
+        this.setEnemy('circle', 0);
         break;
       }
       // case 2: {
@@ -664,6 +680,10 @@ class Game {
     //   axisRotateAngle: 90,
     // });
   }
+  // 備份當前關卡狀態（為了 restart）
+  // backupStatus() {
+  //   this.currentHearts = this.shooter.hearts;
+  // }
 }
 
 
