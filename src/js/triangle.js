@@ -104,10 +104,10 @@ class Triangle {
         onComplete: () => {
           // 移動完後發射子彈
           this.shoot();
-          // 發射一顆子彈後，每 2.4-8.4 秒發射第二發子彈
+          // 發射一顆子彈後，每 2.4-7.2 秒發射第二發子彈
           this.shootTimer = setTimeout(() => {
             this.shoot();
-          }, getRandom(2400, 8400));
+          }, getRandom(2400, 7200));
         }
       });
       this.beforeRotateAxisAngleTime = rotateAxisAngleTime;
@@ -132,7 +132,7 @@ class Triangle {
 
 
   shoot() {
-    gameCrawler.textContent = Math.random() >= 0.9 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
+    if (!game.isStart) return;
     this.bullets.push(new TriBullet({
       p: {
         x: originPos(this.axisRotateR, this.axisRotateAngle).x,
@@ -141,6 +141,7 @@ class Triangle {
       axisRotateR: this.axisRotateR,
       rotateAngle: this.rotate,
     }));
+    gameCrawler.textContent = Math.random() >= 0.8 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
   }
 
 

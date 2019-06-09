@@ -139,6 +139,7 @@ const enemyMethods = {
   attackShooterResult() {
     const shooter = game.shooter;
     const shooterHPBarOriginW = 216;
+    if (!game.isStart) return;
     // 命條減 1/3
     const shooterHPBarW = shooterHPBar.offsetWidth - (shooterHPBarOriginW / 3);
     shooter.isAttacked = true;

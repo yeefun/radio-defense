@@ -111,6 +111,7 @@ class Circle {
 
 
   shoot() {
+    if (!game.isStart) return;
     // 射 1-2 發
     for (let i = 0; i < getRandom(1, 2); i += 1) {
       const timer = setTimeout(() => {
@@ -128,7 +129,7 @@ class Circle {
         // 間隔 0.2-0.4 秒
       }, i * getRandom(200, 400));
     }
-    gameCrawler.textContent = Math.random() >= 0.9 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
+    gameCrawler.textContent = Math.random() >= 0.8 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
   }
 
 

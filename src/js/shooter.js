@@ -18,11 +18,13 @@ class Shooter {
       isAttacked: false,
       isProtect: false,
       beforeShootTime: new Date(),
+      // isHidden: false,
     };
     Object.assign(def, args);
     Object.assign(this, def);
   }
   draw() {
+    if (!game.isStart) return;
     ctx.save();
     // 輪圍
     ctx.translate(gameW / 2, gameH / 2);

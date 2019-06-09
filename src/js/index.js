@@ -149,41 +149,52 @@ class Game {
     ctx.fillRect(0, 0, gameW, gameH);
     // 繪製方格
     this.drawBlock();
+    // 繪製 shooter
+    this.shooter.draw();
+    // 繪製每個 circle
+    this.circles.forEach((circle) => {
+      circle.draw();
+    });
+    // 繪製每個 triangle
+    this.triangles.forEach((triangle) => {
+      triangle.draw();
+    });
+    // 繪製每個 polygon
+    this.polygons.forEach((polygon) => {
+      polygon.draw();
+    });
+    // 繪製每個 sub triangle
+    this.subTris.forEach((subTriangle) => {
+      subTriangle.draw();
+    });
+    // 繪製 prop（道具）
+    this.prop && this.prop.draw();
+    // 繪製魔王
+    this.boss && this.boss.draw();
     if (this.isStart) {
-      // 繪製 shooter
-      this.shooter.draw();
-      // 繪製每個 circle
-      this.circles.forEach((circle) => {
-        circle.draw();
-      });
-      // 繪製每個 triangle
-      this.triangles.forEach((triangle) => {
-        triangle.draw();
-      });
-      // 繪製每個 polygon
-      this.polygons.forEach((polygon) => {
-        polygon.draw();
-      });
-      // 繪製每個 sub triangle
-      this.subTris.forEach((subTriangle) => {
-        subTriangle.draw();
-      });
-      // 繪製 prop（道具）
-      this.prop && this.prop.draw();
-      // 繪製魔王
-      this.boss && this.boss.draw();
       // 繪製滑鼠
       this.drawMouse();
-    } else {
-      this.drawCover();
     }
+    // } else {
+    //   ctx.save();
+    //     ctx.beginPath();
+    //     ctx.arc(gameW / 2, gameH / 2, 264, 0, Math.PI * 2);
+    //     ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    //     ctx.stroke();
+    //     ctx.beginPath();
+    //     ctx.arc(gameW / 2, gameH / 2, 184, 0, Math.PI * 2);
+    //     ctx.lineWidth = 1.6;
+    //     ctx.strokeStyle = globalColor.white;
+    //     ctx.stroke();
+    //   ctx.restore();
+    // }
     requestAnimationFrame(() => {
       this.render();
     });
   }
   update() {
     updateTime += 1;
-    if (this.isStart && !this.isPause) {
+    if (!this.isPause) {
       // 更新 shooter
       this.shooter.update();
       // 更新每個 circle
@@ -211,17 +222,45 @@ class Game {
       this.update();
     }, 1000 / updateFPS);
   }
-  // 繪製封面
+  // 設置封面
   drawCover() {
-    // 黃圓
-    // coverCircle.draw();
-    // coverCircle.update();
-    // 藍三角
-    // coverTriangle.draw();
-    // coverTriangle.update();
-    // 紅多邊形
-    // coverPolygon.draw();
-    // coverPolygon.update();
+    this.shooter = new Shooter();
+    // 圓形
+    this.circles.push(new Circle({
+      axisRotateR: getRandom(gameHalfDiagonalL / 2, gameHalfDiagonalL / 1.5),
+      axisRotateAngle: 225,
+      axisRotateAngleV: -(getRandom(2, 8) / 10),
+      rotate: getRandom(0, 360),
+    }));
+    // 三角形
+    this.triangles.push(new Triangle({
+      axisRotateR: getRandom(gameHalfDiagonalL / 2, gameHalfDiagonalL / 1.5),
+      axisRotateAngle: 45,
+      axisRotateAngleV: (getRandom(2, 8) / 10),
+      rotate: 45,
+    }));
+    // 多邊形
+    const rotateR = getRandom(gameHalfDiagonalL / 2, gameHalfDiagonalL / 1.5);
+    const rotate = getRandom(0, 360);
+    const rotateV = (getRandom(4, 8) / 10);
+    this.polygons.push(new Polygon({
+      axisRotateR: {
+        whole: rotateR,
+        big: rotateR,
+        small: rotateR,
+      },
+      axisRotateAngle: {
+        whole: 315,
+        big: 315,
+        small: 315,
+      },
+      rotate: {
+        whole: rotate,
+        big: rotate,
+        small: rotate,
+      },
+      rotateV,
+    }));
   }
   // 畫方格
   drawBlock() {
@@ -282,13 +321,21 @@ class Game {
     this.playerName = playerName;
     // 初始化 shooter
     this.shooter = new Shooter();
+    // 清空敵人與子彈
+    this.circles[0].bullets = [];
+    this.triangles[0].bullets = [];
+    clearTimeout(this.triangles[0].shootTimer);
+    this.circles = [];
+    this.triangles = [];
+    this.polygons = [];
     // 隱藏預設滑鼠
     container.style.cursor = 'none';
     // 讓滑鼠點擊無效
     panel.style.pointerEvents = 'none';
     // 倒數計時 2 秒
     this.countdownSeconds = 2;
-    gameCrawler.textContent = this.playerName;
+
+    gameCrawler.textContent = `Hello, ${this.playerName}`;
     gameTime.textContent = `00:0${this.countdownSeconds}”`;
     const countdownStartTime = () => {
       setTimeout(() => {
