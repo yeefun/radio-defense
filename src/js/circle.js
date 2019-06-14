@@ -130,6 +130,8 @@ class Circle {
       }, i * getRandom(200, 400));
     }
     gameCrawler.textContent = Math.random() >= 0.8 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
+    const synth = new Tone.MembraneSynth().toMaster();
+    synth.triggerAttackRelease('G5', '8n');
   }
 
 

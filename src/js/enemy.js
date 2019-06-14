@@ -56,6 +56,8 @@ const enemyMethods = {
     setTimeout(() => {
       gameCrawler.textContent = 'ENEMY DIES😇';
     }, 0);
+    const synth = new Tone.DuoSynth().toMaster();
+    synth.triggerAttackRelease('F3', '0.9');
   },
 
 

@@ -693,8 +693,6 @@ function handleLoad() {
   game = new Game();
   initCanvas();
   game.init();
-  // requestAnimationFrame(draw);
-  // setInterval(update, 1000 / updateFPS);
 }
 
 // load & resize event

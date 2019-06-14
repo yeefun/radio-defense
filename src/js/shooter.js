@@ -159,6 +159,37 @@ class Shooter {
         }
       }
       beforeShootTime = shootTime;
+      const synth = new Tone.MembraneSynth().toMaster();
+      synth.triggerAttackRelease('D3', '8n');
+
+      // const synth = new Tone.Synth().toMaster();
+      // synth.triggerAttackRelease('C#5', '8n');
+
+      // var synth = new Tone.AMSynth().toMaster();
+      // synth.triggerAttackRelease("C4", "4t");
+      // var duoSynth = new Tone.DuoSynth().toMaster();
+      // duoSynth.triggerAttackRelease("F3", "4n");
+
+      // var fmSynth = new Tone.FMSynth().toMaster();
+      // fmSynth.triggerAttackRelease("C5", "4n");
+      // var synth = new Tone.MonoSynth({
+      //   "oscillator": {
+      //     "type": "square"
+      //   },
+      //   "envelope": {
+      //     "attack": 0.1
+      //   }
+      // }).toMaster();
+      // synth.triggerAttackRelease("C4", "8n");
+      // var plucky = new Tone.PluckSynth().toMaster();
+      // plucky.triggerAttack("C4", '2n');
+      //a polysynth composed of 6 Voices of Synth
+      // var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
+      //set the attributes using the set interface
+      // synth.set("detune", -1200);
+      //play a chord
+      // synth.triggerAttackRelease(["C4", "E4", "A4"], "4n");
+      // synth.volume.value = -20;
     }
   }
   getProp(propName) {
@@ -562,6 +593,8 @@ class ShooterBullet {
         }
       }
       gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE😤" : 'HIT👍';
+      const synth = new Tone.MembraneSynth().toMaster();
+      synth.triggerAttackRelease('D2', '8n');
     }
     // } else {
     //   gameCrawler.textContent = Math.random() >= 0.5 ? 'DODGE' : "MISS";
