@@ -15,7 +15,6 @@ class Prop {
   draw() {
     if (!this.img.src) {
       this.img.src = this.src;
-      // ctx.mozImageSmoothingEnabled = ctx.webkitImageSmoothingEnabled = ctx.msImageSmoothingEnabled = ctx.imageSmoothingEnabled = false;
     }
     if (this.img.complete) {
       ctx.save();

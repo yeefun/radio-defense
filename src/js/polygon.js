@@ -22,19 +22,10 @@ class Polygon {
         small: 1,
       },
       axisRotateRV: 0,
-      // axisRotateAngleV: {
-      //   whole: 0.4,
-      //   big: 0.4,
-      //   small: 0.4,
-      // },
       rotateV: 0,
       color: globalColor.red,
-      // 是否已經分裂完畢
-      // isSplited: false,
       // 是否正好要分裂
       isJustSplite: true,
-      // 是否正在進行分裂
-      // isSpliting: true,
       scale: 0,
       beginAppear: true,
       isBossGenerate: false,
@@ -157,10 +148,6 @@ class Polygon {
         ctx.$triLineTo(10, 36);
         ctx.closePath();
         ctx.fill();
-        // ctx.fillStyle = 'yellow';
-        // ctx.beginPath();
-        // ctx.arc(0, 0, 2, 0, Math.PI * 2)
-        // ctx.fill();
         // 小分裂閃電
         drawLightning({
           x: 10,
@@ -176,15 +163,11 @@ class Polygon {
     this.beginAppear && this.appear(this.isBossGenerate);
     this.beginAppear = false;
     enemyMethods.approach(this);
-    // if (!this.HP.whole) {
-    //   this.isSplited = true;
-    // }
     // 如果尚未分裂
-    // if (!this.isSplited) {
     if (this.HP.whole) {
       this.rotate.whole = this.rotate.big = this.rotate.small += this.rotateV;
       // 當多邊形撞上 shooter
-      enemyMethods.hitShooter(game.polygons, idx, 'whole', this.axisRotateR.whole, this.axisRotateAngle.whole);
+      game.isStart && enemyMethods.hitShooter(game.polygons, idx, 'whole', this.axisRotateR.whole, this.axisRotateAngle.whole);
     } else {
       // let rotateDirection;
       // 如果正好要分裂
@@ -206,10 +189,6 @@ class Polygon {
           big: `+=${getRandom(180, 270)}`,
           small: `-=${getRandom(180, 270)}`,
           ease: Circ.easeOut,
-          // onComplete: () => {
-            // 處於已分裂狀態
-            // this.isSplited = true;
-          // },
         });
         // gameCrawler.textContent = 'ENEMY SPLITS';
         this.isJustSplite = false;
@@ -252,5 +231,6 @@ class Polygon {
         ease: Power2.easeOut,
       });
     }
+    game.isStart && playSound('synth', 'C4', '4n');
   }
 }

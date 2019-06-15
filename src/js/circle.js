@@ -79,7 +79,7 @@ class Circle {
   update(idx) {
     this.beginAppear && this.appear(this.isBossGenerate);
     this.beginAppear = false;
-    enemyMethods.approach(this);
+    game.isStart && enemyMethods.approach(this);
     // 更新圓形子彈
     this.bullets.forEach((bullet, idx, arr) => {
       bullet.update(idx, arr);
@@ -99,8 +99,9 @@ class Circle {
         ease: Power2.easeOut,
         // 自身旋轉完後射擊
         onComplete: () => {
-          this.shoot();
           this.isRotating = false;
+          if (!game.isStart) return;
+          this.shoot();
         },
       });
       this.beforeRotateTime = rotateTime;
@@ -111,7 +112,6 @@ class Circle {
 
 
   shoot() {
-    if (!game.isStart) return;
     // 射 1-2 發
     for (let i = 0; i < getRandom(1, 2); i += 1) {
       const timer = setTimeout(() => {
@@ -130,8 +130,7 @@ class Circle {
       }, i * getRandom(200, 400));
     }
     gameCrawler.textContent = Math.random() >= 0.8 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
-    const synth = new Tone.MembraneSynth().toMaster();
-    synth.triggerAttackRelease('G5', '8n');
+    playSound('membrane', 'D5');
   }
 
 
@@ -152,6 +151,8 @@ class Circle {
         ease: Power2.easeOut,
       });
     }
+    game.isStart && playSound('synth', 'F4', '4n');
+    // playSound('synth', 'B4', '8n', 50);
   }
 }
 
@@ -167,7 +168,7 @@ class CirBullet {
       axisRotateR: 0,
       color: globalColor.orange,
       moveX: 0,
-      moveXV: -3,
+      moveXV: -4,
       // v: 4,
       rotateAngle: 0,
     }

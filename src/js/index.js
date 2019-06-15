@@ -315,17 +315,20 @@ class Game {
     // 初始化 shooter
     this.shooter = new Shooter();
     // 清空敵人與子彈
-    const circle = this.circles[0];
-    const triangle = this.triangles[0];
-    if (circle) {
+    this.circles.forEach((circle) => {
       circle.bullets = [];
-      this.circles = [];
-    }
-    if (triangle) {
+    });
+    this.triangles.forEach((triangle) => {
       triangle.bullets = [];
-      this.triangles = [];
-    }
+      triangle.HP = 0;
+    });
+    this.circles = [];
+    this.triangles = [];
     this.polygons = [];
+    if (this.boss) {
+      this.boss.bullets = [];
+      this.boss = null;
+    }
     // 隱藏預設滑鼠
     container.style.cursor = 'none';
     // 隱藏結果
@@ -372,38 +375,9 @@ class Game {
       }, 1000);
     }
     countdownStartTime();
+    playSound('synth', 'C#5');
+    playSound('synth', 'E5', '8n', 200);
   }
-  // restartGame() {
-  //   this.isStart = true;
-  //   // 重設敵人
-  //   const circle = this.circles[0];
-  //   const triangle = this.triangles[0];
-  //   if (circle) {
-  //     circle.bullets = [];
-  //     this.circles = [];
-  //   }
-  //   if (triangle) {
-  //     triangle.bullets = [];
-  //     this.triangles = [];
-  //   }
-  //   this.polygons = [];
-  //   this.subTris = [];
-  //   // 電池資訊歸零
-  //   batteryNum.textContent = 0;
-  //   // 重設生命條
-  //   shooterHPBar.style.width = '216px';
-  //   // 重設 shooter
-  //   this.shooter = new Shooter();
-  //   // 隱藏結果
-  //   result.style.opacity = 0;
-  //   // 讓滑鼠點擊無效
-  //   panel.style.pointerEvents = 'none';
-  //   // 顯示獲得電池資訊
-  //   batteryInfo.style.opacity = 1;
-  //   // 顯示鍵盤指示
-  //   keyboard.style.opacity = 1;
-  //   this.setLevel(this.currentLevel);
-  // }
   // 遊戲結束
   endGame() {
     this.isStart = false;
@@ -426,6 +400,9 @@ class Game {
     clearTimeout(this.crawlerClearedTimer);
     clearTimeout(this.propGeneratedTimer);
     gameCrawler.textContent = 'YOU ARE DEAD💀';
+    playSound('synth', 'A3');
+    playSound('synth', 'E2', '8n', 200);
+    playSound('synth', 'A2', '8n', 400);
   }
   // 暫停遊戲
   pauseGame() {
@@ -515,7 +492,6 @@ class Game {
             axisRotateAngle: getRandom(0, 360),
             axisRotateAngleV: -(getRandom(2, 8) / 10),
             rotate: getRandom(0, 360),
-            // rotateV: Math.random() * 0.4 + 0.4,
           }));
           break;
         }
@@ -534,7 +510,6 @@ class Game {
           const rotateR = getRandom(gameHalfDiagonalL / 3, gameHalfDiagonalL / 1.5);
           const rotateAngle = getRandom(0, 360);
           const rotate = getRandom(0, 360);
-          const rotateV = (getRandom(4, 8) / 10);
           this.polygons.push(new Polygon({
             axisRotateR: {
               whole: rotateR,
@@ -551,7 +526,7 @@ class Game {
               big: rotate,
               small: rotate,
             },
-            rotateV,
+            rotateV: getRandom(4, 8) / 10,
           }));
           break;
         }
@@ -572,16 +547,16 @@ class Game {
     switch (level) {
       case 1: {
         this.initLevel('01', 10);
-        // const rotateNum = 360;
-        // this.boss = new Boss({
-        //   axisRotateR: getRandom(gameH / 3, gameH / 2.5),
-        //   axisRotateAngle: rotateNum,
-        //   rotate: rotateNum - 90,
-        // });
+        const rotateNum = 360;
+        this.boss = new Boss({
+          axisRotateR: getRandom(gameH / 3, gameH / 2.5),
+          axisRotateAngle: rotateNum,
+          rotate: rotateNum - 90,
+        });
         // 設定敵人出場
-        this.setEnemy('circle', 0);
-        this.setEnemy('circle', 0);
-        this.setEnemy('circle', 0);
+        // this.setEnemy('circle', 0);
+        // this.setEnemy('triangle', 0);
+        // this.setEnemy('polygon', 0);
         break;
       }
       // case 2: {

@@ -132,6 +132,41 @@ function getRandom(min, max) {
 
 
 
+function playSound(instrument, note, duration = '8n', timeout = 0, volume = -15) {
+  let synth;
+  switch (instrument) {
+    case 'membrane':
+      setTimeout(() => {
+        synth = new Tone.MembraneSynth().toMaster();
+        synth.triggerAttackRelease(note, duration);
+        synth.volume.value = volume;
+      }, timeout);
+      break;
+    case 'duo':
+      setTimeout(() => {
+        synth = new Tone.DuoSynth().toMaster();
+        synth.triggerAttackRelease(note, duration);
+        synth.volume.value = volume;
+      }, timeout);
+      break;
+    case 'mono':
+      setTimeout(() => {
+        synth = new Tone.MonoSynth().toMaster();
+        synth.triggerAttackRelease(note, duration);
+        synth.volume.value = volume;
+      }, timeout);
+      break;
+    default:
+      setTimeout(() => {
+        synth = new Tone.Synth().toMaster();
+        synth.triggerAttackRelease(note, duration);
+        synth.volume.value = volume;
+      }, timeout);
+      break;
+  }
+}
+
+
 /* 2D Vector Class */
 class Vec2 {
   constructor(x, y) {

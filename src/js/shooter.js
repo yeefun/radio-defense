@@ -17,7 +17,6 @@ class Shooter {
       isAttacked: false,
       isProtect: false,
       beforeShootTime: new Date(),
-      // isHidden: false,
     };
     Object.assign(def, args);
     Object.assign(this, def);
@@ -93,14 +92,6 @@ class Shooter {
     ctx.rotate(this.rotateAngle);
     ctx.translate(this.r + 8, 0);
     ctx.moveTo(0, 0);
-    // 下方長方形長 16、寬（高） 12
-    // 上方梯形高 14、上邊寬 8
-    // ctx.lineTo(0, 8);
-    // ctx.lineTo(12, 8);
-    // ctx.lineTo(26, 4);
-    // ctx.lineTo(26, -4);
-    // ctx.lineTo(12, -8);
-    // ctx.lineTo(0, -8);
     // 下方長方形長 13.6、寬（高） 10.2
     // 上方梯形高 11.8、上邊寬 6.8
     ctx.lineTo(0, 6.8);
@@ -143,6 +134,7 @@ class Shooter {
               axisRotateR: 52.7,
               rotateAngle: mouseMoveAngle,
             }));
+            playSound('membrane', 'D3');
           }, 160 * i);
         } else {
           setTimeout(() => {
@@ -155,41 +147,11 @@ class Shooter {
               axisRotateR: 59.5,
               rotateAngle: mouseMoveAngle,
             }));
+            playSound('mono', 'F2', '4n', 0, -25);
           }, 160 * i);
         }
       }
       beforeShootTime = shootTime;
-      const synth = new Tone.MembraneSynth().toMaster();
-      synth.triggerAttackRelease('D3', '8n');
-
-      // const synth = new Tone.Synth().toMaster();
-      // synth.triggerAttackRelease('C#5', '8n');
-
-      // var synth = new Tone.AMSynth().toMaster();
-      // synth.triggerAttackRelease("C4", "4t");
-      // var duoSynth = new Tone.DuoSynth().toMaster();
-      // duoSynth.triggerAttackRelease("F3", "4n");
-
-      // var fmSynth = new Tone.FMSynth().toMaster();
-      // fmSynth.triggerAttackRelease("C5", "4n");
-      // var synth = new Tone.MonoSynth({
-      //   "oscillator": {
-      //     "type": "square"
-      //   },
-      //   "envelope": {
-      //     "attack": 0.1
-      //   }
-      // }).toMaster();
-      // synth.triggerAttackRelease("C4", "8n");
-      // var plucky = new Tone.PluckSynth().toMaster();
-      // plucky.triggerAttack("C4", '2n');
-      //a polysynth composed of 6 Voices of Synth
-      // var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
-      //set the attributes using the set interface
-      // synth.set("detune", -1200);
-      //play a chord
-      // synth.triggerAttackRelease(["C4", "E4", "A4"], "4n");
-      // synth.volume.value = -20;
     }
   }
   getProp(propName) {
@@ -231,6 +193,10 @@ class Shooter {
     }, lastTime);
     // 顯示道具效果持續時間
     this.displayPropInfo(propName, lastTime);
+    if (propName !== 'crackdown') {
+      playSound('synth', 'E5');
+      playSound('synth', 'A5', '8n', 50);
+    }
   }
   // 繪製清場效果
   drawCrackdownEffect() {
@@ -300,13 +266,15 @@ class Shooter {
       }
     }
     requestAnimationFrame(effect);
+    playSound('synth', 'G2', '8n', 0, 20);
+    playSound('duo', 'F2', '2n', 0, 15);
+    playSound('duo', 'E2', '2n', 0, 10);
+    playSound('duo', 'D2', '8n', 1000, 10);
   }
   // 恢復一個愛心命
   recoverHeart() {
-    // this.HP += 3;
     const heart = document.createElement('DIV');
     heart.classList.add('panel__game-heart');
-    // heartWrapper.insertBefore(heart, heartWrapper.firstChild);
     heartWrapper.appendChild(heart);
     this.hearts += 1;
   }
@@ -351,7 +319,7 @@ class ShooterBullet {
       bodyLen: 12.75,
       axisRotateR: 0,
       color: globalColor.white,
-      v: 8,
+      v: 10,
       rotateAngle: 0,
       waveLength: 40,
       waveFreq: 0.2,
@@ -399,7 +367,6 @@ class ShooterBullet {
       ctx.closePath();
       ctx.fill();
     } else {
-      // this.drawWaveBullet();
       drawWaveBullet(this, 'axisRotateR', 1.6, 'rgba(255, 255, 255, 0.72)');
     }
     ctx.restore();
@@ -425,9 +392,6 @@ class ShooterBullet {
       });
       // 判斷子彈有無射中三角形
       game.triangles.forEach((triangle, triIdx) => {
-        // const lengthX = triangle.axisRotateR.x * Math.cos(triangle.axisRotateAngle * degToPi);
-        // const lengthY = triangle.axisRotateR.y * Math.sin(triangle.axisRotateAngle * degToPi);
-        // const length = Math.sqrt(lengthX * lengthX + lengthY * lengthY);
         anglePanFn = () => {
           const lengthX = triangle.axisRotateR + (triangle.r / 2);
           const lengthY = (triangle.r / 2) * Math.sqrt(3);
@@ -593,12 +557,12 @@ class ShooterBullet {
         }
       }
       gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE😤" : 'HIT👍';
-      const synth = new Tone.MembraneSynth().toMaster();
-      synth.triggerAttackRelease('D2', '8n');
+      if (type === 'ordinary') {
+        playSound('membrane', 'D2');
+      } else {
+        playSound('mono', 'C2', '8n', 0, -25);
+      }
     }
-    // } else {
-    //   gameCrawler.textContent = Math.random() >= 0.5 ? 'DODGE' : "MISS";
-    // }
   }
   // 攻擊多邊形
   attackPolygon(polygon, polyIdx, form, sideB1Len, sideB2Len, angleAB1, angleAB2, rotateAngleJudge, bulletIdx, shotRRangeFn, type = 'ordinary') {
@@ -663,6 +627,9 @@ class ShooterBullet {
       game.shooter.bullets.splice(bulletIdx, 1);
       // 扣 1 生命值
       polygon.HP[form] -= 1;
+      if (form === 'whole') {
+        playSound('synth', 'D6', '16n');
+      }
       // 若大或小分裂生命值為 0
       if (!polygon.HP.big || !polygon.HP.small) {
         // 移除效果
@@ -677,10 +644,12 @@ class ShooterBullet {
         batteryNum.textContent = game.batteryNum;
       }
       gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE😤!" : 'HIT👍';
+      if (type === 'ordinary') {
+        playSound('membrane', 'D2');
+      } else {
+        playSound('mono', 'C2', '8n', 0, -25);
+      }
     }
-    // } else {
-    //   gameCrawler.textContent = Math.random() >= 0.5 ? 'DODGE' : "MISS";
-    // }
   }
   // 判斷射中角度範圍
   judgeShotAngleRange(enemyAngleMinus, enemyAngleAdd, type) {

@@ -56,8 +56,7 @@ const enemyMethods = {
     setTimeout(() => {
       gameCrawler.textContent = 'ENEMY DIES😇';
     }, 0);
-    const synth = new Tone.DuoSynth().toMaster();
-    synth.triggerAttackRelease('F3', '0.9');
+    playSound('duo', 'F4', '4n');
   },
 
 
@@ -98,11 +97,13 @@ const enemyMethods = {
       // shooter.HP -= 1;
       judgeWhatEnemyHit();
       enemyMethods.attackShooterResult();
+      playSound('membrane', 'B4');
       // 當敵人撞上 shooter 護盾
     } else if (shieldAngleRange && (enemyAxisRotateR <= (shooter.shieldR + (shooter.shieldLineW / 2)))) {
       judgeWhatEnemyHit();
       shooter.isProtect = true;
       gameCrawler.textContent = 'BLOCK😉';
+      playSound('membrane', 'D4');
     }
   },
 
@@ -118,6 +119,7 @@ const enemyMethods = {
       enemyMethods.attackShooterResult();
       // 移除敵人子彈
       bullets.splice(bulletIdx, 1);
+      bullet.isBoss ? playSound('mono', 'C2', '8n', 0, -25) : playSound('membrane', 'B4');
     }
     // 當敵人子彈射中 shooter 的護盾
     const bulletRotate = bullet.isBoss ? bullet.rotateAngle + 90 : bullet.rotateAngle;
@@ -128,11 +130,11 @@ const enemyMethods = {
     } else {
       shieldAngleRange = (angleGap >= 90) && (angleGap <= 270);
     }
-    // const shieldAngleRange = (angleGap >= 135) && (angleGap <= 225);
     if (shieldAngleRange && (Math.abs(bullet.moveX) >= (bullet.axisRotateR - (shooterShield + bulletLen)))) {
       // 移除子彈
       bullets.splice(bulletIdx, 1);
       gameCrawler.textContent = 'BLOCK😉';
+      playSound('membrane', 'D4');
     }
   },
 

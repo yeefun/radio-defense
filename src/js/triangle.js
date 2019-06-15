@@ -80,7 +80,7 @@ class Triangle {
   update(idx) {
     this.beginAppear && this.appear(this.isBossGenerate);
     this.beginAppear = false;
-    enemyMethods.approach(this);
+    game.isStart && enemyMethods.approach(this);
     // 更新三角子彈
     this.bullets.forEach((bullet, idx, arr) => {
       bullet.update(idx, arr);
@@ -90,7 +90,9 @@ class Triangle {
     let randomRotateAngle;
     if (rotateAxisAngleTime - this.beforeRotateAxisAngleTime > getRandom(4000, 8000)) {
       // 旋轉時不發射子彈
-      if (this.shootTimer) clearTimeout(this.shootTimer);
+      if (this.shootTimer) {
+        clearTimeout(this.shootTimer);
+      }
       randomRotateAngle = (Math.random() >= 0.25 ? 1 : -1) * getRandom(45, 75);
       // 以 0.8 秒移動
       TweenLite.to(this, 0.8, {
@@ -103,9 +105,12 @@ class Triangle {
         ease: Power2.easeInOut,
         onComplete: () => {
           // 移動完後發射子彈
+          // 當遊戲尚未開始、暫停，或此三角形已死掉，便不發射子彈
+          if (!game.isStart || game.isPause || !this.HP) return;
           this.shoot();
           // 發射一顆子彈後，每 2.4-7.2 秒發射第二發子彈
           this.shootTimer = setTimeout(() => {
+            if (!this.HP) return;
             this.shoot();
           }, getRandom(2400, 7200));
         }
@@ -124,6 +129,7 @@ class Triangle {
       }
       gameCrawler.textContent = 'COUNTERATTACK🤛';
       this.isGeneratedSub = true;
+      playSound('synth', 'C6', '16n');
     }
     // 當三角形撞上 shooter
     enemyMethods.hitShooter(game.triangles, idx, 'triangle', this.axisRotateR, this.axisRotateAngle);
@@ -132,7 +138,6 @@ class Triangle {
 
 
   shoot() {
-    if (!game.isStart) return;
     this.bullets.push(new TriBullet({
       p: {
         x: originPos(this.axisRotateR, this.axisRotateAngle).x,
@@ -142,6 +147,7 @@ class Triangle {
       rotateAngle: this.rotate,
     }));
     gameCrawler.textContent = Math.random() >= 0.8 ? 'UNDER ATTACK🤕' : 'ATTACK⚡️';
+    playSound('membrane', 'G5');
   }
 
 
@@ -166,6 +172,7 @@ class Triangle {
       rotate: `+=${rotateNum + 360}`,
       ease: Back.easeOut.config(1.7),
     });
+    game.isStart && playSound('synth', 'B4', '4n');
   }
 }
 

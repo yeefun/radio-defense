@@ -165,6 +165,7 @@ class Boss {
     });
   }
   appear() {
+    if (game.isEnd) return;
     this.appearTimes += 1;
     this.isDisappeared = false;
     this.isAppearing = true;
@@ -182,23 +183,25 @@ class Boss {
         this.isAppearing = false;
       },
     });
-    if (this.appearTimes && this.appearTimes % 3) {
+    if (this.appearTimes && this.appearTimes % 2) {
       setTimeout(() => {
         this.shoot();
       }, 2000);
-      // setTimeout(() => {
-      //   this.disappear();
-      // }, 4000);
+      setTimeout(() => {
+        this.disappear();
+      }, 4000);
     } else {
       setTimeout(() => {
         this.generateEnemy();
       }, 2000);
-      // setTimeout(() => {
-      //   this.disappear();
-      // }, 4000);
+      setTimeout(() => {
+        this.disappear();
+      }, 4000);
     }
+    playSound('membrane', 'A4', '4n');
   }
   disappear() {
+    if (game.isEnd) return;
     this.isDisappeared = true;
     TweenLite.to(this, 1.2, {
       scale: 0,
@@ -213,6 +216,7 @@ class Boss {
     setTimeout(() => {
       this.appear();
     }, 2000);
+    playSound('membrane', 'F3', '4n');
   }
   shoot() {
     this.bullets.push(new BossBullet({
@@ -223,6 +227,7 @@ class Boss {
       rotateAngle: this.rotate,
       axisRotateR: this.axisRotateR,
     }));
+    playSound('mono', 'F2', '4n', 0, -25);
     setTimeout(() => {
       this.bullets.push(new BossBullet({
         p: {
@@ -233,33 +238,64 @@ class Boss {
         waveLength: 14,
         axisRotateR: this.axisRotateR,
       }));
+      playSound('mono', 'F2', '4n', 0, -25);
     }, 200);
   }
   generateEnemy() {
-    // game.circles.push(new Circle({
-    //   axisRotateR: this.axisRotateR,
-    //   axisRotateAngle: this.axisRotateAngle % 360,
-    //   isBossGenerate: true,
-    // }));
-    // game.triangles.push(new Triangle({
-    //   axisRotateR: this.axisRotateR,
-    //   axisRotateAngle: this.axisRotateAngle % 360,
-    //   rotate: this.axisRotateAngle % 360,
-    //   isBossGenerate: true,
-    // }));
-    game.polygons.push(new Polygon({
-      axisRotateR: {
-        whole: this.axisRotateR,
-        big: this.axisRotateR,
-        small: this.axisRotateR,
-      },
-      axisRotateAngle: {
-        whole: this.axisRotateAngle % 360,
-        big: this.axisRotateAngle % 360,
-        small: this.axisRotateAngle % 360,
-      },
-      isBossGenerate: true,
-    }));
+    let num;
+    const chooseEnemy = () => {
+      num = getRandom(1, 3);
+      switch (num) {
+        case 1:
+          game.circles.push(new Circle({
+            axisRotateR: this.axisRotateR,
+            axisRotateAngle: this.axisRotateAngle % 360,
+            axisRotateAngleV: -(getRandom(2, 8) / 10),
+            rotate: getRandom(0, 360),
+            isBossGenerate: true,
+          }));
+          break;
+        case 2:
+          game.triangles.push(new Triangle({
+            axisRotateR: this.axisRotateR,
+            axisRotateAngle: this.axisRotateAngle % 360,
+            axisRotateAngleV: getRandom(2, 8) / 10,
+            rotate: this.axisRotateAngle % 360,
+            isBossGenerate: true,
+          }));
+          break;
+        case 3:
+          const rotate = getRandom(0, 360);
+          game.polygons.push(new Polygon({
+            axisRotateR: {
+              whole: this.axisRotateR,
+              big: this.axisRotateR,
+              small: this.axisRotateR,
+            },
+            axisRotateAngle: {
+              whole: this.axisRotateAngle % 360,
+              big: this.axisRotateAngle % 360,
+              small: this.axisRotateAngle % 360,
+            },
+            rotate: {
+              whole: rotate,
+              big: rotate,
+              small: rotate,
+            },
+            rotateV: getRandom(4, 8) / 10,
+            isBossGenerate: true,
+          }));
+          break;
+        default:
+          break;
+      }
+    }
+    chooseEnemy();
+    if (Math.random() >= 0.5) {
+      setTimeout(() => {
+        chooseEnemy();
+      }, 400);
+    }
   }
 }
 
