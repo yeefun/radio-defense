@@ -56,7 +56,10 @@ const enemyMethods = {
     setTimeout(() => {
       gameCrawler.textContent = 'ENEMY DIES😇';
     }, 0);
-    playSound('duo', 'F4', '4n');
+    // playSound('duo', 'F4', '4n');
+    playSound('synth', 'G2', '8n', 0, 20);
+    playSound('duo', 'F2', '4n', 0, 15);
+    // playSound('duo', 'E2', '4n', 0, 10);
   },
 
 
@@ -87,7 +90,7 @@ const enemyMethods = {
         enemy.HP[type] -= 1;
         const polygonR = type === 'big' ? (34 + 22) / 2 : (23 + 21) / 2;
         enemyMethods.dieEffect(polygonR, enemy.originPos(type).x, enemy.originPos(type).y, '231, 70, 93');
-        if (!enemy.HP.big && !enemy.HP.small) {
+        if (enemy.HP.big === 0 && enemy.HP.small === 0) {
           enemies.splice(enemyIdx, 1);
         }
       }

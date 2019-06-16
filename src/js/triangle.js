@@ -106,11 +106,11 @@ class Triangle {
         onComplete: () => {
           // 移動完後發射子彈
           // 當遊戲尚未開始、暫停，或此三角形已死掉，便不發射子彈
-          if (!game.isStart || game.isPause || !this.HP) return;
+          if (!game.isStart || game.isPause || this.HP === 0) return;
           this.shoot();
           // 發射一顆子彈後，每 2.4-7.2 秒發射第二發子彈
           this.shootTimer = setTimeout(() => {
-            if (!this.HP) return;
+            if (this.HP === 0) return;
             this.shoot();
           }, getRandom(2400, 7200));
         }

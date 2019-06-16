@@ -555,16 +555,16 @@ class Game {
     switch (level) {
       case 1: {
         this.initLevel('01', 10);
-        const rotateNum = 360;
-        this.boss = new Boss({
-          axisRotateR: getRandom(gameH / 3, gameH / 2.5),
-          axisRotateAngle: rotateNum,
-          rotate: rotateNum - 90,
-        });
+        // const rotateNum = 360;
+        // this.boss = new Boss({
+        //   axisRotateR: getRandom(gameH / 3, gameH / 2.5),
+        //   axisRotateAngle: rotateNum,
+        //   rotate: rotateNum - 90,
+        // });
         // 設定敵人出場
-        // this.setEnemy('circle', 0);
-        // this.setEnemy('triangle', 0);
-        // this.setEnemy('polygon', 0);
+        this.setEnemy('circle', 0);
+        this.setEnemy('triangle', 0);
+        this.setEnemy('polygon', 0);
         break;
       }
       // case 2: {

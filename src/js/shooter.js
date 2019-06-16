@@ -201,6 +201,7 @@ class Shooter {
   // 繪製清場效果
   drawCrackdownEffect() {
     let crackdownTime = 1;
+    const boss = game.boss;
     const effect = () => {
       if (!game.isPause) {
         crackdownTime += 1;
@@ -262,25 +263,32 @@ class Shooter {
         }
       });
       // 清除 boss
-      const boss = game.boss;
-      if (boss) {
-        if (effectR > boss.axisRotateR) {
-          boss.HP -= 1;
-          if (boss.HP === 0) {
-
-          }
+      if (game.boss) {
+        if (effectR > boss.axisRotateR && boss.HP === 0) {
+          enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '245, 175, 95');
+          setTimeout(() => {
+            enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '54, 118, 187');
+          }, 300);
+          setTimeout(() => {
+            enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '231, 70, 93');
+          }, 600);
+          game.boss = null;
         }
-        // playSound('membrane', 'D2');
       }
       if (crackdownTime < 100) {
         requestAnimationFrame(effect);
       }
     }
     requestAnimationFrame(effect);
-    playSound('synth', 'G2', '8n', 0, 20);
-    playSound('duo', 'F2', '2n', 0, 15);
-    playSound('duo', 'E2', '2n', 0, 10);
-    playSound('duo', 'D2', '8n', 1000, 10);
+    if (boss) {
+      boss.HP -= 1;
+    }
+    // playSound('duo', 'F4', '2n');
+    playSound('synth', 'C6', '2n', 0, 5);
+    // playSound('synth', 'G2', '8n', 0, 20);
+    // playSound('duo', 'F2', '2n', 0, 15);
+    // playSound('duo', 'E2', '2n', 0, 10);
+    // playSound('duo', 'D2', '8n', 1000, 10);
   }
   // 恢復一個愛心命
   recoverHeart() {
@@ -505,7 +513,7 @@ class ShooterBullet {
             this.attackPolygon(polygon, polyIdx, 'small', 22, 23, ((255 + 17.5) - 180), (180 - (70 + 17.5)), 17.5, bulletIdx, shotRRangeFn, 'wave');
           }
           // 如果大小分裂都已被擊斃，移除此多邊形
-          if (!polygon.HP.big && !polygon.HP.small) {
+          if (polygon.HP.big === 0 && polygon.HP.small === 0) {
             game.polygons.splice(polyIdx, 1);
             // 電池加一
             game.batteryNum += 1;
@@ -558,10 +566,16 @@ class ShooterBullet {
         playSound('mono', 'C2', '8n', 0, -25);
       }
       // 若敵人生命值為 0
-      if (!enemy.HP) {
+      if (enemy.HP === 0) {
         if (isBoss) {
           // 移除 boss
-          enemyMethods.dieEffect(20, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, colorRGB);
+          enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '245, 175, 95');
+          setTimeout(() => {
+            enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '54, 118, 187');
+          }, 300);
+          setTimeout(() => {
+            enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '231, 70, 93');
+          }, 600);
           game.boss = null;
           gameCrawler.textContent = 'BOSS DIES!!!🎊';
           // 3 秒後，結束遊戲
@@ -649,13 +663,13 @@ class ShooterBullet {
         playSound('synth', 'D6', '16n');
       }
       // 若大或小分裂生命值為 0
-      if (!polygon.HP.big || !polygon.HP.small) {
+      if (polygon.HP.big === 0 || polygon.HP.small === 0) {
         // 移除效果
         const polygonR = form === 'big' ? (34 + 22) / 2 : (23 + 21) / 2;
         enemyMethods.dieEffect(polygonR, polygon.originPos(form).x, polygon.originPos(form).y, '231, 70, 93');
       }
       // 如果大小分裂都被擊斃了，那就移除此多邊形
-      if (!polygon.HP.big && !polygon.HP.small) {
+      if (polygon.HP.big === 0 && polygon.HP.small === 0) {
         game.polygons.splice(polyIdx, 1);
         // 電池加一
         game.batteryNum += 1;

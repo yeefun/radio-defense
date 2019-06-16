@@ -179,17 +179,17 @@ class Boss {
     });
     if (this.appearTimes && this.appearTimes % 2) {
       setTimeout(() => {
-        if (!this.HP || game.isPause) return;
+        if (this.HP === 0 || game.isPause) return;
         this.shoot();
       }, 2000);
     } else {
       setTimeout(() => {
-        if (!this.HP || game.isPause) return;
+        if (this.HP === 0 || game.isPause) return;
         this.generateEnemy();
       }, 2000);
     }
     this.disappearTimer = setTimeout(() => {
-      if (!this.HP || game.isPause) return;
+      if (this.HP === 0 || game.isPause) return;
       this.disappear();
     }, 4000);
     playSound('membrane', 'A4', '4n');
@@ -208,7 +208,7 @@ class Boss {
       ease: Expo.easeOut,
     });
     this.appearTimer = setTimeout(() => {
-      if (!this.HP || game.isPause) return;
+      if (this.HP === 0 || game.isPause) return;
       this.appear();
     }, 2000);
     playSound('membrane', 'F3', '4n');
