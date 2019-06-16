@@ -416,6 +416,14 @@ class Game {
       this.countdownTime();
       this.generateProp();
       this.clearCrawler();
+      const boss = game.boss;
+      if (boss.isDisappeared) {
+        clearTimeout(boss.appearTimer);
+        boss.appear();
+      } else {
+        clearTimeout(boss.disappearTimer);
+        boss.disappear();
+      }
     }
   }
   // 產生道具

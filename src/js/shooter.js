@@ -195,7 +195,7 @@ class Shooter {
     this.displayPropInfo(propName, lastTime);
     if (propName !== 'crackdown') {
       playSound('synth', 'E5');
-      playSound('synth', 'A5', '8n', 50);
+      playSound('synth', 'A5', '8n', 80);
     }
   }
   // 繪製清場效果
@@ -261,6 +261,17 @@ class Shooter {
           game.subTris.splice(idx, 1);
         }
       });
+      // 清除 boss
+      const boss = game.boss;
+      if (boss) {
+        if (effectR > boss.axisRotateR) {
+          boss.HP -= 1;
+          if (boss.HP === 0) {
+
+          }
+        }
+        // playSound('membrane', 'D2');
+      }
       if (crackdownTime < 100) {
         requestAnimationFrame(effect);
       }
@@ -541,13 +552,25 @@ class ShooterBullet {
       game.shooter.bullets.splice(bulletIdx, 1);
       // 扣敵人 1 生命值
       enemy.HP -= 1;
+      if (type === 'ordinary') {
+        playSound('membrane', 'D2');
+      } else {
+        playSound('mono', 'C2', '8n', 0, -25);
+      }
+      // 若敵人生命值為 0
       if (!enemy.HP) {
         if (isBoss) {
+          // 移除 boss
+          enemyMethods.dieEffect(20, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, colorRGB);
           game.boss = null;
           gameCrawler.textContent = 'BOSS DIES!!!🎊';
+          // 3 秒後，結束遊戲
+          // setTimeout(() => {
+          //   game.endGame();
+          // }, 3000);
           return;
         } else {
-          // 若生命值 0，移除敵人
+          // 移除敵人
           enemies.splice(enemyIdx, 1);
           // 移除效果
           enemyMethods.dieEffect(enemy.r, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, colorRGB);
@@ -557,11 +580,6 @@ class ShooterBullet {
         }
       }
       gameCrawler.textContent = Math.random() >= 0.8 ? "BULL'S-EYE😤" : 'HIT👍';
-      if (type === 'ordinary') {
-        playSound('membrane', 'D2');
-      } else {
-        playSound('mono', 'C2', '8n', 0, -25);
-      }
     }
   }
   // 攻擊多邊形

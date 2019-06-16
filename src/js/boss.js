@@ -9,12 +9,14 @@ class Boss {
       axisRotateAngleV: 1,
       rotateV: 1,
       bullets: [],
-      HP: 20,
+      HP: 2,
       beforeGenerateEnemyTime: new Date(),
       beginAppear: true,
       isAppearing: false,
       isDisappeared: false,
       appearTimes: 0,
+      appearTimer: null,
+      disappearTimer: null,
     }
     Object.assign(def, args);
     Object.assign(this, def);
@@ -150,14 +152,6 @@ class Boss {
     this.beginAppear && this.appear();
     this.beginAppear = false;
     if (!this.isAppearing && !this.isDisappeared) {
-      // 產生敵人
-      // const generateEnemyTime = new Date();
-      // if (generateEnemyTime - this.beforeGenerateEnemyTime > 2000) {
-      //   this.generateEnemy();
-      //   this.beforeGenerateEnemyTime = generateEnemyTime;
-      // }
-      // this.axisRotateAngle += this.axisRotateAngleV;
-      // this.rotate += this.rotateV;
     }
     // 更新 boss 子彈
     this.bullets.forEach((bullet, idx, arr) => {
@@ -185,19 +179,19 @@ class Boss {
     });
     if (this.appearTimes && this.appearTimes % 2) {
       setTimeout(() => {
+        if (!this.HP || game.isPause) return;
         this.shoot();
       }, 2000);
-      setTimeout(() => {
-        this.disappear();
-      }, 4000);
     } else {
       setTimeout(() => {
+        if (!this.HP || game.isPause) return;
         this.generateEnemy();
       }, 2000);
-      setTimeout(() => {
-        this.disappear();
-      }, 4000);
     }
+    this.disappearTimer = setTimeout(() => {
+      if (!this.HP || game.isPause) return;
+      this.disappear();
+    }, 4000);
     playSound('membrane', 'A4', '4n');
   }
   disappear() {
@@ -213,7 +207,8 @@ class Boss {
       rotate: `+=${rotateNum}`,
       ease: Expo.easeOut,
     });
-    setTimeout(() => {
+    this.appearTimer = setTimeout(() => {
+      if (!this.HP || game.isPause) return;
       this.appear();
     }, 2000);
     playSound('membrane', 'F3', '4n');
