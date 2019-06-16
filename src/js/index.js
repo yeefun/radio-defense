@@ -44,6 +44,7 @@ const keyboard = document.getElementById('keyboard');
 const gameTime = document.getElementById('game-time');
 const gameLevel = document.getElementById('game-level');
 const gameCrawler = document.getElementById('game-crawler');
+const playerName = document.getElementById('player-name');
 
 
 
@@ -109,8 +110,9 @@ class Game {
     canvas.addEventListener('click', handleClick);
     window.addEventListener('keyup', handleKeyup);
     startBtn.addEventListener('click', () => {
+      if (!this.checkPlayerName()) return;
       this.startGame();
-    }, { once: true });
+    });
     restartBtn.addEventListener('click', () => {
       // this.restartGame();
       this.startGame();
@@ -310,8 +312,8 @@ class Game {
       heartWrapper.appendChild(heart);
     }
     // 取得玩家名
-    const playerName = document.getElementById('player-name').value;
-    this.playerName = playerName;
+    // const playerName = document.getElementById('player-name').value;
+    this.playerName = playerName.value;
     // 初始化 shooter
     this.shooter = new Shooter();
     // 清空敵人與子彈
@@ -667,6 +669,14 @@ class Game {
   // backupStatus() {
   //   this.currentHearts = this.shooter.hearts;
   // }
+  checkPlayerName() {
+    // const playerName = document.getElementById('player-name').value;
+    if (playerName.value) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 
@@ -701,6 +711,7 @@ function handleClick() {
 };
 
 function handleKeyup(evt) {
+  if (!game.isStart) return;
   if (evt.key === 's') {
     game.shooter.shoot();
   }
@@ -708,3 +719,21 @@ function handleKeyup(evt) {
     game.pauseGame();
   }
 }
+
+playerName.addEventListener('focus', function() {
+  playerName.classList.remove('shine');
+});
+
+playerName.addEventListener('focusout', function () {
+  if (!playerName.value) {
+    playerName.classList.add('shine');
+  }
+});
+
+playerName.addEventListener('input', function () {
+  if (playerName.value) {
+    startBtn.classList.add('shine');
+  } else {
+    startBtn.classList.remove('shine')
+  }
+});
