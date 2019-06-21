@@ -575,7 +575,7 @@ class ShooterBullet {
           }, 300);
           setTimeout(() => {
             enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '231, 70, 93');
-          }, 600);
+          }, 500);
           game.boss = null;
           gameCrawler.textContent = 'BOSS DIES!!!🎊';
           // 3 秒後，結束遊戲
@@ -646,7 +646,7 @@ class ShooterBullet {
     }
     /**
      * 射中角度範圍
-     * 多邊形雖不會繞軸旋轉，axisRotateAngle 固定，但分裂時可能會超過 360°，故 %360
+     * 多邊形雖不會繞軸旋轉，axisRotateAngle 固定，但分裂時可能會超過 360°，故 % 360
      */
     const polyAngleMinus = (polyAxisRotateAngle % 360) * degToPi - angleB1;
     const polyAngleAdd = (polyAxisRotateAngle % 360) * degToPi + angleB2;

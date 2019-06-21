@@ -96,6 +96,7 @@ class Game {
       countdownSeconds: 0,
       hpRecoverTimer: null,
       countdownTimer: null,
+      countupTimer: null,
       propGeneratedTimer: null,
       crawlerClearedTimer: null,
       propGeneratedInterval: 200,
@@ -348,7 +349,7 @@ class Game {
     // 倒數計時 2 秒
     this.countdownSeconds = 2;
 
-    gameCrawler.textContent = `HEY! ${this.playerName}`;
+    gameCrawler.textContent = `HI! ${this.playerName}`;
     gameTime.textContent = `00:0${this.countdownSeconds}”`;
     const countdownStartTime = () => {
       setTimeout(() => {
@@ -399,6 +400,7 @@ class Game {
     // 移除道具顯示介面
     prop.style.opacity = 0;
     clearTimeout(this.countdownTimer);
+    clearTimeout(this.countupTimer);
     clearTimeout(this.crawlerClearedTimer);
     clearTimeout(this.propGeneratedTimer);
     gameCrawler.textContent = 'YOU ARE DEAD💀';
@@ -412,10 +414,15 @@ class Game {
     this.isPause = !this.isPause;
     if (this.isPause) {
       clearTimeout(this.countdownTimer);
+      clearTimeout(this.countupTimer);
       clearTimeout(this.propGeneratedTimer);
       clearTimeout(this.crawlerClearedTimer);
     } else {
-      this.countdownTime();
+      if (this.boss) {
+        this.countdownTime();
+      } else {
+        this.countupTime();
+      }
       this.generateProp();
       this.clearCrawler();
       const boss = game.boss;
@@ -457,15 +464,21 @@ class Game {
   // 倒數遊戲時間
   countdownTime() {
     this.countdownTimer = setTimeout(() => {
-      if (!this.countdownSeconds) {
+      if (this.countdownSeconds === 0) {
         this.currentLevel += 1;
         this.setLevel(this.currentLevel);
         return;
       }
       this.countdownSeconds -= 1;
       gameTime.textContent = `00:${this.countdownSeconds < 10 ? `0${this.countdownSeconds}` : this.countdownSeconds}”`;
-      // gameTime.textContent = `00:${this.countdownSeconds}”`;
       this.countdownTime();
+    }, 1000);
+  }
+  countupTime() {
+    this.countupTimer = setTimeout(() => {
+      this.countdownSeconds += 1;
+      gameTime.textContent = `00:${this.countdownSeconds < 10 ? `0${this.countdownSeconds}` : this.countdownSeconds}”`;
+      this.countupTime();
     }, 1000);
   }
   // 自動恢復 shooter 生命條
@@ -555,8 +568,8 @@ class Game {
   // 設定關卡
   setLevel(level) {
     switch (level) {
-      case 1: {
-        this.initLevel('01', 10);
+      case 1:
+        // this.initLevel('01', 10);
         // const rotateNum = 360;
         // this.boss = new Boss({
         //   axisRotateR: getRandom(gameH / 3, gameH / 2.5),
@@ -564,25 +577,22 @@ class Game {
         //   rotate: rotateNum - 90,
         // });
         // 設定敵人出場
-        this.setEnemy('circle', 0);
-        this.setEnemy('triangle', 0);
-        this.setEnemy('polygon', 0);
+        // this.setEnemy('circle', 0);
+        // this.setEnemy('triangle', 0);
+        // this.setEnemy('polygon', 0);
         break;
-      }
-      // case 2: {
+      // case 2:
       //   this.initLevel('02', 20);
       //   this.setEnemy('triangle', 0);
       //   this.setEnemy('polygon', 10);
       //   break;
-      // }
-      // case 3: {
+      // case 3:
       //   this.initLevel('03', 20);
       //   this.setEnemy('polygon', 0);
       //   this.setEnemy('circle', 5);
       //   this.setEnemy('polygon', 10);
       //   break;
-      // }
-      // case 4: {
+      // case 4:
       //   this.initLevel('04', 30);
       //   this.setEnemy('circle', 0);
       //   this.setEnemy('triangle', 0);
@@ -590,8 +600,7 @@ class Game {
       //   this.setEnemy('triangle', 15);
       //   this.setEnemy('polygon', 20);
       //   break;
-      // }
-      // case 5: {
+      // case 5:
       //   this.initLevel('05', 30);
       //   this.setEnemy('circle', 0);
       //   this.setEnemy('circle', 0);
@@ -599,8 +608,7 @@ class Game {
       //   this.setEnemy('polygon', 15);
       //   this.setEnemy('triangle', 20);
       //   break;
-      // }
-      // case 6: {
+      // case 6:
       //   this.initLevel('06', 40);
       //   this.setEnemy('triangle', 0);
       //   this.setEnemy('triangle', 5);
@@ -608,8 +616,7 @@ class Game {
       //   this.setEnemy('circle', 25);
       //   this.setEnemy('polygon', 25);
       //   break;
-      // }
-      // case 7: {
+      // case 7:
       //   this.initLevel('07', 60);
       //   this.setEnemy('circle', 0);
       //   this.setEnemy('triangle', 0);
@@ -625,8 +632,7 @@ class Game {
       //   this.setEnemy('circle', 45);
       //   this.setEnemy('circle', 50);
       //   break;
-      // }
-      // case 8: {
+      // case 8:
       //   this.initLevel('08', 60);
       //   this.setEnemy('circle', 5);
       //   this.setEnemy('triangle', 10);
@@ -643,8 +649,7 @@ class Game {
       //   this.setEnemy('circle', 50);
       //   this.setEnemy('polygon', 50);
       //   break;
-      // }
-      // case 9: {
+      // case 9:
       //   this.initLevel('09', 30);
       //   this.setEnemy('circle', 0);
       //   this.setEnemy('circle', 0);
@@ -656,14 +661,19 @@ class Game {
       //   this.setEnemy('polygon', 15);
       //   this.setEnemy('polygon', 25);
       //   break;
-      // }
+      case 10:
+        gameLevel.textContent = 'Wave 10';
+        const rotateNum = getRandom(0, 360);
+        this.boss = new Boss({
+          axisRotateR: getRandom(gameH / 3, gameH / 2.5),
+          axisRotateAngle: rotateNum,
+          rotate: rotateNum - 90,
+        });
+        this.countupTime();
+        break;
       default:
         break;
     }
-    // this.boss = new Boss({
-    //   axisRotateR: 200,
-    //   axisRotateAngle: 90,
-    // });
   }
   // 備份當前關卡狀態（為了 restart）
   // backupStatus() {
@@ -674,6 +684,7 @@ class Game {
     if (playerName.value) {
       return true;
     } else {
+      playerName.classList.add('warn');
       return false;
     }
   }
@@ -722,6 +733,7 @@ function handleKeyup(evt) {
 
 playerName.addEventListener('focus', function() {
   playerName.classList.remove('shine');
+  playerName.classList.remove('warn');
 });
 
 playerName.addEventListener('focusout', function () {
