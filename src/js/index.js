@@ -94,6 +94,7 @@ class Game {
       },
       currentLevel: 0,
       countdownSeconds: 0,
+      // countupSeconds: 0,
       hpRecoverTimer: null,
       countdownTimer: null,
       countupTimer: null,
@@ -102,6 +103,7 @@ class Game {
       propGeneratedInterval: 200,
       boss: null,
       playerName: '',
+      beatBossSeconds: 0,
     };
     Object.assign(def, args);
     Object.assign(this, def);
@@ -306,17 +308,17 @@ class Game {
     batteryNum.textContent = 0;
     // 重設生命條
     shooterHPBar.style.width = '216px';
-    // 三個愛心命
-    for (let i = 0; i < 3; i++) {
-      const heart = document.createElement('DIV');
-      heart.classList.add('panel__game-heart');
-      heartWrapper.appendChild(heart);
-    }
     // 取得玩家名
     // const playerName = document.getElementById('player-name').value;
     this.playerName = playerName.value;
     // 初始化 shooter
     this.shooter = new Shooter();
+    // 三個愛心命
+    for (let i = 0; i < this.shooter.hearts; i++) {
+      const heart = document.createElement('DIV');
+      heart.classList.add('panel__game-heart');
+      heartWrapper.appendChild(heart);
+    }
     // 清空敵人與子彈
     this.circles.forEach((circle) => {
       circle.bullets = [];
@@ -347,9 +349,9 @@ class Game {
     // 回到第 0 關
     this.currentLevel = 0;
     // 倒數計時 2 秒
-    this.countdownSeconds = 2;
+    this.countdownSeconds = 3;
 
-    gameCrawler.textContent = `HI! ${this.playerName}`;
+    gameCrawler.textContent = `${this.playerName}👋`;
     gameTime.textContent = `00:0${this.countdownSeconds}”`;
     const countdownStartTime = () => {
       setTimeout(() => {
@@ -365,11 +367,14 @@ class Game {
         this.countdownSeconds -= 1;
         gameTime.textContent = `00:0${this.countdownSeconds}”`;
         switch (this.countdownSeconds) {
+          case 2:
+            gameCrawler.textContent = 'WAVES ARE COMING🌊';
+            break;
           case 1:
             gameCrawler.textContent = 'ARE YOU READY?';
             break;
           case 0:
-            gameCrawler.textContent = 'GO!';
+            gameCrawler.textContent = 'GO🚀';
             break;
           default:
             break;
@@ -399,6 +404,7 @@ class Game {
     panel.style.pointerEvents = 'auto';
     // 移除道具顯示介面
     prop.style.opacity = 0;
+    this.sendGameResult();
     clearTimeout(this.countdownTimer);
     clearTimeout(this.countupTimer);
     clearTimeout(this.crawlerClearedTimer);
@@ -434,6 +440,27 @@ class Game {
         boss.disappear();
       }
     }
+  }
+  sendGameResult() {
+    const name = this.playerName;
+    const level = this.currentLevel;
+    const battery = this.batteryNum;
+    const bullet = this.shooter.bulletNum;
+    let boss;
+    if (level !== 9) {
+      boss = 'failed';
+    } else {
+      boss = this.beatBossSeconds;
+    }
+    axios.get('https://script.google.com/a/g.ntu.edu.tw/macros/s/AKfycbwwNUeevxFlQaLzP_gdhnTmSC97HgRlpV6DOCUIzg/dev', {
+      params: {
+        name,
+        level,
+        battery,
+        bullet,
+        boss,
+      }
+    });
   }
   // 產生道具
   generateProp() {
@@ -476,8 +503,8 @@ class Game {
   }
   countupTime() {
     this.countupTimer = setTimeout(() => {
-      this.countdownSeconds += 1;
-      gameTime.textContent = `00:${this.countdownSeconds < 10 ? `0${this.countdownSeconds}` : this.countdownSeconds}”`;
+      this.beatBossSeconds += 1;
+      gameTime.textContent = `00:${this.beatBossSeconds < 10 ? `0${this.beatBossSeconds}` : this.beatBossSeconds}”`;
       this.countupTime();
     }, 1000);
   }
@@ -494,7 +521,7 @@ class Game {
         shooterHPBar.style.width = `${recoverHPBarW}px`;
       }
       this.recoverShooterHPBar();
-    }, 500);
+    }, 300);
   }
   // 每 3 秒清除一次跑馬燈
   clearCrawler() {
@@ -569,7 +596,7 @@ class Game {
   setLevel(level) {
     switch (level) {
       case 1:
-        // this.initLevel('01', 10);
+        this.initLevel('01', 10);
         // const rotateNum = 360;
         // this.boss = new Boss({
         //   axisRotateR: getRandom(gameH / 3, gameH / 2.5),
@@ -577,7 +604,10 @@ class Game {
         //   rotate: rotateNum - 90,
         // });
         // 設定敵人出場
-        // this.setEnemy('circle', 0);
+        this.setEnemy('circle', 0);
+        this.setEnemy('circle', 0);
+        this.setEnemy('circle', 0);
+        this.setEnemy('circle', 0);
         // this.setEnemy('triangle', 0);
         // this.setEnemy('polygon', 0);
         break;
@@ -722,12 +752,18 @@ function handleClick() {
 };
 
 function handleKeyup(evt) {
-  if (!game.isStart) return;
-  if (evt.key === 's') {
-    game.shooter.shoot();
-  }
-  if (evt.key === 'p') {
-    game.pauseGame();
+  if (game.isStart) {
+    if (evt.key === 's') {
+      game.shooter.shoot();
+    }
+    if (evt.key === 'p') {
+      game.pauseGame();
+    }
+  } else {
+    if (evt.key === 'Enter') {
+      if (!game.checkPlayerName()) return;
+      game.startGame();
+    }
   }
 }
 

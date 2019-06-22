@@ -12,7 +12,8 @@ class Shooter {
       shieldLineW: 4,
       rotateAngle: 0,
       bullets: [],
-      hearts: 3,
+      bulletNum: 0,
+      hearts: 0,
       state: '',
       isAttacked: false,
       isProtect: false,
@@ -129,6 +130,7 @@ class Shooter {
       for (let i = 0; i < bulletNum; i++) {
         if (this.state !== 'wave') {
           setTimeout(() => {
+            this.bulletNum += 1;
             this.bullets.push(new ShooterBullet({
               // axisRotateR: 62 * 0.85,
               axisRotateR: 52.7,
@@ -138,6 +140,7 @@ class Shooter {
           }, 160 * i);
         } else {
           setTimeout(() => {
+            this.bulletNum += 1;
             this.bullets.push(new ShooterBullet({
               waveLength: getRandom(40, 80),
               waveFreq: getRandom(2, 4) / 10,

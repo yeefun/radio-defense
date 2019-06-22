@@ -21,6 +21,8 @@ html(lang="zh-Hant")
 
     script(src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.3/dat.gui.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.8.12/Tone.min.js", integrity="sha256-dkaO/q/8qkzLcxzcFH2BrIltvicuMNsmB6+ppG7dCY8=", crossorigin="anonymous")
+    script(src="https://unpkg.com/axios/dist/axios.min.js")
+    //- script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js")
 
   body
     .container#container
@@ -75,6 +77,10 @@ html(lang="zh-Hant")
           .panel__game-end#result
             img(src="./img/battery.svg", alt="")
             div
+              //- .level wave 06
+              //- div
+              //- div
+              //- div
               p 你回收了
               p <span id="result-num">0</span>個能量電池
               button#restart-btn(type="button") Restart
