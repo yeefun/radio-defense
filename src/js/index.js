@@ -36,8 +36,8 @@ const prop = document.getElementById('prop');
 const propImg = document.getElementById('prop__img');
 const propLastTime = document.getElementById('prop__last-time');
 const batteryNum = document.getElementById('battery-num');
-const result = document.getElementById('result');
-const resultNum = document.getElementById('result-num');
+const result = document.getElementById('game-result');
+// const resultNum = document.getElementById('result-num');
 const panel = document.getElementById('panel');
 const container = document.getElementById('container');
 const keyboard = document.getElementById('keyboard');
@@ -45,6 +45,13 @@ const gameTime = document.getElementById('game-time');
 const gameLevel = document.getElementById('game-level');
 const gameCrawler = document.getElementById('game-crawler');
 const playerName = document.getElementById('player-name');
+
+const resultBoss = document.getElementById('result-boss');
+const resultBattery = document.getElementById('result-battery');
+const resultBullet = document.getElementById('result-bullet');
+const totalPlayers = document.getElementById('total-players');
+const ranking = document.getElementById('ranking');
+
 
 
 
@@ -117,7 +124,6 @@ class Game {
       this.startGame();
     });
     restartBtn.addEventListener('click', () => {
-      // this.restartGame();
       this.startGame();
     });
     this.drawCover();
@@ -305,7 +311,8 @@ class Game {
     // 顯示遊戲介面
     gamePanel.style.display = 'block';
     // 電池資訊歸零
-    batteryNum.textContent = 0;
+    this.batteryNum = 0;
+    batteryNum.textContent = this.batteryNum;
     // 重設生命條
     shooterHPBar.style.width = '216px';
     // 取得玩家名
@@ -371,10 +378,10 @@ class Game {
             gameCrawler.textContent = 'WAVES ARE COMING🌊';
             break;
           case 1:
-            gameCrawler.textContent = 'ARE YOU READY?';
+            gameCrawler.textContent = 'ARE YOU READY?😈';
             break;
           case 0:
-            gameCrawler.textContent = 'GO🚀';
+            gameCrawler.textContent = '🔥🔥GO🔥🔥';
             break;
           default:
             break;
@@ -395,7 +402,15 @@ class Game {
     // 隱藏鍵盤指示
     keyboard.style.opacity = 0;
     // 貼上電池數量
-    resultNum.textContent = this.batteryNum;
+    // resultNum.textContent = this.batteryNum;
+    // 填上結果
+    if (this.currentLevel !== 9) {
+      resultBoss.textContent = 'NO';
+    } else {
+      resultBoss.textContent = this.beatBossSeconds;
+    }
+    resultBattery.textContent = this.batteryNum;
+    resultBullet.textContent = this.shooter.bulletNum;
     // 顯示結果
     result.style.opacity = 1;
     // 顯示預設滑鼠
@@ -404,12 +419,12 @@ class Game {
     panel.style.pointerEvents = 'auto';
     // 移除道具顯示介面
     prop.style.opacity = 0;
-    this.sendGameResult();
+    this.handleGameResult();
     clearTimeout(this.countdownTimer);
     clearTimeout(this.countupTimer);
     clearTimeout(this.crawlerClearedTimer);
     clearTimeout(this.propGeneratedTimer);
-    gameCrawler.textContent = 'YOU ARE DEAD💀';
+    gameCrawler.textContent = `YOU, ${this.playerName}💀, ARE DEAD`;
     playSound('synth', 'A3');
     playSound('synth', 'E2', '8n', 200);
     playSound('synth', 'A2', '8n', 400);
@@ -441,7 +456,7 @@ class Game {
       }
     }
   }
-  sendGameResult() {
+  handleGameResult() {
     const name = this.playerName;
     const level = this.currentLevel;
     const battery = this.batteryNum;
@@ -460,6 +475,10 @@ class Game {
         bullet,
         boss,
       }
+    })
+    .then((res) => {
+      totalPlayers.textContent = res.data.totalPlayers;
+      // result.style.opacity = 1;
     });
   }
   // 產生道具

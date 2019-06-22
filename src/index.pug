@@ -74,16 +74,29 @@ html(lang="zh-Hant")
             .key-wrapper
               .key-code P
               .key-name 暫停
-          .panel__game-end#result
-            img(src="./img/battery.svg", alt="")
-            div
-              //- .level wave 06
+          section.panel__game-end#game-result
+            //- img(src="./img/battery.svg", alt="")
+            .ranking
+              .ranking__num#ranking ???<span id="total-players">/&nbsp;???</span>
+              div
+                button#restart-btn(type="button") Restart
+                button#ranking-btn(type="button") Ranking
+            .achive
+              div
+                .achive__num#result-boss 0
+                .achive__text BOSS
+              div
+                .achive__num#result-battery 0
+                .achive__text BATS
+              div
+                .achive__num#result-bullet 0
+                .achive__text BULLETS
               //- div
               //- div
               //- div
-              p 你回收了
-              p <span id="result-num">0</span>個能量電池
-              button#restart-btn(type="button") Restart
+              //- p 你回收了
+              //- p <span id="result-num">0</span>個能量電池
+              //- button#restart-btn(type="button") Restart
       //- .mouse-style#mouse-style
       //-   .mouse-circle
     //- link(rel="stylesheet" href="./css/style.css")
