@@ -49,7 +49,7 @@ const playerName = document.getElementById('player-name');
 const resultBoss = document.getElementById('result-boss');
 const resultBattery = document.getElementById('result-battery');
 const resultBullet = document.getElementById('result-bullet');
-const totalPlayers = document.getElementById('total-players');
+// const totalPlayers = document.getElementById('total-players');
 const ranking = document.getElementById('ranking');
 
 
@@ -404,7 +404,7 @@ class Game {
     // 貼上電池數量
     // resultNum.textContent = this.batteryNum;
     // 填上結果
-    if (this.currentLevel !== 9) {
+    if (this.currentLevel !== 10) {
       resultBoss.textContent = 'NO';
     } else {
       resultBoss.textContent = this.beatBossSeconds;
@@ -477,7 +477,10 @@ class Game {
       }
     })
     .then((res) => {
-      totalPlayers.textContent = res.data.totalPlayers;
+      const data = res.data;
+      ranking.innerHTML = `${data.rank}<span>/&nbsp;${data.totalPlayers}</span>`;
+      // totalPlayers.textContent = `/&nbsp;${data.totalPlayers}`;
+      // ranking.textContent = data.rank;
       // result.style.opacity = 1;
     });
   }
@@ -724,10 +727,6 @@ class Game {
         break;
     }
   }
-  // 備份當前關卡狀態（為了 restart）
-  // backupStatus() {
-  //   this.currentHearts = this.shooter.hearts;
-  // }
   checkPlayerName() {
     // const playerName = document.getElementById('player-name').value;
     if (playerName.value) {
