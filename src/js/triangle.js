@@ -110,7 +110,7 @@ class Triangle {
           this.shoot();
           // 發射一顆子彈後，每 2.4-7.2 秒發射第二發子彈
           this.shootTimer = setTimeout(() => {
-            if (this.HP === 0) return;
+            if (!game.isStart || this.HP === 0) return;
             this.shoot();
           }, getRandom(2400, 7200));
         }

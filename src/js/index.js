@@ -386,12 +386,13 @@ class Game {
           default:
             break;
         }
+        playSound('synth', 'G4');
         countdownStartTime();
       }, 1000);
     }
     countdownStartTime();
     playSound('synth', 'C#5');
-    playSound('synth', 'E5', '8n', 200);
+    playSound('synth', 'E5', '8n', 160);
   }
   // 遊戲結束
   endGame() {
@@ -426,8 +427,8 @@ class Game {
     clearTimeout(this.propGeneratedTimer);
     gameCrawler.textContent = `YOU, ${this.playerName}💀, ARE DEAD`;
     playSound('synth', 'A3');
-    playSound('synth', 'E2', '8n', 200);
-    playSound('synth', 'A2', '8n', 400);
+    playSound('synth', 'E2', '8n', 160);
+    playSound('synth', 'A2', '8n', 320);
   }
   // 暫停遊戲
   pauseGame() {
@@ -439,7 +440,7 @@ class Game {
       clearTimeout(this.propGeneratedTimer);
       clearTimeout(this.crawlerClearedTimer);
     } else {
-      if (this.boss) {
+      if (!this.boss) {
         this.countdownTime();
       } else {
         this.countupTime();
@@ -479,9 +480,6 @@ class Game {
     .then((res) => {
       const data = res.data;
       ranking.innerHTML = `${data.rank}<span>/&nbsp;${data.totalPlayers}</span>`;
-      // totalPlayers.textContent = `/&nbsp;${data.totalPlayers}`;
-      // ranking.textContent = data.rank;
-      // result.style.opacity = 1;
     });
   }
   // 產生道具
@@ -626,93 +624,90 @@ class Game {
         //   rotate: rotateNum - 90,
         // });
         // 設定敵人出場
-        this.setEnemy('circle', 0);
-        this.setEnemy('circle', 0);
-        this.setEnemy('circle', 0);
-        this.setEnemy('circle', 0);
+        this.setEnemy('circle', 2);
         // this.setEnemy('triangle', 0);
         // this.setEnemy('polygon', 0);
         break;
-      // case 2:
-      //   this.initLevel('02', 20);
-      //   this.setEnemy('triangle', 0);
-      //   this.setEnemy('polygon', 10);
-      //   break;
-      // case 3:
-      //   this.initLevel('03', 20);
-      //   this.setEnemy('polygon', 0);
-      //   this.setEnemy('circle', 5);
-      //   this.setEnemy('polygon', 10);
-      //   break;
-      // case 4:
-      //   this.initLevel('04', 30);
-      //   this.setEnemy('circle', 0);
-      //   this.setEnemy('triangle', 0);
-      //   this.setEnemy('polygon', 10);
-      //   this.setEnemy('triangle', 15);
-      //   this.setEnemy('polygon', 20);
-      //   break;
-      // case 5:
-      //   this.initLevel('05', 30);
-      //   this.setEnemy('circle', 0);
-      //   this.setEnemy('circle', 0);
-      //   this.setEnemy('circle', 5);
-      //   this.setEnemy('polygon', 15);
-      //   this.setEnemy('triangle', 20);
-      //   break;
-      // case 6:
-      //   this.initLevel('06', 40);
-      //   this.setEnemy('triangle', 0);
-      //   this.setEnemy('triangle', 5);
-      //   this.setEnemy('circle', 15);
-      //   this.setEnemy('circle', 25);
-      //   this.setEnemy('polygon', 25);
-      //   break;
-      // case 7:
-      //   this.initLevel('07', 60);
-      //   this.setEnemy('circle', 0);
-      //   this.setEnemy('triangle', 0);
-      //   this.setEnemy('circle', 10);
-      //   this.setEnemy('triangle', 10);
-      //   this.setEnemy('polygon', 15);
-      //   this.setEnemy('polygon', 20);
-      //   this.setEnemy('triangle', 25);
-      //   this.setEnemy('polygon', 25);
-      //   this.setEnemy('polygon', 35);
-      //   this.setEnemy('triangle', 35);
-      //   this.setEnemy('polygon', 40);
-      //   this.setEnemy('circle', 45);
-      //   this.setEnemy('circle', 50);
-      //   break;
-      // case 8:
-      //   this.initLevel('08', 60);
-      //   this.setEnemy('circle', 5);
-      //   this.setEnemy('triangle', 10);
-      //   this.setEnemy('triangle', 10);
-      //   this.setEnemy('polygon', 15);
-      //   this.setEnemy('circle', 15);
-      //   this.setEnemy('circle', 20);
-      //   this.setEnemy('polygon', 30);
-      //   this.setEnemy('circle', 35);
-      //   this.setEnemy('triangle', 35);
-      //   this.setEnemy('polygon', 35);
-      //   this.setEnemy('circle', 45);
-      //   this.setEnemy('triangle', 45);
-      //   this.setEnemy('circle', 50);
-      //   this.setEnemy('polygon', 50);
-      //   break;
-      // case 9:
-      //   this.initLevel('09', 30);
-      //   this.setEnemy('circle', 0);
-      //   this.setEnemy('circle', 0);
-      //   this.setEnemy('triangle', 0);
-      //   this.setEnemy('triangle', 0);
-      //   this.setEnemy('polygon', 10);
-      //   this.setEnemy('circle', 15);
-      //   this.setEnemy('triangle', 15);
-      //   this.setEnemy('polygon', 15);
-      //   this.setEnemy('polygon', 25);
-      //   break;
+      case 2:
+        this.initLevel('02', 20);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('polygon', 10);
+        break;
+      case 3:
+        this.initLevel('03', 20);
+        this.setEnemy('polygon', 2);
+        this.setEnemy('circle', 5);
+        this.setEnemy('polygon', 10);
+        break;
+      case 4:
+        this.initLevel('04', 30);
+        this.setEnemy('circle', 2);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('polygon', 10);
+        this.setEnemy('triangle', 15);
+        this.setEnemy('polygon', 20);
+        break;
+      case 5:
+        this.initLevel('05', 30);
+        this.setEnemy('circle', 2);
+        this.setEnemy('circle', 2);
+        this.setEnemy('circle', 5);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('triangle', 20);
+        break;
+      case 6:
+        this.initLevel('06', 40);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('triangle', 5);
+        this.setEnemy('circle', 15);
+        this.setEnemy('circle', 25);
+        this.setEnemy('polygon', 25);
+        break;
+      case 7:
+        this.initLevel('07', 60);
+        this.setEnemy('circle', 2);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('circle', 10);
+        this.setEnemy('triangle', 10);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('polygon', 20);
+        this.setEnemy('triangle', 25);
+        this.setEnemy('polygon', 25);
+        this.setEnemy('polygon', 35);
+        this.setEnemy('triangle', 35);
+        this.setEnemy('polygon', 40);
+        this.setEnemy('circle', 45);
+        this.setEnemy('circle', 50);
+        break;
+      case 8:
+        this.initLevel('08', 60);
+        this.setEnemy('circle', 5);
+        this.setEnemy('triangle', 10);
+        this.setEnemy('triangle', 10);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('circle', 15);
+        this.setEnemy('circle', 20);
+        this.setEnemy('polygon', 30);
+        this.setEnemy('circle', 35);
+        this.setEnemy('triangle', 35);
+        this.setEnemy('polygon', 35);
+        this.setEnemy('circle', 45);
+        this.setEnemy('triangle', 45);
+        this.setEnemy('circle', 50);
+        this.setEnemy('polygon', 50);
+        break;
+      case 9:
+        this.initLevel('09', 30);
+        this.setEnemy('circle', 2);
+        this.setEnemy('circle', 2);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('polygon', 10);
+        this.setEnemy('circle', 15);
+        this.setEnemy('triangle', 15);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('polygon', 25);
+        break;
       case 10:
         gameLevel.textContent = 'Wave 10';
         const rotateNum = getRandom(0, 360);
@@ -726,6 +721,7 @@ class Game {
       default:
         break;
     }
+    playSound('synth', 'A6');
   }
   checkPlayerName() {
     // const playerName = document.getElementById('player-name').value;
@@ -733,6 +729,8 @@ class Game {
       return true;
     } else {
       playerName.classList.add('warn');
+      playSound('synth', 'A3');
+      playSound('synth', 'A2', '8n', 160);
       return false;
     }
   }
@@ -800,6 +798,6 @@ playerName.addEventListener('input', function () {
   if (playerName.value) {
     startBtn.classList.add('shine');
   } else {
-    startBtn.classList.remove('shine')
+    startBtn.classList.remove('shine');
   }
 });

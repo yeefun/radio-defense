@@ -310,6 +310,11 @@ canvas {
           align-items: baseline;
           font-size: 9.6rem;
           box-shadow: inset 0 -24px 0 rgba(#e7465d, 0.4);
+          & img {
+            width: 96px;
+            margin-left: auto;
+            margin-right: auto;
+          }
           & span {
             font-size: 2rem;
             font-weight: 300;

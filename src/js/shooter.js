@@ -13,7 +13,7 @@ class Shooter {
       rotateAngle: 0,
       bullets: [],
       bulletNum: 0,
-      hearts: 0,
+      hearts: 3,
       state: '',
       isAttacked: false,
       isProtect: false,
@@ -287,7 +287,7 @@ class Shooter {
       boss.HP -= 1;
     }
     // playSound('duo', 'F4', '2n');
-    playSound('synth', 'C6', '2n', 0, 5);
+    playSound('synth', 'C6', '2n');
     // playSound('synth', 'G2', '8n', 0, 20);
     // playSound('duo', 'F2', '2n', 0, 15);
     // playSound('duo', 'E2', '2n', 0, 10);
