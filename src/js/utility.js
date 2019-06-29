@@ -133,6 +133,7 @@ function getRandom(min, max) {
 
 
 function playSound(instrument, note, duration = '8n', timeout = 0, volume = 0) {
+  if (game.isMuted) return;
   let synth;
   switch (instrument) {
     case 'membrane':

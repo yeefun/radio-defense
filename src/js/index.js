@@ -27,6 +27,9 @@ const props = ['heart', 'crackdown', 'shield', 'double', 'wave'];
 
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
+const starsBtn = document.getElementById('stars-btn');
+const backBtn = document.getElementById('back-btn');
+
 const cover = document.getElementById('cover');
 const gamePanel = document.getElementById('game-panel');
 const batteryInfo = document.getElementById('battery-info');
@@ -50,9 +53,13 @@ const resultBoss = document.getElementById('result-boss');
 const resultBattery = document.getElementById('result-battery');
 const resultBullet = document.getElementById('result-bullet');
 // const totalPlayers = document.getElementById('total-players');
-const ranking = document.getElementById('ranking');
+const rankingNum = document.getElementById('ranking-num');
 
-const share = document.getElementById('share');
+const resultRanking = document.getElementById('result-ranking');
+const resultScore = document.getElementById('result-score');
+const resultStars = document.getElementById('result-stars');
+
+// const share = document.getElementById('share');
 const bgm = document.getElementById('bgm');
 const victoryBgm = document.getElementById('victory-bgm');
 
@@ -115,6 +122,7 @@ class Game {
       boss: null,
       playerName: '',
       beatBossSeconds: 0,
+      isMuted: false,
     };
     Object.assign(def, args);
     Object.assign(this, def);
@@ -138,7 +146,6 @@ class Game {
     this.setBlockV();
     // 緩慢恢復 shooter 生命條
     this.recoverShooterHPBar();
-    bgm.volume = 0.5;
   }
   render() {
     // if (!this.isPause) {
@@ -326,6 +333,7 @@ class Game {
     // 初始化 shooter
     this.shooter = new Shooter();
     // 三個愛心命
+    heartWrapper.innerHTML = '';
     for (let i = 0; i < this.shooter.hearts; i++) {
       const heart = document.createElement('DIV');
       heart.classList.add('panel__game-heart');
@@ -351,7 +359,7 @@ class Game {
     // 隱藏結果
     // result.style.opacity = 0;
     result.classList.add('op0');
-    share.classList.add('op0');
+    // share.classList.add('op0');
     // 讓滑鼠點擊無效
     panel.style.pointerEvents = 'none';
     // 顯示獲得電池資訊
@@ -402,6 +410,11 @@ class Game {
     countdownStartTime();
     playSound('synth', 'C#5');
     playSound('synth', 'E5', '8n', 160);
+    // 改變背景音樂
+    victoryBgm.pause();
+    victoryBgm.currentTime = 0;
+    bgm.play();
+    bgm.volume = 0.5;
   }
   // 遊戲結束
   endGame() {
@@ -420,7 +433,7 @@ class Game {
     // 顯示結果
     // result.style.opacity = 1;
     result.classList.remove('op0');
-    share.classList.remove('op0');
+    // share.classList.remove('op0');
     // 隱藏電池分數資訊
     // batteryInfo.style.opacity = 0;
     batteryInfo.classList.add('op0');
@@ -493,7 +506,7 @@ class Game {
     })
     .then((res) => {
       const data = res.data;
-      ranking.innerHTML = `${data.rank}<span>/&nbsp;${data.totalPlayers}</span>`;
+      rankingNum.innerHTML = `<p>${data.rank}</p><span>/&nbsp;${data.totalPlayers}</span>`;
     });
   }
   // 產生道具
@@ -795,6 +808,11 @@ function handleKeyup(evt) {
       game.startGame();
     }
   }
+  if (evt.key === 'm') {
+    game.isMuted = !game.isMuted;
+    bgm.muted = !bgm.muted;
+    victoryBgm.muted = !victoryBgm.muted;
+  }
 }
 
 playerName.addEventListener('focus', function() {
@@ -814,4 +832,19 @@ playerName.addEventListener('input', function () {
   } else {
     startBtn.classList.remove('shine');
   }
+});
+
+starsBtn.addEventListener('click', function () {
+  resultRanking.classList.add('dpn');
+  resultScore.classList.add('dpn');
+  resultStars.classList.remove('dpn');
+  result.classList.add('t20');
+});
+
+backBtn.addEventListener('click', function () {
+  resultStars.classList.add('dpn');
+  resultRanking.classList.remove('dpn');
+  resultScore.classList.remove('dpn');
+  result.classList.remove('t20');
+  // result.style.top = '20%';
 });

@@ -583,14 +583,15 @@ class ShooterBullet {
           }, 500);
           game.boss = null;
           gameCrawler.textContent = 'BOSS DIES!!!🎊';
+          // 改變背景音樂
           bgm.pause();
-          // 3 秒後，結束遊戲
+          bgm.currentTime = 0;
+          victoryBgm.play();
+          victoryBgm.volume = 0.5;
+          // 2 秒後，結束遊戲
           setTimeout(() => {
             game.endGame();
-            // bgm.pause();
-            victoryBgm.play();
-            victoryBgm.volume = 0.5;
-          }, 3000);
+          }, 2000);
           return;
         } else {
           // 移除敵人

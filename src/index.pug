@@ -56,38 +56,93 @@ html(lang="zh-Hant")
               p 已回收
               p <span id="battery-num">0</span>個能量電池
           .panel__game-keyboard#keyboard
-            .key-wrapper(style="margin-right: 20px;")
+            .key-wrapper
               .key-code S
               .key-name 射擊
             .key-wrapper
               .key-code P
               .key-name 暫停
+            .key-wrapper
+              .key-code M
+              .key-name 控音
           section.panel__game-end.op0#game-result
-            //- img(src="./img/battery.svg" alt="")
-            //- .result\
-            //- div
-            .ranking
-              .ranking__num#ranking
-                img(src="./img/loading.svg" alt="loading icon")  
-                //- span /&nbsp;???
-              .ranking__btn
-                button#restart-btn(type="button") Restart
-                button#ranking-btn(type="button") Ranking
-            .achive
-              div
-                .achive__num#result-boss 0
-                .achive__text BOSS
-              div
-                .achive__num#result-battery 0
-                .achive__text BATS
-              div
-                .achive__num#result-bullet 0
-                .achive__text BULLETS
-          #share.op0
-            svg#share__fb(viewBox="0 0 24 24" width="48" height="48")
-              path(d="M17,3H7C4.791,3,3,4.791,3,7v10c0,2.209,1.791,4,4,4h5.621v-6.961h-2.343v-2.725h2.343V9.309 c0-2.324,1.421-3.591,3.495-3.591c0.699-0.002,1.397,0.034,2.092,0.105v2.43h-1.428c-1.13,0-1.35,0.534-1.35,1.322v1.735h2.7 l-0.351,2.725h-2.365V21H17c2.209,0,4-1.791,4-4V7C21,4.791,19.209,3,17,3z")
-            svg#share__twitter(viewBox="0 0 24 24" width="48" height="48")
-              path(d="M17,3H7C4.791,3,3,4.791,3,7v10c0,2.209,1.791,4,4,4h10c2.209,0,4-1.791,4-4V7C21,4.791,19.209,3,17,3z M17.05,9.514 c0,0.086,0,0.171,0,0.343c0,3.257-2.486,7.029-7.029,7.029c-1.371,0-2.657-0.429-3.771-1.114c0.171,0,0.429,0,0.6,0 c1.114,0,2.229-0.429,3.086-1.029c-1.114,0-1.971-0.771-2.314-1.714c0.171,0,0.343,0.086,0.429,0.086c0.257,0,0.429,0,0.686-0.086 c-1.114-0.257-1.971-1.2-1.971-2.4c0.343,0.171,0.686,0.257,1.114,0.343c-0.686-0.6-1.114-1.286-1.114-2.143 c0-0.429,0.086-0.857,0.343-1.2c1.2,1.457,3,2.486,5.057,2.571c0-0.171-0.086-0.343-0.086-0.6c0-1.371,1.114-2.486,2.486-2.486 c0.686,0,1.371,0.257,1.8,0.771c0.6-0.086,1.114-0.343,1.543-0.6c-0.171,0.6-0.6,1.029-1.114,1.371 c0.514-0.086,0.943-0.171,1.457-0.429C17.907,8.743,17.479,9.171,17.05,9.514z")
-    audio#bgm(src="./audio/Incoming_Transition.mp3" autoplay loop)
+            .result
+              .result__stars.dpn#result-stars
+                .result__stars__star
+                  .result__star
+                    .star__ranking 1
+                    .star__name Yeefun
+                    .star__scores
+                      .star__score
+                        .star__num 8
+                        .star__text WAVES
+                      .star__score
+                        .star__num NO
+                        .star__text BOSS
+                      .star__score
+                        .star__num 48
+                        .star__text BATS
+                      .star__score
+                        .star__num 188
+                        .star__text BULLETS
+                  .result__star
+                    .star__ranking 2
+                    .star__name ???
+                    .star__scores
+                      .star__score
+                        .star__num ?
+                        .star__text WAVES
+                      .star__score
+                        .star__num ?
+                        .star__text BOSS
+                      .star__score
+                        .star__num ?
+                        .star__text BATS
+                      .star__score
+                        .star__num ?
+                        .star__text BULLETS
+                  .result__star
+                    .star__ranking 3
+                    .star__name ???
+                    .star__scores
+                      .star__score
+                        .star__num ?
+                        .star__text WAVES
+                      .star__score
+                        .star__num ?
+                        .star__text BOSS
+                      .star__score
+                        .star__num ?
+                        .star__text BATS
+                      .star__score
+                        .star__num ?
+                        .star__text BULLETS
+                .result__stars__btns
+                  button#back-btn(type="button") ←
+                  button#restart-btn--ranking(type="button") Restart
+              .result__ranking#result-ranking
+                .ranking__num#ranking-num
+                  //- p 88
+                  //- span /&nbsp;88
+                  img(src="./img/loading.svg" alt="loading icon")
+                .ranking__btns
+                  button#restart-btn(type="button") Restart
+                  button#stars-btn(type="button") Stars
+              .result__score#result-score
+                div
+                  .score__num#result-boss 0
+                  .score__text BOSS
+                div
+                  .score__num#result-battery 0
+                  .score__text BATS
+                div
+                  .score__num#result-bullet 0
+                  .score__text BULLETS
+            .share
+              svg.share__fb(viewBox="0 0 24 24" width="48" height="48")
+                path(d="M17,3H7C4.791,3,3,4.791,3,7v10c0,2.209,1.791,4,4,4h5.621v-6.961h-2.343v-2.725h2.343V9.309 c0-2.324,1.421-3.591,3.495-3.591c0.699-0.002,1.397,0.034,2.092,0.105v2.43h-1.428c-1.13,0-1.35,0.534-1.35,1.322v1.735h2.7 l-0.351,2.725h-2.365V21H17c2.209,0,4-1.791,4-4V7C21,4.791,19.209,3,17,3z")
+              svg.share__twitter(viewBox="0 0 24 24" width="48" height="48")
+                path(d="M17,3H7C4.791,3,3,4.791,3,7v10c0,2.209,1.791,4,4,4h10c2.209,0,4-1.791,4-4V7C21,4.791,19.209,3,17,3z M17.05,9.514 c0,0.086,0,0.171,0,0.343c0,3.257-2.486,7.029-7.029,7.029c-1.371,0-2.657-0.429-3.771-1.114c0.171,0,0.429,0,0.6,0 c1.114,0,2.229-0.429,3.086-1.029c-1.114,0-1.971-0.771-2.314-1.714c0.171,0,0.343,0.086,0.429,0.086c0.257,0,0.429,0,0.686-0.086 c-1.114-0.257-1.971-1.2-1.971-2.4c0.343,0.171,0.686,0.257,1.114,0.343c-0.686-0.6-1.114-1.286-1.114-2.143 c0-0.429,0.086-0.857,0.343-1.2c1.2,1.457,3,2.486,5.057,2.571c0-0.171-0.086-0.343-0.086-0.6c0-1.371,1.114-2.486,2.486-2.486 c0.686,0,1.371,0.257,1.8,0.771c0.6-0.086,1.114-0.343,1.543-0.6c-0.171,0.6-0.6,1.029-1.114,1.371 c0.514-0.086,0.943-0.171,1.457-0.429C17.907,8.743,17.479,9.171,17.05,9.514z")
+    audio#bgm(src="./audio/Incoming_Transition.mp3" loop)
     audio#victory-bgm(src="./audio/Magical_Triumph.mp3" loop)
     script(src="./js/index.js")
