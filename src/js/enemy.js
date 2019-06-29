@@ -57,9 +57,9 @@ const enemyMethods = {
       gameCrawler.textContent = 'ENEMY DIES😇';
     }, 0);
     // playSound('duo', 'F4', '4n');
-    playSound('synth', 'G2', '8n', 0, 20);
+    playSound('synth', 'G2', '8n', 0, 25);
     playSound('duo', 'F2', '4n', 0, 15);
-    // playSound('duo', 'E2', '4n', 0, 10);
+    playSound('duo', 'E2', '4n', 0, 10);
   },
 
 
@@ -122,7 +122,7 @@ const enemyMethods = {
       enemyMethods.attackShooterResult();
       // 移除敵人子彈
       bullets.splice(bulletIdx, 1);
-      bullet.isBoss ? playSound('mono', 'C2', '8n', 0, -25) : playSound('membrane', 'B4');
+      bullet.isBoss ? playSound('mono', 'C2', '8n', 0, -10) : playSound('membrane', 'B4');
     }
     // 當敵人子彈射中 shooter 的護盾
     const bulletRotate = bullet.isBoss ? bullet.rotateAngle + 90 : bullet.rotateAngle;
@@ -166,6 +166,9 @@ const enemyMethods = {
       } else {
         // 如果沒有愛心，結束遊戲
         game.endGame();
+        playSound('synth', 'A3');
+        playSound('synth', 'E2', '8n', 160);
+        playSound('synth', 'A2', '8n', 320);
         return;
       }
     }

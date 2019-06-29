@@ -132,7 +132,7 @@ function getRandom(min, max) {
 
 
 
-function playSound(instrument, note, duration = '8n', timeout = 0, volume = -15) {
+function playSound(instrument, note, duration = '8n', timeout = 0, volume = 0) {
   let synth;
   switch (instrument) {
     case 'membrane':

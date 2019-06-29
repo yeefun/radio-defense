@@ -23,7 +23,7 @@ class Shooter {
     Object.assign(this, def);
   }
   draw() {
-    if (!game.isStart) return;
+    if (!game.isStart && !game.isEnd) return;
     ctx.save();
     // 輪圍
     ctx.translate(gameW / 2, gameH / 2);
@@ -150,7 +150,7 @@ class Shooter {
               axisRotateR: 59.5,
               rotateAngle: mouseMoveAngle,
             }));
-            playSound('mono', 'F2', '4n', 0, -25);
+            playSound('mono', 'F2', '4n', 0, -10);
           }, 160 * i);
         }
       }
@@ -198,7 +198,7 @@ class Shooter {
     this.displayPropInfo(propName, lastTime);
     if (propName !== 'crackdown') {
       playSound('synth', 'E5');
-      playSound('synth', 'A5', '8n', 80);
+      playSound('synth', 'G5', '8n', 160);
     }
   }
   // 繪製清場效果
@@ -568,7 +568,7 @@ class ShooterBullet {
       if (type === 'ordinary') {
         playSound('membrane', 'D2');
       } else {
-        playSound('mono', 'C2', '8n', 0, -25);
+        playSound('mono', 'C2', '8n', 0, -10);
       }
       // 若敵人生命值為 0
       if (enemy.HP === 0) {
@@ -583,10 +583,14 @@ class ShooterBullet {
           }, 500);
           game.boss = null;
           gameCrawler.textContent = 'BOSS DIES!!!🎊';
+          bgm.pause();
           // 3 秒後，結束遊戲
-          // setTimeout(() => {
-          //   game.endGame();
-          // }, 3000);
+          setTimeout(() => {
+            game.endGame();
+            // bgm.pause();
+            victoryBgm.play();
+            victoryBgm.volume = 0.5;
+          }, 3000);
           return;
         } else {
           // 移除敵人
@@ -684,7 +688,7 @@ class ShooterBullet {
       if (type === 'ordinary') {
         playSound('membrane', 'D2');
       } else {
-        playSound('mono', 'C2', '8n', 0, -25);
+        playSound('mono', 'C2', '8n', 0, -10);
       }
     }
   }

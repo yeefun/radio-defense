@@ -89,6 +89,13 @@ gulp.task('img', () => {
     .pipe(browserSync.stream());
 });
 
+gulp.task('audio', () => {
+  return gulp.src('./src/assets/audio/**/*.mp3')
+  .pipe($.plumber())
+  .pipe(gulp.dest('./dist/audio/'))
+  .pipe(browserSync.stream());
+});
+
 
 
 gulp.task('browser-sync', () => {
@@ -108,6 +115,7 @@ gulp.task('watch', () => {
   gulp.watch('./src/scss/**/*.scss', ['sass']);
   gulp.watch('./src/js/**/*.js', ['babel']);
   gulp.watch('./src/assets/**/*.svg', ['img']);
+  gulp.watch('./src/assets/**/*.mp3', ['audio']);
 });
 
 
@@ -115,7 +123,7 @@ gulp.task('watch', () => {
 
 
 // 開發流程
-gulp.task('default', ['pug', 'sass', 'babel', 'img', 'browser-sync', 'watch']);
+gulp.task('default', ['pug', 'sass', 'babel', 'img', 'audio', 'browser-sync', 'watch']);
 
 // 發布流程
-gulp.task('build', gulpSequence('clean', 'pug', 'sass', 'babel', 'img'));
+gulp.task('build', gulpSequence('clean', 'pug', 'sass', 'babel', 'img', 'audio'));

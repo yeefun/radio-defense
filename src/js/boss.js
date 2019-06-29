@@ -222,7 +222,7 @@ class Boss {
       rotateAngle: this.rotate,
       axisRotateR: this.axisRotateR,
     }));
-    playSound('mono', 'F2', '4n', 0, -25);
+    playSound('mono', 'F2', '4n', 0, -10);
     setTimeout(() => {
       this.bullets.push(new BossBullet({
         p: {
@@ -233,7 +233,7 @@ class Boss {
         waveLength: 14,
         axisRotateR: this.axisRotateR,
       }));
-      playSound('mono', 'F2', '4n', 0, -25);
+      playSound('mono', 'F2', '4n', 0, -10);
     }, 200);
   }
   generateEnemy() {
