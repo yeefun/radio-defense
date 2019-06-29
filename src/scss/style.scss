@@ -231,11 +231,11 @@ canvas {
     &-prop {
       display: flex;
       align-items: center;
-      border: 0.8px solid #fff;
-      // border: 1px solid #fff;
+      // border: 0.8px solid #fff;
+      border: 1px solid #fff;
       padding: 8px 18px;
       // display: none;
-      opacity: 0;
+      // opacity: 0;
       // height: 32px;
       // box-sizing: border-box;
       border-radius: 4px;
@@ -257,20 +257,22 @@ canvas {
     &-end {
       background-color: rgba(0, 29, 46, 0.4);
       display: flex;
-      // align-items: center;
+      align-items: center;
+      // flex-direction: column;
+      // justify-content: center;
       font-weight: 500;
       // font-size: 2.4rem;
       // font-weight: 300;
-      border: 0.8px solid #fff;
-      // border: 1px solid #fff;
-      padding: 32px 60px;
+      // border: 0.8px solid #fff;
+      border: 1px solid #fff;
+      padding: 36px 60px;
       // padding: 28px 56px 32px 88px;
-      border-radius: 24px;
+      border-radius: 20px;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      opacity: 0;
+      // opacity: 0;
       transition: opacity 0.2s ease-in;
       // & > div {
       //   flex-shrink: 0;
@@ -296,12 +298,12 @@ canvas {
         font-size: 1.6rem;
         padding: 4px 20px;
         display: block;
-        box-shadow: 0 4px 0 rgba(#f5af5f, 0.8);
+        // box-shadow: 0 2px 0 rgba(#f5af5f, 0.8);
         // width: 88px;
         // height: 30px;
         // line-height: 26px;
       }
-      .ranking {
+      & .ranking {
         padding-right: 52px;
         min-width: 192px;
         &__num {
@@ -324,8 +326,25 @@ canvas {
             top: 4px;
           }
         }
+        &__btn {
+          margin-top: 20px;
+        //   display: flex;
+        //   margin-top: 24px;
+        //   font-size: 1.6rem;
+        }
       }
-      .achive {
+      // & .result {
+      //   display: flex;
+      //   align-items: center;
+      // }
+      // & .share {
+      //   border: 0.8px solid #fff;
+      //   border-radius: 16px;
+      //   flex-basis: 100%;
+      //   box-shadow: 0 2px 0 rgba(245, 175, 95, 0.8);
+      //   margin-left: 16px;
+      // }
+      & .achive {
         min-width: 192px;
         & > div {
           display: flex;
@@ -361,13 +380,44 @@ canvas {
   }
 }
 
+#share {
+  position: absolute;
+  top: 72.8%;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.2s ease-in;
+  & svg {
+    width: 40px;
+    // fill: rgba(#fff, 0.8);
+    fill: #fff;
+    opacity: 0.6;
+    // padding-left: 4px;
+    // padding-right: 4px;
+    transition: opacity 0.2s ease-out;
+    cursor: pointer;
+    &:hover {
+      // fill: rgba(#fff, 1);
+      opacity: 1;
+    }
+  }
+  &__fb {
+    margin-right: 4px;
+  }
+  &__twitter {
+    margin-left: 4px;
+  }
+}
+
 #restart-btn {
-  margin-top: 20px;
+  // margin-top: 20px;
+  box-shadow: -1px 4px 0 rgba(245, 175, 95, 0.8);
 }
 
 #ranking-btn {
   margin-left: auto;
-  margin-top: 4px;
+  margin-top: 8px;
+  box-shadow: 1px -4px 0 rgba(245, 175, 95, 0.8);
+  // margin-top: 12px;
 }
 
 #start-btn {
@@ -398,8 +448,8 @@ canvas {
     align-items: center;
     width: 28px;
     height: 28px;
-    border: 0.8px solid #fff;
-    // border: 1px solid #fff;
+    // border: 0.8px solid #fff;
+    border: 1px solid #fff;
     border-radius: 4px;
     margin-right: 8px;
     box-sizing: border-box;
@@ -516,3 +566,7 @@ img {
 //   font-size: 4.8rem;
 //   font-weight: 500;
 // }
+
+.op0 {
+  opacity: 0 !important;
+}

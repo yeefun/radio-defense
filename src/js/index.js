@@ -52,6 +52,8 @@ const resultBullet = document.getElementById('result-bullet');
 // const totalPlayers = document.getElementById('total-players');
 const ranking = document.getElementById('ranking');
 
+const share = document.getElementById('share');
+
 
 
 
@@ -344,13 +346,17 @@ class Game {
     // 隱藏預設滑鼠
     container.style.cursor = 'none';
     // 隱藏結果
-    result.style.opacity = 0;
+    // result.style.opacity = 0;
+    result.classList.add('op0');
+    share.classList.add('op0');
     // 讓滑鼠點擊無效
     panel.style.pointerEvents = 'none';
     // 顯示獲得電池資訊
-    batteryInfo.style.opacity = 1;
+    // batteryInfo.style.opacity = 1;
+    batteryInfo.classList.remove('op0');
     // 顯示鍵盤指示
-    keyboard.style.opacity = 1;
+    // keyboard.style.opacity = 1;
+    keyboard.classList.remove('op0');
     // 清空關卡字
     gameLevel.textContent = '';
     // 回到第 0 關
@@ -398,10 +404,6 @@ class Game {
   endGame() {
     this.isStart = false;
     this.isEnd = true;
-    // 隱藏電池分數資訊
-    batteryInfo.style.opacity = 0;
-    // 隱藏鍵盤指示
-    keyboard.style.opacity = 0;
     // 貼上電池數量
     // resultNum.textContent = this.batteryNum;
     // 填上結果
@@ -413,13 +415,22 @@ class Game {
     resultBattery.textContent = this.batteryNum;
     resultBullet.textContent = this.shooter.bulletNum;
     // 顯示結果
-    result.style.opacity = 1;
+    // result.style.opacity = 1;
+    result.classList.remove('op0');
+    share.classList.remove('op0');
+    // 隱藏電池分數資訊
+    // batteryInfo.style.opacity = 0;
+    batteryInfo.classList.add('op0');
+    // 隱藏鍵盤指示
+    // keyboard.style.opacity = 0;
+    keyboard.classList.add('op0');
+    // 移除道具顯示介面
+    // prop.style.opacity = 0;
+    prop.classList.add('op0');
     // 顯示預設滑鼠
     container.style.cursor = 'auto';
     // 讓滑鼠可以點擊
     panel.style.pointerEvents = 'auto';
-    // 移除道具顯示介面
-    prop.style.opacity = 0;
     this.handleGameResult();
     clearTimeout(this.countdownTimer);
     clearTimeout(this.countupTimer);

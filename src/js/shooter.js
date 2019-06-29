@@ -302,7 +302,8 @@ class Shooter {
   }
   displayPropInfo(propName, lastTime) {
     if (propName === 'crackdown' || propName === 'heart') return;
-    prop.style.opacity = 1;
+    // prop.style.opacity = 1;
+    prop.classList.remove('op0');
     propImg.src = `../img/${propName}--panel.svg`;
     lastTime /= 1000;  
     propLastTime.textContent = lastTime;
@@ -323,7 +324,8 @@ class Shooter {
         if (lastTime) {
           countLastTime();
         } else {
-          prop.style.opacity = 0;
+          // prop.style.opacity = 0;
+          prop.classList.add('op0');
           clearTimeout(propInfoTimer);
         }
       }, 1000);
