@@ -29,6 +29,7 @@ const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
 const starsBtn = document.getElementById('stars-btn');
 const backBtn = document.getElementById('back-btn');
+const restartBtnStars = document.getElementById('restart-btn--stars');
 
 const cover = document.getElementById('cover');
 const gamePanel = document.getElementById('game-panel');
@@ -131,11 +132,15 @@ class Game {
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('click', handleClick);
     window.addEventListener('keyup', handleKeyup);
+    handlePlayerName();
     startBtn.addEventListener('click', () => {
       if (!this.checkPlayerName()) return;
       this.startGame();
     });
     restartBtn.addEventListener('click', () => {
+      this.startGame();
+    });
+    restartBtnStars.addEventListener('click', () => {
       this.startGame();
     });
     this.drawCover();
@@ -146,6 +151,19 @@ class Game {
     this.setBlockV();
     // 緩慢恢復 shooter 生命條
     this.recoverShooterHPBar();
+    starsBtn.addEventListener('click', () => {
+      resultRanking.classList.add('dpn');
+      resultScore.classList.add('dpn');
+      resultStars.classList.remove('dpn');
+      result.classList.add('t20');
+      this.handleGameStars();
+    });
+    backBtn.addEventListener('click', function () {
+      resultStars.classList.add('dpn');
+      resultRanking.classList.remove('dpn');
+      resultScore.classList.remove('dpn');
+      result.classList.remove('t20');
+    });
   }
   render() {
     // if (!this.isPause) {
@@ -450,9 +468,8 @@ class Game {
     this.handleGameResult();
     clearTimeout(this.countdownTimer);
     clearTimeout(this.countupTimer);
-    clearTimeout(this.crawlerClearedTimer);
+    // clearTimeout(this.crawlerClearedTimer);
     clearTimeout(this.propGeneratedTimer);
-    gameCrawler.textContent = `YOU, ${this.playerName}💀, ARE DEAD`;
     // playSound('synth', 'A3');
     // playSound('synth', 'E2', '8n', 160);
     // playSound('synth', 'A2', '8n', 320);
@@ -491,7 +508,7 @@ class Game {
     const bullet = this.shooter.bulletNum;
     let boss;
     if (level !== 9) {
-      boss = 'failed';
+      boss = 'no';
     } else {
       boss = this.beatBossSeconds;
     }
@@ -508,6 +525,45 @@ class Game {
       const data = res.data;
       rankingNum.innerHTML = `<p>${data.rank}</p><span>/&nbsp;${data.totalPlayers}</span>`;
     });
+  }
+  handleGameStars() {
+    axios.get('https://script.google.com/a/g.ntu.edu.tw/macros/s/AKfycbx1L2GmotaRfoSMzVA5BtpC9kiWneoA69IOtoEi/dev')
+      .then((res) => {
+        const data = res.data;
+        const firstStarData = data.firstData;
+        const secondStarData = data.secondData;
+        const thirdStarData = data.thirdData;
+
+        const starName1 = document.getElementById('star-name1');
+        const starWave1 = document.getElementById('star-wave1');
+        const starBattery1 = document.getElementById('star-battery1');
+        const starBullet1 = document.getElementById('star-bullet1');
+        const starBoss1 = document.getElementById('star-boss1');
+        const starName2 = document.getElementById('star-name2');
+        const starWave2 = document.getElementById('star-wave2');
+        const starBattery2 = document.getElementById('star-battery2');
+        const starBullet2 = document.getElementById('star-bullet2');
+        const starBoss2 = document.getElementById('star-boss2');
+        const starName3 = document.getElementById('star-name3');
+        const starWave3 = document.getElementById('star-wave3');
+        const starBattery3 = document.getElementById('star-battery3');
+        const starBullet3 = document.getElementById('star-bullet3');
+        const starBoss3 = document.getElementById('star-boss3');
+
+        const star1Arr = [starName1, starWave1, starBattery1, starBullet1, starBoss1];
+        const star2Arr = [starName2, starWave2, starBattery2, starBullet2, starBoss2];
+        const star3Arr = [starName3, starWave3, starBattery3, starBullet3, starBoss3];
+
+        for (let i = 0; i < firstStarData.length; i++) {
+          star1Arr[i].textContent = firstStarData[i];
+        }
+        for (let i = 0; i < secondStarData.length; i++) {
+          star2Arr[i].textContent = secondStarData[i];
+        }
+        for (let i = 0; i < thirdStarData.length; i++) {
+          star3Arr[i].textContent = thirdStarData[i];
+        }
+      });
   }
   // 產生道具
   generateProp() {
@@ -815,36 +871,23 @@ function handleKeyup(evt) {
   }
 }
 
-playerName.addEventListener('focus', function() {
-  playerName.classList.remove('shine');
-  playerName.classList.remove('warn');
-});
+function handlePlayerName() {
+  playerName.addEventListener('focus', function () {
+    playerName.classList.remove('shine');
+    playerName.classList.remove('warn');
+  });
 
-playerName.addEventListener('focusout', function () {
-  if (!playerName.value) {
-    playerName.classList.add('shine');
-  }
-});
+  playerName.addEventListener('focusout', function () {
+    if (!playerName.value) {
+      playerName.classList.add('shine');
+    }
+  });
 
-playerName.addEventListener('input', function () {
-  if (playerName.value) {
-    startBtn.classList.add('shine');
-  } else {
-    startBtn.classList.remove('shine');
-  }
-});
-
-starsBtn.addEventListener('click', function () {
-  resultRanking.classList.add('dpn');
-  resultScore.classList.add('dpn');
-  resultStars.classList.remove('dpn');
-  result.classList.add('t20');
-});
-
-backBtn.addEventListener('click', function () {
-  resultStars.classList.add('dpn');
-  resultRanking.classList.remove('dpn');
-  resultScore.classList.remove('dpn');
-  result.classList.remove('t20');
-  // result.style.top = '20%';
-});
+  playerName.addEventListener('input', function () {
+    if (playerName.value) {
+      startBtn.classList.add('shine');
+    } else {
+      startBtn.classList.remove('shine');
+    }
+  });
+}

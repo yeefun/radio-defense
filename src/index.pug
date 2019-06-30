@@ -71,55 +71,55 @@ html(lang="zh-Hant")
                 .result__stars__star
                   .result__star
                     .star__ranking 1
-                    .star__name Yeefun
+                    .star__name#star-name1 Yeefun
                     .star__scores
                       .star__score
-                        .star__num 8
+                        .star__num#star-wave1 8
                         .star__text WAVES
                       .star__score
-                        .star__num NO
-                        .star__text BOSS
-                      .star__score
-                        .star__num 48
+                        .star__num#star-battery1 48
                         .star__text BATS
                       .star__score
-                        .star__num 188
+                        .star__num#star-bullet1 188
                         .star__text BULLETS
+                      .star__score
+                        .star__num#star-boss1 NO
+                        .star__text BOSS
                   .result__star
                     .star__ranking 2
-                    .star__name ???
+                    .star__name#star-name2 ???
                     .star__scores
                       .star__score
-                        .star__num ?
+                        .star__num#star-wave2 ?
                         .star__text WAVES
                       .star__score
-                        .star__num ?
-                        .star__text BOSS
-                      .star__score
-                        .star__num ?
+                        .star__num#star-battery2 ?
                         .star__text BATS
                       .star__score
-                        .star__num ?
+                        .star__num#star-bullet2 ?
                         .star__text BULLETS
+                      .star__score
+                        .star__num#star-boss2 ?
+                        .star__text BOSS
                   .result__star
                     .star__ranking 3
-                    .star__name ???
+                    .star__name#star-name3 ???
                     .star__scores
                       .star__score
-                        .star__num ?
+                        .star__num#star-wave3 ?
                         .star__text WAVES
                       .star__score
-                        .star__num ?
-                        .star__text BOSS
-                      .star__score
-                        .star__num ?
+                        .star__num#star-battery3 ?
                         .star__text BATS
                       .star__score
-                        .star__num ?
+                        .star__num#star-bullet3 ?
                         .star__text BULLETS
+                      .star__score
+                        .star__num#star-boss3 ?
+                        .star__text BOSS
                 .result__stars__btns
                   button#back-btn(type="button") ←
-                  button#restart-btn--ranking(type="button") Restart
+                  button#restart-btn--stars(type="button") Restart
               .result__ranking#result-ranking
                 .ranking__num#ranking-num
                   //- p 88
@@ -130,14 +130,14 @@ html(lang="zh-Hant")
                   button#stars-btn(type="button") Stars
               .result__score#result-score
                 div
-                  .score__num#result-boss 0
-                  .score__text BOSS
-                div
                   .score__num#result-battery 0
                   .score__text BATS
                 div
                   .score__num#result-bullet 0
                   .score__text BULLETS
+                div
+                  .score__num#result-boss 0
+                  .score__text BOSS
             .share
               svg.share__fb(viewBox="0 0 24 24" width="48" height="48")
                 path(d="M17,3H7C4.791,3,3,4.791,3,7v10c0,2.209,1.791,4,4,4h5.621v-6.961h-2.343v-2.725h2.343V9.309 c0-2.324,1.421-3.591,3.495-3.591c0.699-0.002,1.397,0.034,2.092,0.105v2.43h-1.428c-1.13,0-1.35,0.534-1.35,1.322v1.735h2.7 l-0.351,2.725h-2.365V21H17c2.209,0,4-1.791,4-4V7C21,4.791,19.209,3,17,3z")

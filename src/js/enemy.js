@@ -29,7 +29,7 @@ const enemyMethods = {
 
 
   // 死亡效果
-  dieEffect(enemyR, effectX, effectY, colorRGB) {
+  dieEffect(enemyR, effectX, effectY, colorRGB, isBoss = false) {
     let dieTime = 1;
     let effect = () => {
       if (!game.isPause) {
@@ -53,9 +53,11 @@ const enemyMethods = {
       }
     }
     requestAnimationFrame(effect);
-    setTimeout(() => {
-      gameCrawler.textContent = 'ENEMY DIES😇';
-    }, 0);
+    if (!isBoss) {
+      setTimeout(() => {
+        gameCrawler.textContent = 'ENEMY DIES😇';
+      }, 0);
+    }
     // playSound('duo', 'F4', '4n');
     playSound('synth', 'G2', '8n', 0, 25);
     playSound('duo', 'F2', '4n', 0, 15);
@@ -169,6 +171,8 @@ const enemyMethods = {
         playSound('synth', 'A3');
         playSound('synth', 'E2', '8n', 160);
         playSound('synth', 'A2', '8n', 320);
+        clearTimeout(game.crawlerClearedTimer);
+        gameCrawler.textContent = `YOU, ${this.playerName}💀, ARE DEAD`;
         return;
       }
     }

@@ -268,12 +268,12 @@ class Shooter {
       // 清除 boss
       if (game.boss) {
         if (effectR > boss.axisRotateR && boss.HP === 0) {
-          enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '245, 175, 95');
+          enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '245, 175, 95', true);
           setTimeout(() => {
-            enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '54, 118, 187');
+            enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '54, 118, 187', true);
           }, 300);
           setTimeout(() => {
-            enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '231, 70, 93');
+            enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '231, 70, 93', true);
           }, 600);
           game.boss = null;
         }
@@ -574,24 +574,25 @@ class ShooterBullet {
       if (enemy.HP === 0) {
         if (isBoss) {
           // 移除 boss
-          enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '245, 175, 95');
+          enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '245, 175, 95', true);
           setTimeout(() => {
-            enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '54, 118, 187');
+            enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '54, 118, 187', true);
           }, 300);
           setTimeout(() => {
-            enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '231, 70, 93');
-          }, 500);
+            enemyMethods.dieEffect(264, originPos(enemy.axisRotateR, enemy.axisRotateAngle).x, originPos(enemy.axisRotateR, enemy.axisRotateAngle).y, '231, 70, 93', true);
+          }, 600);
           game.boss = null;
-          gameCrawler.textContent = 'BOSS DIES!!!🎊';
           // 改變背景音樂
           bgm.pause();
           bgm.currentTime = 0;
           victoryBgm.play();
           victoryBgm.volume = 0.5;
-          // 2 秒後，結束遊戲
+          // 3 秒後，結束遊戲
           setTimeout(() => {
             game.endGame();
-          }, 2000);
+          }, 3000);
+          clearTimeout(game.crawlerClearedTimer);
+          gameCrawler.textContent = 'BOSS DIES!!!🎊';
           return;
         } else {
           // 移除敵人
