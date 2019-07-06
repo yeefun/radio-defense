@@ -146,9 +146,9 @@ const enemyMethods = {
 
   // 敵人撞擊或子彈擊中 shooter 後
   attackShooterResult() {
+    if (!game.isStart || (game.currentLevel === 10 && !game.boss)) return;
     const shooter = game.shooter;
     const shooterHPBarOriginW = 216;
-    if (!game.isStart) return;
     // 命條減 1/3
     const shooterHPBarW = shooterHPBar.offsetWidth - (shooterHPBarOriginW / 3);
     shooter.isAttacked = true;
@@ -178,4 +178,28 @@ const enemyMethods = {
     }
     gameCrawler.textContent = Math.random() >= 0.5 ? 'OUCH😣' : 'UGGH😫';
   },
+
+
+  bossDieResult() {
+    let boss = game.boss;
+    enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '245, 175, 95', true);
+    setTimeout(() => {
+      enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '54, 118, 187', true);
+    }, 300);
+    setTimeout(() => {
+      enemyMethods.dieEffect(264, originPos(boss.axisRotateR, boss.axisRotateAngle).x, originPos(boss.axisRotateR, boss.axisRotateAngle).y, '231, 70, 93', true);
+    }, 600);
+    game.boss = null;
+    // 改變背景音樂
+    bgm.pause();
+    bgm.currentTime = 0;
+    victoryBgm.play();
+    victoryBgm.volume = 0.5;
+    // 3 秒後，結束遊戲
+    setTimeout(() => {
+      game.endGame();
+    }, 3000);
+    clearTimeout(game.crawlerClearedTimer);
+    gameCrawler.textContent = 'BOSS DIES!!!🎊';
+  }
 }

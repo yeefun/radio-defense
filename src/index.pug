@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-html(lang="zh-Hant")
+//- html(lang="zh-Hant")
+html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no")
     meta(http-equiv="X-UA-Compatible" content="ie=edge")
-    title Radio-Defense
+    //- link(rel="icon" type="image/ico" href="https://udn.com/upf/newmedia/image/udn-icon.ico")
+    title Radio Defense - 能量電池奪命戰
 
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css")
     link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Yantramanav:300,400,500")
@@ -15,9 +17,25 @@ html(lang="zh-Hant")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/easing/EasePack.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenLite.min.js")
 
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.3/dat.gui.min.js")
+    //- script(src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.3/dat.gui.min.js")
+    
     script(src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.8.12/Tone.min.js" integrity="sha256-dkaO/q/8qkzLcxzcFH2BrIltvicuMNsmB6+ppG7dCY8=" crossorigin="anonymous")
+
     script(src="https://unpkg.com/axios/dist/axios.min.js")
+
+    //- Open Graph
+    meta(property="og:url" content="https://yeefun.github.io/radio-defense")
+    meta(property="og:type" content="website")
+    meta(property="og:title" content="Radio Defense")
+    meta(property="og:description" content="你身負著運送能量電池的任務，卻遭到幾何星人的埋伏，快從他們手中奪回能量電池！")
+    //- meta(property="og:image" content="https://udn.com/upf/newmedia/2018_data/2018election/game2/meta--default.jpg")
+    meta(property="og:image:width" content="1280")
+    meta(property="og:image:height" content="672")
+    //- meta(property="og:locale" content="zh_tw")
+
+    meta(name="twitter:card" content="summary_large_image")
+    meta(name="twitter:creator" content="@szyeefun")
+
   body
     .container#container
       canvas#game(width="856" height="624")
@@ -71,52 +89,30 @@ html(lang="zh-Hant")
                 .result__stars__star
                   .result__star
                     .star__ranking 1
-                    .star__name#star-name1 Yeefun
-                    .star__scores
-                      .star__score
-                        .star__num#star-wave1 8
-                        .star__text WAVES
-                      .star__score
-                        .star__num#star-battery1 48
-                        .star__text BATS
-                      .star__score
-                        .star__num#star-bullet1 188
-                        .star__text BULLETS
-                      .star__score
-                        .star__num#star-boss1 NO
-                        .star__text BOSS
+                    .star__wrapper#star-wrapper1
+                      img(src="./img/loading.svg" alt="loading icon")
+                    //- .star__name#star-name1 Yeefun
+                    //- .star__scores
+                    //-   .star__score
+                    //-     .star__num#star-wave1 8
+                    //-     .star__text WAVES
+                    //-   .star__score
+                    //-     .star__num#star-battery1 48
+                    //-     .star__text BATS
+                    //-   .star__score
+                    //-     .star__num#star-bullet1 188
+                    //-     .star__text BULLETS
+                    //-   .star__score
+                    //-     .star__num#star-boss1 NO
+                    //-     .star__text BOSS
                   .result__star
                     .star__ranking 2
-                    .star__name#star-name2 ???
-                    .star__scores
-                      .star__score
-                        .star__num#star-wave2 ?
-                        .star__text WAVES
-                      .star__score
-                        .star__num#star-battery2 ?
-                        .star__text BATS
-                      .star__score
-                        .star__num#star-bullet2 ?
-                        .star__text BULLETS
-                      .star__score
-                        .star__num#star-boss2 ?
-                        .star__text BOSS
+                    .star__wrapper#star-wrapper2
+                      img(src="./img/loading.svg" alt="loading icon")
                   .result__star
                     .star__ranking 3
-                    .star__name#star-name3 ???
-                    .star__scores
-                      .star__score
-                        .star__num#star-wave3 ?
-                        .star__text WAVES
-                      .star__score
-                        .star__num#star-battery3 ?
-                        .star__text BATS
-                      .star__score
-                        .star__num#star-bullet3 ?
-                        .star__text BULLETS
-                      .star__score
-                        .star__num#star-boss3 ?
-                        .star__text BOSS
+                    .star__wrapper#star-wrapper3
+                      img(src="./img/loading.svg" alt="loading icon")
                 .result__stars__btns
                   button#back-btn(type="button") ←
                   button#restart-btn--stars(type="button") Restart
@@ -131,7 +127,7 @@ html(lang="zh-Hant")
               .result__score#result-score
                 div
                   .score__num#result-battery 0
-                  .score__text BATS
+                  .score__text BATTERIES
                 div
                   .score__num#result-bullet 0
                   .score__text BULLETS
@@ -139,9 +135,9 @@ html(lang="zh-Hant")
                   .score__num#result-boss 0
                   .score__text BOSS
             .share
-              svg.share__fb(viewBox="0 0 24 24" width="48" height="48")
+              svg.share__fb#share-fb(viewBox="0 0 24 24" width="48" height="48")
                 path(d="M17,3H7C4.791,3,3,4.791,3,7v10c0,2.209,1.791,4,4,4h5.621v-6.961h-2.343v-2.725h2.343V9.309 c0-2.324,1.421-3.591,3.495-3.591c0.699-0.002,1.397,0.034,2.092,0.105v2.43h-1.428c-1.13,0-1.35,0.534-1.35,1.322v1.735h2.7 l-0.351,2.725h-2.365V21H17c2.209,0,4-1.791,4-4V7C21,4.791,19.209,3,17,3z")
-              svg.share__twitter(viewBox="0 0 24 24" width="48" height="48")
+              svg.share__twitter#share-twitter(viewBox="0 0 24 24" width="48" height="48")
                 path(d="M17,3H7C4.791,3,3,4.791,3,7v10c0,2.209,1.791,4,4,4h10c2.209,0,4-1.791,4-4V7C21,4.791,19.209,3,17,3z M17.05,9.514 c0,0.086,0,0.171,0,0.343c0,3.257-2.486,7.029-7.029,7.029c-1.371,0-2.657-0.429-3.771-1.114c0.171,0,0.429,0,0.6,0 c1.114,0,2.229-0.429,3.086-1.029c-1.114,0-1.971-0.771-2.314-1.714c0.171,0,0.343,0.086,0.429,0.086c0.257,0,0.429,0,0.686-0.086 c-1.114-0.257-1.971-1.2-1.971-2.4c0.343,0.171,0.686,0.257,1.114,0.343c-0.686-0.6-1.114-1.286-1.114-2.143 c0-0.429,0.086-0.857,0.343-1.2c1.2,1.457,3,2.486,5.057,2.571c0-0.171-0.086-0.343-0.086-0.6c0-1.371,1.114-2.486,2.486-2.486 c0.686,0,1.371,0.257,1.8,0.771c0.6-0.086,1.114-0.343,1.543-0.6c-0.171,0.6-0.6,1.029-1.114,1.371 c0.514-0.086,0.943-0.171,1.457-0.429C17.907,8.743,17.479,9.171,17.05,9.514z")
     audio#bgm(src="./audio/Incoming_Transition.mp3" loop)
     audio#victory-bgm(src="./audio/Magical_Triumph.mp3" loop)

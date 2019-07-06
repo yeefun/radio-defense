@@ -64,6 +64,13 @@ const resultStars = document.getElementById('result-stars');
 const bgm = document.getElementById('bgm');
 const victoryBgm = document.getElementById('victory-bgm');
 
+const starWrapper1 = document.getElementById('star-wrapper1');
+const starWrapper2 = document.getElementById('star-wrapper2');
+const starWrapper3 = document.getElementById('star-wrapper3');
+
+const shareFb = document.getElementById('share-fb');
+const shareTwitter = document.getElementById('share-twitter');
+
 
 
 
@@ -124,6 +131,7 @@ class Game {
       playerName: '',
       beatBossSeconds: 0,
       isMuted: false,
+      isDisplayStars: false,
     };
     Object.assign(def, args);
     Object.assign(this, def);
@@ -144,7 +152,6 @@ class Game {
       this.startGame();
     });
     this.drawCover();
-    // this.startGame();
     this.render();
     this.update();
     // 初始化方格移動速率與計時器
@@ -156,13 +163,19 @@ class Game {
       resultScore.classList.add('dpn');
       resultStars.classList.remove('dpn');
       result.classList.add('t20');
-      this.handleGameStars();
+      if (!this.isDisplayStars) {
+        this.handleGameStars();
+      }
+      this.isDisplayStars = true;
     });
     backBtn.addEventListener('click', function () {
-      resultStars.classList.add('dpn');
       resultRanking.classList.remove('dpn');
       resultScore.classList.remove('dpn');
+      resultStars.classList.add('dpn');
       result.classList.remove('t20');
+    });
+    shareFb.addEventListener('click', function () {
+      window.open('https://www.facebook.com/sharer/sharer.php?u=https://yeefun.github.io/radio-defense');
     });
   }
   render() {
@@ -346,7 +359,6 @@ class Game {
     // 重設生命條
     shooterHPBar.style.width = '216px';
     // 取得玩家名
-    // const playerName = document.getElementById('player-name').value;
     this.playerName = playerName.value;
     // 初始化 shooter
     this.shooter = new Shooter();
@@ -375,16 +387,12 @@ class Game {
     // 隱藏預設滑鼠
     container.style.cursor = 'none';
     // 隱藏結果
-    // result.style.opacity = 0;
     result.classList.add('op0');
-    // share.classList.add('op0');
     // 讓滑鼠點擊無效
     panel.style.pointerEvents = 'none';
     // 顯示獲得電池資訊
-    // batteryInfo.style.opacity = 1;
     batteryInfo.classList.remove('op0');
     // 顯示鍵盤指示
-    // keyboard.style.opacity = 1;
     keyboard.classList.remove('op0');
     // 清空關卡字
     gameLevel.textContent = '';
@@ -433,6 +441,19 @@ class Game {
     victoryBgm.currentTime = 0;
     bgm.play();
     bgm.volume = 0.5;
+    // 遊戲結果返回第一頁
+    resultRanking.classList.remove('dpn');
+    resultScore.classList.remove('dpn');
+    resultStars.classList.add('dpn');
+    result.classList.remove('t20');
+    // 將遊戲結果換成 loading 圖示
+    const loadingIcon = '<img src="./img/loading.svg" alt="loading icon" />';
+    rankingNum.innerHTML = loadingIcon;
+    starWrapper1.innerHTML = loadingIcon;
+    starWrapper2.innerHTML = loadingIcon;
+    starWrapper3.innerHTML = loadingIcon;
+    // 開啟讓 stars 重新取資料的開關
+    this.isDisplayStars = false;
   }
   // 遊戲結束
   endGame() {
@@ -449,17 +470,12 @@ class Game {
     resultBattery.textContent = this.batteryNum;
     resultBullet.textContent = this.shooter.bulletNum;
     // 顯示結果
-    // result.style.opacity = 1;
     result.classList.remove('op0');
-    // share.classList.remove('op0');
     // 隱藏電池分數資訊
-    // batteryInfo.style.opacity = 0;
     batteryInfo.classList.add('op0');
     // 隱藏鍵盤指示
-    // keyboard.style.opacity = 0;
     keyboard.classList.add('op0');
     // 移除道具顯示介面
-    // prop.style.opacity = 0;
     prop.classList.add('op0');
     // 顯示預設滑鼠
     container.style.cursor = 'auto';
@@ -468,11 +484,7 @@ class Game {
     this.handleGameResult();
     clearTimeout(this.countdownTimer);
     clearTimeout(this.countupTimer);
-    // clearTimeout(this.crawlerClearedTimer);
     clearTimeout(this.propGeneratedTimer);
-    // playSound('synth', 'A3');
-    // playSound('synth', 'E2', '8n', 160);
-    // playSound('synth', 'A2', '8n', 320);
   }
   // 暫停遊戲
   pauseGame() {
@@ -523,7 +535,10 @@ class Game {
     })
     .then((res) => {
       const data = res.data;
-      rankingNum.innerHTML = `<p>${data.rank}</p><span>/&nbsp;${data.totalPlayers}</span>`;
+      rankingNum.innerHTML = `
+        <p>${data.rank}</p>
+        <span>/&nbsp;${data.totalPlayers}</span>
+      `;
     });
   }
   handleGameStars() {
@@ -533,36 +548,36 @@ class Game {
         const firstStarData = data.firstData;
         const secondStarData = data.secondData;
         const thirdStarData = data.thirdData;
-
-        const starName1 = document.getElementById('star-name1');
-        const starWave1 = document.getElementById('star-wave1');
-        const starBattery1 = document.getElementById('star-battery1');
-        const starBullet1 = document.getElementById('star-bullet1');
-        const starBoss1 = document.getElementById('star-boss1');
-        const starName2 = document.getElementById('star-name2');
-        const starWave2 = document.getElementById('star-wave2');
-        const starBattery2 = document.getElementById('star-battery2');
-        const starBullet2 = document.getElementById('star-bullet2');
-        const starBoss2 = document.getElementById('star-boss2');
-        const starName3 = document.getElementById('star-name3');
-        const starWave3 = document.getElementById('star-wave3');
-        const starBattery3 = document.getElementById('star-battery3');
-        const starBullet3 = document.getElementById('star-bullet3');
-        const starBoss3 = document.getElementById('star-boss3');
-
-        const star1Arr = [starName1, starWave1, starBattery1, starBullet1, starBoss1];
-        const star2Arr = [starName2, starWave2, starBattery2, starBullet2, starBoss2];
-        const star3Arr = [starName3, starWave3, starBattery3, starBullet3, starBoss3];
-
-        for (let i = 0; i < firstStarData.length; i++) {
-          star1Arr[i].textContent = firstStarData[i];
+        let starScoreHTML = '';
+        function fillStarScore(name, wave, bat, bullet, boss) {
+          starScoreHTML = `
+            <div class="star__name">${name}</div>
+            <div class="star__scores">
+              <div class="star__score">
+                <div class="star__num">${wave}</div>
+                <div class="star__text">WAVES</div>
+              </div>
+              <div class="star__score">
+                <div class="star__num">${bat}</div>
+                <div class="star__text">BATTERIES</div>
+              </div>
+              <div class="star__score">
+                <div class="star__num">${bullet}</div>
+                <div class="star__text">BULLETS</div>
+              </div>
+              <div class="star__score">
+                <div class="star__num">${boss}</div>
+                <div class="star__text">BOSS</div>
+              </div>
+            </div>
+          `;
         }
-        for (let i = 0; i < secondStarData.length; i++) {
-          star2Arr[i].textContent = secondStarData[i];
-        }
-        for (let i = 0; i < thirdStarData.length; i++) {
-          star3Arr[i].textContent = thirdStarData[i];
-        }
+        fillStarScore(...firstStarData);
+        starWrapper1.innerHTML = starScoreHTML;
+        fillStarScore(...secondStarData);
+        starWrapper2.innerHTML = starScoreHTML;
+        fillStarScore(...thirdStarData);
+        starWrapper3.innerHTML = starScoreHTML;
       });
   }
   // 產生道具
