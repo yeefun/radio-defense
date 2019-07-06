@@ -175,7 +175,13 @@ class Game {
       result.classList.remove('t20');
     });
     shareFb.addEventListener('click', function () {
-      window.open('https://www.facebook.com/sharer/sharer.php?u=https://yeefun.github.io/radio-defense');
+      window.open('https://www.facebook.com/sharer/sharer.php?u=https://yeefun.github.io/radio-defense', '', 'left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0');
+    });
+    shareTwitter.addEventListener('click', function () {
+      // 參考 https://gist.github.com/McKinneyDigital/2884508
+      const url = 'https://yeefun.github.io/radio-defense';
+      const name = 'szyeefun';
+      window.open(`http://twitter.com/share?url=${encodeURIComponent(url)}&via=${encodeURIComponent(name)}`, '', 'left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0');
     });
   }
   render() {
