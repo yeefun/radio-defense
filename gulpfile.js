@@ -80,19 +80,26 @@ gulp.task('babel', () => {
 
 // https://www.npmjs.com/package/gulp-imagemin
 // https://www.npmjs.com/package/gulp-svgmin
-gulp.task('img', () => {
-  return gulp.src('./src/assets/img/**/*.svg')
+gulp.task('img-compress', () => {
+  return gulp.src('./src/assets/**/*.svg')
     .pipe($.plumber())
     // .pipe($.if(options.env === 'prod', $.imagemin()))
     .pipe($.if(options.env === 'prod', $.svgmin()))
-    .pipe(gulp.dest('./dist/img/'))
+    .pipe(gulp.dest('./dist/'))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('img', () => {
+  return gulp.src('./src/assets/**/*.{png, jpg}')
+    .pipe($.plumber())
+    .pipe(gulp.dest('./dist/'))
     .pipe(browserSync.stream());
 });
 
 gulp.task('audio', () => {
-  return gulp.src('./src/assets/audio/**/*.mp3')
+  return gulp.src('./src/assets/**/*.mp3')
   .pipe($.plumber())
-  .pipe(gulp.dest('./dist/audio/'))
+  .pipe(gulp.dest('./dist/'))
   .pipe(browserSync.stream());
 });
 
@@ -114,7 +121,7 @@ gulp.task('watch', () => {
   gulp.watch('./src/**/*.pug', ['pug']);
   gulp.watch('./src/scss/**/*.scss', ['sass']);
   gulp.watch('./src/js/**/*.js', ['babel']);
-  gulp.watch('./src/assets/**/*.svg', ['img']);
+  gulp.watch('./src/assets/**/*.svg', ['img-compress']);
   gulp.watch('./src/assets/**/*.mp3', ['audio']);
 });
 
@@ -123,7 +130,7 @@ gulp.task('watch', () => {
 
 
 // 開發流程
-gulp.task('default', ['pug', 'sass', 'babel', 'img', 'audio', 'browser-sync', 'watch']);
+gulp.task('default', ['pug', 'sass', 'babel', 'img', 'img-compress', 'audio', 'browser-sync', 'watch']);
 
 // 發布流程
-gulp.task('build', gulpSequence('clean', 'pug', 'sass', 'babel', 'img', 'audio'));
+gulp.task('build', gulpSequence('clean', 'pug', 'sass', 'babel', 'img', 'img-compress', 'audio'));
