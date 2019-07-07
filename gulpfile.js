@@ -90,7 +90,7 @@ gulp.task('img-compress', () => {
 });
 
 gulp.task('img', () => {
-  return gulp.src('./src/assets/**/*.{png, jpg}')
+  return gulp.src('./src/assets/**/*.{png,jpg,ico}')
     .pipe($.plumber())
     .pipe(gulp.dest('./dist/'))
     .pipe(browserSync.stream());
