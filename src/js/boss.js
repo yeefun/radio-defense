@@ -9,7 +9,7 @@ class Boss {
       axisRotateAngleV: 1,
       rotateV: 1,
       bullets: [],
-      HP: 2,
+      HP: 24,
       beforeGenerateEnemyTime: new Date(),
       beginAppear: true,
       isAppearing: false,
@@ -177,7 +177,7 @@ class Boss {
         this.isAppearing = false;
       },
     });
-    if (this.appearTimes && this.appearTimes % 2) {
+    if (this.appearTimes && this.appearTimes % 3) {
       setTimeout(() => {
         if (this.HP === 0 || game.isPause) return;
         this.shoot();
@@ -201,7 +201,7 @@ class Boss {
       scale: 0,
       ease: Expo.easeOut,
     });
-    const rotateNum = getRandom(45, 135);
+    const rotateNum = getRandom(45, 225);
     TweenLite.to(this, 1.6, {
       axisRotateAngle: `+=${rotateNum}`,
       rotate: `+=${rotateNum}`,

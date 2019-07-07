@@ -502,20 +502,19 @@ class Game {
       clearTimeout(this.propGeneratedTimer);
       clearTimeout(this.crawlerClearedTimer);
     } else {
+      this.generateProp();
+      this.clearCrawler();
       if (!this.boss) {
         this.countdownTime();
       } else {
         this.countupTime();
-      }
-      this.generateProp();
-      this.clearCrawler();
-      const boss = game.boss;
-      if (boss.isDisappeared) {
-        clearTimeout(boss.appearTimer);
-        boss.appear();
-      } else {
-        clearTimeout(boss.disappearTimer);
-        boss.disappear();
+        if (this.boss.isDisappeared) {
+          clearTimeout(this.boss.appearTimer);
+          this.boss.appear();
+        } else {
+          clearTimeout(this.boss.disappearTimer);
+          this.boss.disappear();
+        }
       }
     }
   }
@@ -525,7 +524,7 @@ class Game {
     const battery = this.batteryNum;
     const bullet = this.shooter.bulletNum;
     let boss;
-    if (level !== 9) {
+    if (level !== 10) {
       boss = 'no';
     } else {
       boss = this.beatBossSeconds;
@@ -551,6 +550,8 @@ class Game {
     axios.get('https://script.google.com/a/g.ntu.edu.tw/macros/s/AKfycbx1L2GmotaRfoSMzVA5BtpC9kiWneoA69IOtoEi/dev')
       .then((res) => {
         const data = res.data;
+        console.log(data);
+        
         const firstStarData = data.firstData;
         const secondStarData = data.secondData;
         const thirdStarData = data.thirdData;
@@ -628,7 +629,11 @@ class Game {
   countupTime() {
     this.countupTimer = setTimeout(() => {
       this.beatBossSeconds += 1;
-      gameTime.textContent = `00:${this.beatBossSeconds < 10 ? `0${this.beatBossSeconds}` : this.beatBossSeconds}”`;
+      const minutes = Math.floor(this.beatBossSeconds / 60);
+      const trueSeconds = this.beatBossSeconds % 60;
+      const TimeSeconds = trueSeconds < 10 ? `0${trueSeconds}` : trueSeconds;
+      const TimeMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      gameTime.textContent = `${TimeMinutes}:${TimeSeconds}”`;
       this.countupTime();
     }, 1000);
   }
@@ -720,108 +725,97 @@ class Game {
   setLevel(level) {
     switch (level) {
       case 1:
-        this.initLevel('01', 10);
-        const rotateNum = 360;
+        this.initLevel('01', 15);
+        // const rotateNum = 360;
+        // this.boss = new Boss({
+        //   axisRotateR: getRandom(gameH / 3, gameH / 2.5),
+        //   axisRotateAngle: rotateNum,
+        //   rotate: rotateNum - 90,
+        // });
+        // 設定敵人出場
+        this.setEnemy('circle', 2);
+        break;
+      case 2:
+        this.initLevel('02', 20);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('polygon', 10);
+        break;
+      case 3:
+        this.initLevel('03', 20);
+        this.setEnemy('polygon', 2);
+        this.setEnemy('circle', 5);
+        this.setEnemy('polygon', 10);
+        break;
+      case 4:
+        this.initLevel('04', 30);
+        this.setEnemy('circle', 2);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('polygon', 10);
+        this.setEnemy('triangle', 15);
+        this.setEnemy('polygon', 20);
+        break;
+      case 5:
+        this.initLevel('05', 30);
+        this.setEnemy('circle', 2);
+        this.setEnemy('circle', 5);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('triangle', 20);
+        break;
+      case 6:
+        this.initLevel('06', 40);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('triangle', 5);
+        this.setEnemy('circle', 15);
+        this.setEnemy('circle', 30);
+        this.setEnemy('polygon', 30);
+        break;
+      case 7:
+        this.initLevel('07', 60);
+        this.setEnemy('circle', 2);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('circle', 10);
+        this.setEnemy('triangle', 10);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('polygon', 20);
+        this.setEnemy('triangle', 25);
+        this.setEnemy('triangle', 35);
+        this.setEnemy('polygon', 40);
+        this.setEnemy('circle', 45);
+        break;
+      case 8:
+        this.initLevel('08', 60);
+        this.setEnemy('circle', 5);
+        this.setEnemy('triangle', 10);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('circle', 20);
+        this.setEnemy('polygon', 30);
+        this.setEnemy('triangle', 35);
+        this.setEnemy('polygon', 35);
+        this.setEnemy('triangle', 45);
+        this.setEnemy('circle', 50);
+        this.setEnemy('polygon', 50);
+        break;
+      case 9:
+        this.initLevel('09', 40);
+        this.setEnemy('circle', 2);
+        this.setEnemy('triangle', 2);
+        this.setEnemy('triangle', 5);
+        this.setEnemy('polygon', 10);
+        this.setEnemy('circle', 15);
+        this.setEnemy('polygon', 15);
+        this.setEnemy('circle', 25);
+        this.setEnemy('triangle', 30);
+        break;
+      case 10:
+        gameLevel.textContent = 'Wave 10';
+        const rotateNum = getRandom(0, 360);
         this.boss = new Boss({
           axisRotateR: getRandom(gameH / 3, gameH / 2.5),
           axisRotateAngle: rotateNum,
           rotate: rotateNum - 90,
         });
-        // 設定敵人出場
-        // this.setEnemy('circle', 2);
-        // this.setEnemy('triangle', 0);
-        // this.setEnemy('polygon', 0);
+        this.countupTime();
         break;
-      // case 2:
-      //   this.initLevel('02', 20);
-      //   this.setEnemy('triangle', 2);
-      //   this.setEnemy('polygon', 10);
-      //   break;
-      // case 3:
-      //   this.initLevel('03', 20);
-      //   this.setEnemy('polygon', 2);
-      //   this.setEnemy('circle', 5);
-      //   this.setEnemy('polygon', 10);
-      //   break;
-      // case 4:
-      //   this.initLevel('04', 30);
-      //   this.setEnemy('circle', 2);
-      //   this.setEnemy('triangle', 2);
-      //   this.setEnemy('polygon', 10);
-      //   this.setEnemy('triangle', 15);
-      //   this.setEnemy('polygon', 20);
-      //   break;
-      // case 5:
-      //   this.initLevel('05', 30);
-      //   this.setEnemy('circle', 2);
-      //   this.setEnemy('circle', 2);
-      //   this.setEnemy('circle', 5);
-      //   this.setEnemy('polygon', 15);
-      //   this.setEnemy('triangle', 20);
-      //   break;
-      // case 6:
-      //   this.initLevel('06', 40);
-      //   this.setEnemy('triangle', 2);
-      //   this.setEnemy('triangle', 5);
-      //   this.setEnemy('circle', 15);
-      //   this.setEnemy('circle', 25);
-      //   this.setEnemy('polygon', 25);
-      //   break;
-      // case 7:
-      //   this.initLevel('07', 60);
-      //   this.setEnemy('circle', 2);
-      //   this.setEnemy('triangle', 2);
-      //   this.setEnemy('circle', 10);
-      //   this.setEnemy('triangle', 10);
-      //   this.setEnemy('polygon', 15);
-      //   this.setEnemy('polygon', 20);
-      //   this.setEnemy('triangle', 25);
-      //   this.setEnemy('polygon', 25);
-      //   this.setEnemy('polygon', 35);
-      //   this.setEnemy('triangle', 35);
-      //   this.setEnemy('polygon', 40);
-      //   this.setEnemy('circle', 45);
-      //   this.setEnemy('circle', 50);
-      //   break;
-      // case 8:
-      //   this.initLevel('08', 60);
-      //   this.setEnemy('circle', 5);
-      //   this.setEnemy('triangle', 10);
-      //   this.setEnemy('triangle', 10);
-      //   this.setEnemy('polygon', 15);
-      //   this.setEnemy('circle', 15);
-      //   this.setEnemy('circle', 20);
-      //   this.setEnemy('polygon', 30);
-      //   this.setEnemy('circle', 35);
-      //   this.setEnemy('triangle', 35);
-      //   this.setEnemy('polygon', 35);
-      //   this.setEnemy('circle', 45);
-      //   this.setEnemy('triangle', 45);
-      //   this.setEnemy('circle', 50);
-      //   this.setEnemy('polygon', 50);
-      //   break;
-      // case 9:
-      //   this.initLevel('09', 30);
-      //   this.setEnemy('circle', 2);
-      //   this.setEnemy('circle', 2);
-      //   this.setEnemy('triangle', 2);
-      //   this.setEnemy('triangle', 2);
-      //   this.setEnemy('polygon', 10);
-      //   this.setEnemy('circle', 15);
-      //   this.setEnemy('triangle', 15);
-      //   this.setEnemy('polygon', 15);
-      //   this.setEnemy('polygon', 25);
-      //   break;
-      // case 10:
-      //   gameLevel.textContent = 'Wave 10';
-      //   const rotateNum = getRandom(0, 360);
-      //   this.boss = new Boss({
-      //     axisRotateR: getRandom(gameH / 3, gameH / 2.5),
-      //     axisRotateAngle: rotateNum,
-      //     rotate: rotateNum - 90,
-      //   });
-      //   this.countupTime();
-      //   break;
       default:
         break;
     }

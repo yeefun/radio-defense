@@ -25,45 +25,45 @@ function drawWaveBullet(bullet, originPos, lineWidth, shadowColor) {
 }
 
 // 繪製電池
-function drawBattery(p) {
-  ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.fillStyle = globalColor.orange;
-    // 瓶身
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(-24, 0);
-    ctx.lineTo(-24, 42);
-    ctx.lineTo(0, 42);
-    ctx.closePath();
-    ctx.fill();
-    // 瓶底
-    ctx.save();
-      ctx.translate(0, 44);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(-24, 0);
-      ctx.lineTo(-24, 3);
-      ctx.lineTo(0, 3);
-      ctx.closePath();
-      ctx.fill();
-    ctx.restore();
-    // 瓶蓋
-    ctx.fillStyle = globalColor.white;
-    ctx.save();
-      ctx.translate(-6.75, 0);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(0, -3);
-      ctx.lineTo(-10.5, -3);
-      ctx.lineTo(-10.5, -0);
-      ctx.closePath();
-      ctx.fill();
-    ctx.restore();
-    // 閃電
-    drawLightning({ x: -11, y: 9 });
-  ctx.restore();
-}
+// function drawBattery(p) {
+//   ctx.save();
+//     ctx.translate(p.x, p.y);
+//     ctx.fillStyle = globalColor.orange;
+//     // 瓶身
+//     ctx.beginPath();
+//     ctx.moveTo(0, 0);
+//     ctx.lineTo(-24, 0);
+//     ctx.lineTo(-24, 42);
+//     ctx.lineTo(0, 42);
+//     ctx.closePath();
+//     ctx.fill();
+//     // 瓶底
+//     ctx.save();
+//       ctx.translate(0, 44);
+//       ctx.beginPath();
+//       ctx.moveTo(0, 0);
+//       ctx.lineTo(-24, 0);
+//       ctx.lineTo(-24, 3);
+//       ctx.lineTo(0, 3);
+//       ctx.closePath();
+//       ctx.fill();
+//     ctx.restore();
+//     // 瓶蓋
+//     ctx.fillStyle = globalColor.white;
+//     ctx.save();
+//       ctx.translate(-6.75, 0);
+//       ctx.beginPath();
+//       ctx.moveTo(0, 0);
+//       ctx.lineTo(0, -3);
+//       ctx.lineTo(-10.5, -3);
+//       ctx.lineTo(-10.5, -0);
+//       ctx.closePath();
+//       ctx.fill();
+//     ctx.restore();
+//     // 閃電
+//     drawLightning({ x: -11, y: 9 });
+//   ctx.restore();
+// }
 
 
 
