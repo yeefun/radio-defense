@@ -22,9 +22,9 @@ class Prop {
     if (this.img.complete) {
       ctx.save();
       ctx.translate(originPos(this.axisRotateR, this.axisRotateAngle).x, originPos(this.axisRotateR, this.axisRotateAngle).y);
-      setTimeout(() => {
-        ctx.drawImage(this.img, 0, 0);
-      }, 0);
+      // setTimeout(() => {
+      ctx.drawImage(this.img, 0, 0);
+      // }, 0);
       // ctx.drawImage(this.img, 0, 0);
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
@@ -45,7 +45,7 @@ class Prop {
     if ((this.axisRotateR + this.r) <= (shooter.r + (shooter.cirSolidLineW / 2))) {
       // 清掉該道具
       game.prop = '';
-      const propName = this.src.replace('../img/', '').split('.')[0];
+      const propName = this.src.replace('./img/', '').split('.')[0];
       shooter.getProp(propName);
     }
   }

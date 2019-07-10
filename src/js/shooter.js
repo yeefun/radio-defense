@@ -297,7 +297,7 @@ class Shooter {
     if (propName === 'crackdown' || propName === 'heart') return;
     // prop.style.opacity = 1;
     prop.classList.remove('op0');
-    propImg.src = `../img/${propName}--panel.svg`;
+    propImg.src = `./img/${propName}--panel.svg`;
     lastTime /= 1000;  
     propLastTime.textContent = lastTime;
     const countLastTime = () => {

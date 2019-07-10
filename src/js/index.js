@@ -601,7 +601,7 @@ class Game {
           propName = props[getRandom(1, 4)];
         }
         this.prop = new Prop({
-          src: `../img/${propName}.svg`,
+          src: `./img/${propName}.svg`,
           axisRotateR: gameHalfDiagonalL,
           axisRotateAngle: getRandom(0, 360),
         });
