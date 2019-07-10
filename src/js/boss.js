@@ -181,17 +181,17 @@ class Boss {
       setTimeout(() => {
         if (this.HP === 0 || game.isPause) return;
         this.shoot();
-      }, 2000);
+      }, getRandom(1000, 2000));
     } else {
       setTimeout(() => {
         if (this.HP === 0 || game.isPause) return;
         this.generateEnemy();
-      }, 2000);
+      }, getRandom(1000, 2000));
     }
     this.disappearTimer = setTimeout(() => {
       if (this.HP === 0 || game.isPause) return;
       this.disappear();
-    }, 4000);
+    }, getRandom(3000, 4000));
     playSound('membrane', 'A4', '4n');
   }
   disappear() {
@@ -285,6 +285,7 @@ class Boss {
           break;
       }
     }
+    chooseEnemy();
     chooseEnemy();
     if (Math.random() >= 0.5) {
       setTimeout(() => {

@@ -427,7 +427,7 @@ class Game {
             gameCrawler.textContent = '🌊WAVES ARE COMING🌊';
             break;
           case 1:
-            gameCrawler.textContent = '😈ARE YOU READY?😈';
+            gameCrawler.textContent = '😈ARE YOU READY😈';
             break;
           case 0:
             gameCrawler.textContent = '🔥🔥GO🔥🔥';

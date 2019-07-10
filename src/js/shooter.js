@@ -189,17 +189,30 @@ class Shooter {
     // 將道具設為 shooter 的狀態
     this.state = propName;
     // 時間到後，移除道具效果
-    setTimeout(() => {
-      this.state = '';
-      // 重新道具計時
-      game.generateProp();
-    }, lastTime);
+    const countLastTime = () => {
+      setTimeout(() => {
+        if (!game.isStart) return;
+        if (game.isPause) {
+          countLastTime();
+        } else {
+          lastTime -= 1000;
+          if (lastTime > 0) {
+            countLastTime();
+          } else {
+            this.state = '';
+            // 重新道具計時
+            game.generateProp();
+          }
+        }
+      }, 1000);
+    }
     // 顯示道具效果持續時間
     this.displayPropInfo(propName, lastTime);
     if (propName !== 'crackdown') {
       playSound('synth', 'E5');
       playSound('synth', 'G5', '8n', 160);
     }
+    countLastTime();
   }
   // 繪製清場效果
   drawCrackdownEffect() {
@@ -295,31 +308,30 @@ class Shooter {
   }
   displayPropInfo(propName, lastTime) {
     if (propName === 'crackdown' || propName === 'heart') return;
-    // prop.style.opacity = 1;
     prop.classList.remove('op0');
     propImg.src = `./img/${propName}--panel.svg`;
     lastTime /= 1000;  
     propLastTime.textContent = lastTime;
     const countLastTime = () => {
-      const propInfoTimer = setTimeout(() => {
+      // const propInfoTimer = setTimeout(() => {
+      setTimeout(() => {
+        if (!game.isStart) return;
         if (game.isPause) {
           countLastTime();
           return;
         }
         // 遊戲結束時，清除計時器
-        if (!game.isStart) {
-          // prop.style.opacity = 0;
-          clearTimeout(propInfoTimer);
-          return;
-        }
+        // if (!game.isStart) {
+        //   clearTimeout(propInfoTimer);
+        //   return;
+        // }
         lastTime -= 1;
         propLastTime.textContent = lastTime >= 10 ? lastTime : `0${lastTime}`;
         if (lastTime) {
           countLastTime();
         } else {
-          // prop.style.opacity = 0;
           prop.classList.add('op0');
-          clearTimeout(propInfoTimer);
+          // clearTimeout(propInfoTimer);
         }
       }, 1000);
     }
