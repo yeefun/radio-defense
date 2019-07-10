@@ -15,14 +15,17 @@ class Prop {
   draw() {
     if (!this.img.src) {
       // 防止 Failed to execute 'drawImage' on 'CanvasRenderingContext2D': The HTMLImageElement provided is in the 'broken' state.
-      this.img.width = 44;
-      this.img.height = 44;
+      // this.img.width = 44;
+      // this.img.height = 44;
       this.img.src = this.src;
     }
     if (this.img.complete) {
       ctx.save();
       ctx.translate(originPos(this.axisRotateR, this.axisRotateAngle).x, originPos(this.axisRotateR, this.axisRotateAngle).y);
-      ctx.drawImage(this.img, 0, 0);
+      setTimeout(() => {
+        ctx.drawImage(this.img, 0, 0);
+      }, 0);
+      // ctx.drawImage(this.img, 0, 0);
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
       ctx.arc(this.img.width / 2, this.img.height / 2, this.r, 0, Math.PI * 2);
