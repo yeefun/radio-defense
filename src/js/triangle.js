@@ -271,7 +271,7 @@ class TriBullet {
         y: 0,
       },
       moveX: 0,
-      moveXV: -4,
+      moveXV: -4.5,
       rotateAngle: 0,
       color: globalColor.blue,
     }

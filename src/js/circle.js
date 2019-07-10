@@ -168,7 +168,7 @@ class CirBullet {
       axisRotateR: 0,
       color: globalColor.orange,
       moveX: 0,
-      moveXV: -4,
+      moveXV: -4.5,
       // v: 4,
       rotateAngle: 0,
     }

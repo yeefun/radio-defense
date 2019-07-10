@@ -550,8 +550,6 @@ class Game {
     axios.get('https://script.google.com/a/g.ntu.edu.tw/macros/s/AKfycbx1L2GmotaRfoSMzVA5BtpC9kiWneoA69IOtoEi/dev')
       .then((res) => {
         const data = res.data;
-        console.log(data);
-        
         const firstStarData = data.firstData;
         const secondStarData = data.secondData;
         const thirdStarData = data.thirdData;

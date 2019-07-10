@@ -14,6 +14,9 @@ class Prop {
   }
   draw() {
     if (!this.img.src) {
+      // 防止 Failed to execute 'drawImage' on 'CanvasRenderingContext2D': The HTMLImageElement provided is in the 'broken' state.
+      this.img.width = 44;
+      this.img.height = 44;
       this.img.src = this.src;
     }
     if (this.img.complete) {
@@ -29,7 +32,7 @@ class Prop {
   }
   update() {
     if (!this.axisRotateRV) {
-      const seconds = getRandom(5, 10);
+      const seconds = getRandom(5, 8);
       this.axisRotateRV = -(gameHalfDiagonalL / (seconds * updateFPS));
     }
     this.axisRotateR += this.axisRotateRV;
