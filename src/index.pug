@@ -50,8 +50,8 @@ html(lang="en")
       .panel#panel
         section.panel__cover#cover
           .panel__cover-img-wrapper
-            img.battery(src="./img/battery.svg" alt="")
-            img.logo(src="./img/R.svg" alt="")
+            img.battery(src="./img/battery.svg" alt="battery icon")
+            img.logo(src="./img/R.svg" alt="R logo")
           h1 Radio Defense
           input#player-name.shine(type="text" placeholder="Your Name...")
           button#start-btn(type="button") Start Game
@@ -72,12 +72,12 @@ html(lang="en")
               //- .panel__game-heart
               //- .panel__game-heart
             .panel__game-prop.op0#prop
-              img#prop__img(src="./img/heart.svg" alt="")
+              img#prop__img(src="./img/heart.svg" alt="heart icon")
               p 00:<span id="prop__last-time">00</span>
           .panel__game-part-top-left
-            img(src="./img/R.svg" alt="")
+            img(src="./img/R.svg" alt="R logo")
           .panel__game-part-bottom-right#battery-info
-            img.battery(src="./img/battery.svg" alt="")
+            img.battery(src="./img/battery.svg" alt="battery icon")
             div
               p 已回收
               p <span id="battery-num">0</span>個能量電池
@@ -131,7 +131,7 @@ html(lang="en")
                   img(src="./img/loading.svg" alt="loading icon")
                 .ranking__btns
                   button#restart-btn(type="button") Restart
-                  button#stars-btn(type="button") Stars
+                  button#stars-btn(type="button") Top Players
               .result__score#result-score
                 div
                   .score__num#result-battery 0
