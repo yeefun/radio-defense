@@ -529,7 +529,7 @@ class Game {
     } else {
       boss = this.beatBossSeconds;
     }
-    axios.get('https://script.google.com/a/g.ntu.edu.tw/macros/s/AKfycbwwNUeevxFlQaLzP_gdhnTmSC97HgRlpV6DOCUIzg/dev', {
+    axios.get('https://script.google.com/a/g.ntu.edu.tw/macros/s/AKfycbwwNUeevxFlQaLzP_gdhnTmSC97HgRlpV6DOCUIzg/exec', {
       params: {
         name,
         level,
@@ -547,7 +547,7 @@ class Game {
     });
   }
   handleGameStars() {
-    axios.get('https://script.google.com/a/g.ntu.edu.tw/macros/s/AKfycbx1L2GmotaRfoSMzVA5BtpC9kiWneoA69IOtoEi/dev')
+    axios.get('https://script.google.com/a/g.ntu.edu.tw/macros/s/AKfycbx1L2GmotaRfoSMzVA5BtpC9kiWneoA69IOtoEi/exec')
       .then((res) => {
         const data = res.data;
         const firstStarData = data.firstData;
