@@ -172,7 +172,7 @@ const enemyMethods = {
         playSound('synth', 'E2', '8n', 160);
         playSound('synth', 'A2', '8n', 320);
         clearTimeout(game.crawlerClearedTimer);
-        gameCrawler.textContent = `YOU, ${this.playerName}💀, ARE DEAD`;
+        gameCrawler.textContent = `YOU, ${game.playerName}💀, ARE DEAD`;
         return;
       }
     }
