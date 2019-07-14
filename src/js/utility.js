@@ -167,6 +167,21 @@ function playSound(instrument, note, duration = '8n', timeout = 0, volume = 0) {
   }
 }
 
+function isMob() {
+  if (navigator.userAgent.match(/Android/i) ||
+    navigator.userAgent.match(/webOS/i) ||
+    navigator.userAgent.match(/iPhone/i) ||
+    navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/iPod/i) ||
+    navigator.userAgent.match(/BlackBerry/i) ||
+    navigator.userAgent.match(/Windows Phone/i)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 /* 2D Vector Class */
 // class Vec2 {

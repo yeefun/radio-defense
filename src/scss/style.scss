@@ -659,3 +659,13 @@ img {
   top: 20% !important;
 }
 
+.warning {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 54%;
+  font-size: 1.6rem;
+  line-height: 1.8;
+  font-weight: 300;
+}
+

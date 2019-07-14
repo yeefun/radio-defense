@@ -49,6 +49,7 @@ const gameTime = document.getElementById('game-time');
 const gameLevel = document.getElementById('game-level');
 const gameCrawler = document.getElementById('game-crawler');
 const playerName = document.getElementById('player-name');
+const warning = document.getElementById('warning');
 
 const resultBoss = document.getElementById('result-boss');
 const resultBattery = document.getElementById('result-battery');
@@ -151,6 +152,12 @@ class Game {
     restartBtnStars.addEventListener('click', () => {
       this.startGame();
     });
+    // 檢查是否為手機
+    if(isMob()) {
+      playerName.classList.add('dpn');
+      startBtn.classList.add('dpn');
+      warning.classList.remove('dpn');
+    }
     this.drawCover();
     this.render();
     this.update();
