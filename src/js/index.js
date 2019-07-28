@@ -531,7 +531,7 @@ class Game {
     const battery = this.batteryNum;
     const bullet = this.shooter.bulletNum;
     let boss;
-    if (level !== 10) {
+    if (level !== 10 || this.boss) {
       boss = 'no';
     } else {
       boss = this.beatBossSeconds;
